@@ -8,6 +8,9 @@
 #include "DeviceResources.h"
 #include "StepTimer.h"
 #include "ImageObjectHelper.h"
+#include "Triangle.h"
+#include "Image.h"
+#include "Line.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -104,15 +107,11 @@ private:
     //----------------------
 
     // -- IMAGE Attributes --
-    float imageXRatio = 2.f;
-    float imageYRatio = 10.f;
-
     //
 
     // Prepares bitfont for sprite texts.
     std::unique_ptr<DirectX::DescriptorHeap> m_resourceDescriptors;
     std::unique_ptr<DirectX::SpriteFont> m_font;
-
     std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 
     // Prepare the drawing of png.
@@ -123,12 +122,15 @@ private:
     // Controller Image Render 
     DirectX::SimpleMath::Vector2 m_controllerPos;
     DirectX::SimpleMath::Vector2 m_controllerOrigin;
-
     DirectX::SimpleMath::Vector2 m_leftTriggerPos;
     DirectX::SimpleMath::Vector2 m_leftTriggerOrigin;
     DirectX::SimpleMath::Vector2 m_rightTriggerPos;
     DirectX::SimpleMath::Vector2 m_rightTriggerOrigin;
     // ----------------------
+
+    Image controller;
+    Image leftTrigger;
+    Image rightTrigger;
 
     enum Descriptors
     {
@@ -144,26 +146,27 @@ private:
     DirectX::GamePad::ButtonStateTracker m_buttons;
     // ------------------------
 
-    bool pressA = false;
-    bool pressB = false;
-    bool pressX = false;
-    bool pressY = false;
-    bool pressView = false;
-    bool pressStart = false;
-    bool pressDPadUp = false;
-    bool pressDPadDown = false;
-    bool pressDPadLeft = false;
-    bool pressDPadRight = false;
-    bool pressLeftShoulder = false;
-    bool pressLeftTrigger = false;
-    bool pressRightShoulder = false;
-    bool pressRightTrigger = false;
-    bool pressLeftStick = false;
-    bool pressRightStick = false;
     bool isConnected = false;
-    DirectX::SimpleMath::Vector2 leftTriggPos;
-    DirectX::SimpleMath::Vector2 rightTriggPos;
 
+    Triangle indA;
+    Triangle indB;
+    Triangle indX;
+    Triangle indY;
+    Triangle indView;
+    Triangle indStart;
+    Triangle indDPadUp;
+    Triangle indDPadDown;
+    Triangle indDPadLeft;
+    Triangle indDPadRight;
+    Triangle indLeftShoulder;
+    Triangle indRightShoulder;
+    Triangle indLeftTrigger;
+    Triangle indRightTrigger;
+    Triangle indLeftStick;
+    Triangle indRightStick;
+
+    Line leftStick;
+    Line rightStick;
 
     // -- SHAPE Attributes --
     using VertexType = DirectX::VertexPositionColor;

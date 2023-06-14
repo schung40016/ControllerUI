@@ -3,6 +3,7 @@
 //
 #include "pch.h"
 #include "Game.h"
+#include <iostream>
 
 Game::Game() noexcept(false)
 {
@@ -39,6 +40,16 @@ void Game::Initialize(HWND window, int width, int height)
     m_timer.SetTargetElapsedSeconds(1.0 / 60);
     */
 
+    auto size = m_deviceResources->GetOutputSize();
+
+    //controller = Image(Colors::White, 2.f, 2.f, ".\\Images\\gamepad.png", size);
+    //leftTrigger = Image(Colors::White, 7.f, 4.f, ".\\Images\\LeftTrigger.png", size);
+    //rightTrigger = Image(Colors::White, 1.17f, 4.f, ".\\Images\\RightTrigger.png", size);
+    leftStick = Line();
+    leftStick.SetColor(Colors::HotPink);
+    rightStick = Line();
+    rightStick.SetColor(Colors::HotPink);
+
     // Set up gamepad
     m_gamePad = std::make_unique<GamePad>();
 }
@@ -73,29 +84,29 @@ void Game::Update(DX::StepTimer const& timer)
 
         isConnected = pad.IsConnected() ? true : false;
 
-        pressA = pad.IsAPressed() ? true : false;
-        pressB = pad.IsBPressed() ? true : false;
-        pressX = pad.IsXPressed() ? true : false;
-        pressY = pad.IsYPressed() ? true : false;
-        pressStart = pad.IsStartPressed() ? true : false;
-        pressView = pad.IsViewPressed() ? true : false;
+        indA.SetDisplay(pad.IsAPressed());
+        indB.SetDisplay(pad.IsBPressed());
+        indX.SetDisplay(pad.IsXPressed());
+        indY.SetDisplay(pad.IsYPressed());
+        indStart.SetDisplay(pad.IsStartPressed());
+        indView.SetDisplay(pad.IsViewPressed());
 
-        // DPad
-        pressDPadUp = pad.IsDPadUpPressed() ? true : false;
-        pressDPadDown = pad.IsDPadDownPressed() ? true : false;
-        pressDPadLeft = pad.IsDPadLeftPressed() ? true : false;
-        pressDPadRight = pad.IsDPadRightPressed() ? true : false;
-        
-        // Triggers and Bumpers
-        pressLeftShoulder = pad.IsLeftShoulderPressed() ? true : false;
-        pressLeftTrigger = pad.IsLeftTriggerPressed() ? true : false;
-        pressRightShoulder = pad.IsRightShoulderPressed() ? true : false;
-        pressRightTrigger = pad.IsRightTriggerPressed() ? true : false;
+        // Dpad
+        indDPadUp.SetDisplay(pad.IsDPadUpPressed());
+        indDPadDown.SetDisplay(pad.IsDPadDownPressed());
+        indDPadLeft.SetDisplay(pad.IsDPadLeftPressed());
+        indDPadRight.SetDisplay(pad.IsDPadRightPressed());
 
-        // Thumbsticks.
+        // Front Controller
+        indLeftShoulder.SetDisplay(pad.IsLeftShoulderPressed());
+        indRightShoulder.SetDisplay(pad.IsRightShoulderPressed());
+        indLeftTrigger.SetDisplay(pad.IsLeftTriggerPressed());
+        indRightTrigger.SetDisplay(pad.IsRightTriggerPressed());
+
+        // Sticks
         SetTriggerPosition(pad);
-        pressLeftStick = pad.IsLeftStickPressed() ? true : false;
-        pressRightStick = pad.IsRightStickPressed() ? true : false;
+        indLeftStick.SetDisplay(pad.IsLeftStickPressed());
+        indRightStick.SetDisplay(pad.IsRightStickPressed());
     }
     else
     {
@@ -142,6 +153,7 @@ void Game::Render()
 
     m_font->DrawString(m_spriteBatch.get(), t_connection,
         m_connectPos, textColor, 0.f, titleOrigin);
+
     if (isConnected)
     {
         m_font->DrawString(m_spriteBatch.get(), L"On",
@@ -184,8 +196,10 @@ void Game::Render()
 
     m_batch->Begin(commandList);
 
-    DrawStickOrientation(-.37f, 0.255f, leftTriggPos.x, leftTriggPos.y);
-    DrawStickOrientation(.2025f, -.05f, rightTriggPos.x, rightTriggPos.y);
+    leftStick.SetVec1(m_controllerPos.x - 148.f, m_controllerPos.y - 78.f);
+    rightStick.SetVec1(m_controllerPos.x + 80.f, m_controllerPos.y + 15.f);
+    leftStick.DrawStickOrientation(m_batch);
+    rightStick.DrawStickOrientation(m_batch);
 
     m_batch->End();
     // -----------------
@@ -359,6 +373,7 @@ void Game::CreateDeviceDependentResources()
     XMUINT2 leftTriggerSize = GetTextureSize(m_leftTriggerTexture.Get());
     XMUINT2 rightTriggerSize = GetTextureSize(m_rightTriggerTexture.Get());
 
+    //controller.SetOrigin(controllerSize);
     imageHelper.SetImagePivot(m_controllerOrigin, controllerSize);
     imageHelper.SetImagePivot(m_leftTriggerOrigin, leftTriggerSize);
     imageHelper.SetImagePivot(m_rightTriggerOrigin, rightTriggerSize);
@@ -401,12 +416,20 @@ void Game::CreateWindowSizeDependentResources()
 
     auto size = m_deviceResources->GetOutputSize();
 
+    std::cout << size.right << ", " << size.bottom << std::endl;
+
     imageHelper.SetImagePosition(m_titlePos, size, 2.f, 10.f);
     imageHelper.SetImagePosition(m_connectPos, size, 4.f, 1.1f);
     imageHelper.SetImagePosition(m_statusPos, size, 1.f, 1.1f);
     imageHelper.SetImagePosition(m_controllerPos, size, 2.f, 2.f);
     imageHelper.SetImagePosition(m_leftTriggerPos, size, 7.f, 4.f);
     imageHelper.SetImagePosition(m_rightTriggerPos, size, 1.17f, 4.f);
+
+
+    Matrix proj = Matrix::CreateScale(2.f / float(size.right), -2.f / float(size.bottom), 1.f) * Matrix::CreateTranslation(-1.f, 1.f, 0.f);
+
+    m_effect->SetProjection(proj);
+    m_lineEffect->SetProjection(proj);
 }
 
 void Game::OnDeviceLost()
@@ -431,6 +454,8 @@ void Game::ResetAssets()
     m_spriteBatch.reset();
     m_font.reset();
     m_controllerTexture.Reset();
+
+
     m_leftTriggerTexture.Reset();
     m_rightTriggerTexture.Reset();
     m_resourceDescriptors.reset();
@@ -441,96 +466,118 @@ void Game::ResetAssets()
 
 void Game::SetTriggerPosition(DirectX::GamePad::State pad)
 {
-    leftTriggPos.x = pad.thumbSticks.leftX;
-    leftTriggPos.y = pad.thumbSticks.leftY;
-    rightTriggPos.x = pad.thumbSticks.rightX;
-    rightTriggPos.y = pad.thumbSticks.rightY;
+    leftStick.SetVec2(pad.thumbSticks.leftX, pad.thumbSticks.leftY);
+    rightStick.SetVec2(pad.thumbSticks.rightX, pad.thumbSticks.rightY);
 }
 
 void Game::CheckInputs()
 {
-    if (pressA)
-    {
-        DrawTriangle(0.3955f, .13f);
-    }
-    if (pressB)
-    {
-        DrawTriangle(0.495f, .27f);
-    }
-    if (pressX)
-    {
-        DrawTriangle(0.295f, .27f);
-    }
-    if (pressY)
-    {
-        DrawTriangle(0.3955f, .4f);
-    }
-    if (pressStart)
-    {
-        DrawTriangle(.12f, .27f);
-    }
-    if (pressView)
-    {
-        DrawTriangle(-.105f, .27f);
-    }
-    if (pressDPadUp)
-    {
-        DrawTriangle(-.1825f, .05f);
-    }
-    if (pressDPadDown)
-    {
-        DrawTriangle(-.1825f, -.14f);
-    }
-    if (pressDPadLeft)
-    {
-        DrawTriangle(-.26f, -.045f);
-    }
-    if (pressDPadRight)
-    {
-        DrawTriangle(-.105f, -.045f);
-    }
-    if (pressLeftShoulder)
-    {
-        DrawTriangle(-.35f, .63f);
-    }
-    if (pressRightShoulder)
-    {
-        DrawTriangle(.35f, .63f);
-    }
-    if (pressLeftTrigger)
-    {
-        DrawTriangle(-.68f, .52f);
-    }
-    if (pressRightTrigger)
-    {
-        DrawTriangle(.68f, .52f);
-    }
-    if (pressLeftStick)
-    {
-        DrawTriangle(-.37f, .265f);
-    }
-    if (pressRightStick)
-    {
-        DrawTriangle(.205f, -.04f);
-    }
-}
+    // All the triangle's position have to be relative to the image positions.
 
-void Game::DrawTriangle(float x, float y)
-{
-    VertexPositionColor v1(Vector3(x, y + 0.05f, 0.5f), Colors::LightPink);
-    VertexPositionColor v2(Vector3(x + 0.05f, y - 0.05f, 0.5f), Colors::LightPink);
-    VertexPositionColor v3(Vector3(x - 0.05f, y - 0.05f, 0.5f), Colors::LightPink);
-
-    m_batch->DrawTriangle(v1, v2, v3);
-}
-
-void Game::DrawStickOrientation(float ox, float oy, float p1, float p2)
-{
-    float calcX = p1 * .08f + ox;
-    float calcY = p2 * .11f + oy;
-
-    VertexPositionColor v1(Vector3(ox, oy, 0.5f), Colors::HotPink);
-    VertexPositionColor v2(Vector3(calcX, calcY, 0.5f), Colors::HotPink);
-    m_batch->DrawLine(v1, v2);
+    if (indA.GetDisplay())
+    {
+        indA.SetPos(m_controllerPos.x + 108.f, m_controllerPos.y - 78.f);
+        indA.DrawTriangle(m_batch);
+    }
+    if (indB.GetDisplay())
+    {
+        indB.SetPos(m_controllerPos.x + 148.f, m_controllerPos.y - 120.f);
+        indB.DrawTriangle(m_batch);
+    }
+    if (indX.GetDisplay())
+    {
+        indX.SetPos(m_controllerPos.x + 68.f, m_controllerPos.y - 120.f);
+        indX.DrawTriangle(m_batch);
+    }
+    if (indY.GetDisplay())
+    {
+        indY.SetPos(m_controllerPos.x + 108.f, m_controllerPos.y - 160.f);
+        indY.DrawTriangle(m_batch);
+    }
+    if (indStart.GetDisplay())
+    {
+        indStart.SetPos(m_controllerPos.x + 0.f, m_controllerPos.y - 120.f);
+        indStart.DrawTriangle(m_batch);
+    }
+    if (indView.GetDisplay())
+    {
+        indView.SetPos(m_controllerPos.x - 90.f, m_controllerPos.y - 120.f);
+        indView.DrawTriangle(m_batch);
+    }
+    if (indDPadUp.GetDisplay())
+    {
+        indDPadUp.SetPos(m_controllerPos.x - 123.f, m_controllerPos.y - 60.f);
+        indDPadUp.DrawTriangle(m_batch);
+    }
+    if (indDPadDown.GetDisplay())
+    {
+        indDPadDown.SetPos(m_controllerPos.x - 123.f, m_controllerPos.y + 10.f);
+        indDPadDown.DrawTriangle(m_batch);
+    }
+    if (indDPadLeft.GetDisplay())
+    {
+        indDPadLeft.SetPos(m_controllerPos.x - 160.f, m_controllerPos.y - 25.f);
+        indDPadLeft.DrawTriangle(m_batch);
+    }
+    if (indDPadRight.GetDisplay())
+    {
+        indDPadRight.SetPos(m_controllerPos.x - 80.f, m_controllerPos.y - 25.f);
+        indDPadRight.DrawTriangle(m_batch);
+    }
+    if (indLeftShoulder.GetDisplay())
+    {
+        indLeftShoulder.SetPos(m_controllerPos.x - 200.f, m_controllerPos.y - 220.f);
+        indLeftShoulder.DrawTriangle(m_batch);
+    }
+    if (indRightShoulder.GetDisplay())
+    {
+        indRightShoulder.SetPos(m_controllerPos.x + 100.f, m_controllerPos.y - 220.f);
+        indRightShoulder.DrawTriangle(m_batch);
+    }
+    if (indLeftTrigger.GetDisplay())
+    {     
+        indLeftTrigger.SetPos(m_leftTriggerPos.x - 50.f, m_leftTriggerPos.y - 30.f);
+        indLeftTrigger.DrawTriangle(m_batch);
+    }
+    if (indRightTrigger.GetDisplay())
+    {
+        indRightTrigger.SetPos(m_rightTriggerPos.x - 50.f, m_rightTriggerPos.y - 30.f);
+        indRightTrigger.DrawTriangle(m_batch);
+    }
+    if (indLeftStick.GetDisplay())
+    {
+        indLeftStick.SetPos(m_controllerPos.x - 198.f, m_controllerPos.y - 120.f);
+        indLeftStick.DrawTriangle(m_batch);
+    }
+    if (indRightStick.GetDisplay())
+    {
+        indRightStick.SetPos(m_controllerPos.x + 32.f, m_controllerPos.y - 25.f);
+        indRightStick.DrawTriangle(m_batch);
+    }
 }
 #pragma endregion
+
+/*
+Font:
+const wchar* text
+Vector2 pos
+color
+
+Sprite:
+Vector2 pos
+Vector2 origin
+color
+XMUIINT32 size
+texture
+
+Triangle:
+color
+v1 
+v2
+v3
+
+Line
+color
+v1 // based on gamepad input.
+v2 (origin)
+*/

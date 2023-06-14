@@ -8,6 +8,9 @@
       <UniqueIdentifier>8b63201d-87f5-439b-8da8-b61e8cad2efc</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="DirectXObjects">
+      <UniqueIdentifier>{16158fd4-c95f-4b4f-bfd7-e99408b0dad0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -22,6 +25,18 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="ImageObjectHelper.h" />
+    <ClInclude Include="Triangle.h">
+      <Filter>DirectXObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>DirectXObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>DirectXObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>DirectXObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -31,6 +46,15 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="ImageObjectHelper.cpp" />
+    <ClCompile Include="Triangle.cpp">
+      <Filter>DirectXObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>DirectXObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>DirectXObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
