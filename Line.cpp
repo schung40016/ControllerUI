@@ -5,50 +5,39 @@ Line::Line()
 {
 }
 
-Line::Line(DirectX::XMVECTOR inp_shapeColor, float v1x, float v1y, float v2x, float v2y)
+Line::Line(DirectX::XMVECTOR inp_shapeColor, IDirXObject& inp_parentObj, float inp_offsetX, float inp_offsetY, float inp_scale)
+    : shapeColor(inp_shapeColor)
+{
+    m_parentObj = &inp_parentObj;
+    m_offsetPos = {inp_offsetX, inp_offsetY};
+    m_scale = inp_scale;
+}
+
+Line::Line(DirectX::XMVECTOR inp_shapeColor, float v1x, float v1y, float v2x, float v2y, float inp_scale)
 	: shapeColor(inp_shapeColor)
 {
-    v1 = { v1x, v1y };
-    v2 = { v2x, v2y };
+    m_position = { v1x, v1y };
+    point2 = { v2x, v2y };
+    m_scale = inp_scale;
 }
 
 void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch)
 {
-    float calcX = v2.x * 30.f + v1.x;
-    float calcY = v2.y * -30.f + v1.y;
+    float calcX = point2.x * m_scale + m_position.x;
+    float calcY = point2.y * m_scale * -1 + m_position.y;
 
-    DirectX::DX12::VertexPositionColor vec1(Vector3(v1.x, v1.y, 0.f), shapeColor);
+    DirectX::DX12::VertexPositionColor vec1(Vector3(m_position.x, m_position.y, 0.f), shapeColor);
     DirectX::DX12::VertexPositionColor vec2(Vector3(calcX, calcY, 0.f), shapeColor);
     m_batch->DrawLine(vec1, vec2);
 }
 
 // Getters & Setters
-DirectX::XMVECTOR Line::GetColor()
+DirectX::SimpleMath::Vector2 Line::GetPoint2()
 {
-    return shapeColor;
+    return point2;
 }
 
-DirectX::SimpleMath::Vector2 Line::GetVec1()
+void Line::SetPoint2(float v2x, float v2y)
 {
-    return v1;
-}
-
-DirectX::SimpleMath::Vector2 Line::GetVec2()
-{
-    return v2;
-}
-
-void Line::SetColor(DirectX::XMVECTOR inp_shapeColor)
-{
-    shapeColor = inp_shapeColor;
-}
-
-void Line::SetVec1(float v1x, float v1y)
-{
-    v1 = { v1x, v1y };
-}
-
-void Line::SetVec2(float v2x, float v2y)
-{
-    v2 = { v2x, v2y };
+     point2 = { v2x, v2y };
 }

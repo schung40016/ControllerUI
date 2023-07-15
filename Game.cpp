@@ -24,11 +24,41 @@ Game::~Game()
 
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
-{
+{   
+    tTitle = Text(Colors::Black, "ControllerUI");
+    tConnect = Text(Colors::Black, "Controller Connection: ");
+    tStatus = Text(Colors::Black, "Connected");
+
+    controller = Image(Colors::White, ".\\Images\\gamepad.png", 1.f);
+    leftTrigger = Image(Colors::White, ".\\Images\\LeftTrigger.png", 1.f);
+    rightTrigger = Image(Colors::White, ".\\Images\\RightTrigger.png", 1.f);
+
+    indA = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, 108.f, -78.f);
+    indB = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, 148.f, -120.f);
+    indX = Triangle(Colors::HotPink, controller,1.f, 0.f, 0.f, 68.f, -120.f);
+    indY = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, 108.f, -160.f);
+    indView = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, 0.f, -120.f);
+    indStart = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, -90.f, -120.f);
+    indStart = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, -90.f, -120.f);
+    indDPadUp = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, -123.f, -60.f);
+    indDPadDown = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, -123.f, 10.f);
+    indDPadLeft = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, -160.f, -25.f);
+    indDPadRight = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, -80.f, -25.f);
+    indLeftShoulder = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, -200.f, -220.f);
+    indRightShoulder = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, 100.f, -220.f);
+    indLeftTrigger = Triangle(Colors::HotPink, leftTrigger, 1.f, 0.f, 0.f, -50.f, -30.f);
+    indRightTrigger = Triangle(Colors::HotPink, rightTrigger, 1.f, 0.f, 0.f, -50.f, -30.f);
+    indLeftStick = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, -198.f, -120.f);
+    indRightStick = Triangle(Colors::HotPink, controller, 1.f, 0.f, 0.f, 32.f, -25.f);
+
+    leftStick = Line(Colors::HotPink, controller, -148.f, -78.f, 30.f);
+    rightStick = Line(Colors::HotPink, controller, 80.f, 15.f, 30.f);
+
     m_deviceResources->SetWindow(window, width, height);
 
     m_deviceResources->CreateDeviceResources();
     CreateDeviceDependentResources();
+
 
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
@@ -41,14 +71,6 @@ void Game::Initialize(HWND window, int width, int height)
     */
 
     auto size = m_deviceResources->GetOutputSize();
-
-    //controller = Image(Colors::White, 2.f, 2.f, ".\\Images\\gamepad.png", size);
-    //leftTrigger = Image(Colors::White, 7.f, 4.f, ".\\Images\\LeftTrigger.png", size);
-    //rightTrigger = Image(Colors::White, 1.17f, 4.f, ".\\Images\\RightTrigger.png", size);
-    leftStick = Line();
-    leftStick.SetColor(Colors::HotPink);
-    rightStick = Line();
-    rightStick.SetColor(Colors::HotPink);
 
     // Set up gamepad
     m_gamePad = std::make_unique<GamePad>();
@@ -144,41 +166,35 @@ void Game::Render()
     m_spriteBatch->Begin(commandList);
     // -- RENDER TEXT --
     // Prepare the text.
-    Vector2 titleOrigin = m_font->MeasureString(t_title) / 2.f;
-    Vector2 connectOrigin = m_font->MeasureString(t_connection) / 2.f;
+    tTitle.SetOrigin(m_font);
+    tConnect.SetOrigin(m_font);
+
+    tTitle.DrawText(m_font, m_spriteBatch);
+    tConnect.DrawText(m_font, m_spriteBatch);
 
     // Draws the font.
-    m_font->DrawString(m_spriteBatch.get(), t_title,
-        m_titlePos, textColor, 0.f, titleOrigin);
-
-    m_font->DrawString(m_spriteBatch.get(), t_connection,
-        m_connectPos, textColor, 0.f, titleOrigin);
 
     if (isConnected)
     {
-        m_font->DrawString(m_spriteBatch.get(), L"On",
-            m_statusPos, textColor, 0.f, titleOrigin);
+        tStatus.SetText("On");
     }
     else
     {
-        m_font->DrawString(m_spriteBatch.get(), L"Off",
-            m_statusPos, textColor, 0.f, titleOrigin);
+        tStatus.SetText("Off");
     }
+
+    tStatus.SetOrigin(m_font);
+    tStatus.DrawText(m_font, m_spriteBatch);
+
     //------------------
 
     // -- RENDER IMAGE --
-    m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(Descriptors::Controller),
-        GetTextureSize(m_controllerTexture.Get()),
-        m_controllerPos, nullptr, Colors::White, 0.f, m_controllerOrigin);
-
-    m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(Descriptors::LeftTrigger),
-        GetTextureSize(m_leftTriggerTexture.Get()),
-        m_leftTriggerPos, nullptr, Colors::White, 0.f, m_leftTriggerOrigin);
-
-    m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(Descriptors::RightTrigger),
-        GetTextureSize(m_rightTriggerTexture.Get()),
-        m_rightTriggerPos, nullptr, Colors::White, 0.f, m_rightTriggerOrigin);
+    controller.RenderImage(m_spriteBatch, m_resourceDescriptors, Descriptors::Controller);
+    leftTrigger.RenderImage(m_spriteBatch, m_resourceDescriptors, Descriptors::LeftTrigger);
+    rightTrigger.RenderImage(m_spriteBatch, m_resourceDescriptors, Descriptors::RightTrigger);
     // ------------------
+
+
     m_spriteBatch->End();
 
     // -- RENDER SHAPE --
@@ -196,8 +212,8 @@ void Game::Render()
 
     m_batch->Begin(commandList);
 
-    leftStick.SetVec1(m_controllerPos.x - 148.f, m_controllerPos.y - 78.f);
-    rightStick.SetVec1(m_controllerPos.x + 80.f, m_controllerPos.y + 15.f);
+    leftStick.SetPosition();
+    rightStick.SetPosition();
     leftStick.DrawStickOrientation(m_batch);
     rightStick.DrawStickOrientation(m_batch);
 
@@ -337,27 +353,11 @@ void Game::CreateDeviceDependentResources()
         m_resourceDescriptors->GetGpuHandle(Descriptors::MyFont));
     //----------------------
 
-    // ----- CONTROLLER IMAGE -----
-    DX::ThrowIfFailed(
-        CreateWICTextureFromFile(device, resourceUpload, L".\\Images\\gamepad.png",
-            m_controllerTexture.ReleaseAndGetAddressOf()));
-
-    CreateShaderResourceView(device, m_controllerTexture.Get(),
-        m_resourceDescriptors->GetCpuHandle(Descriptors::Controller));
-
-    DX::ThrowIfFailed(
-        CreateWICTextureFromFile(device, resourceUpload, L".\\Images\\LeftTrigger.png",
-            m_leftTriggerTexture.ReleaseAndGetAddressOf()));
-
-    CreateShaderResourceView(device, m_leftTriggerTexture.Get(),
-        m_resourceDescriptors->GetCpuHandle(Descriptors::LeftTrigger));
-
-    DX::ThrowIfFailed(
-        CreateWICTextureFromFile(device, resourceUpload, L".\\Images\\RightTrigger.png",
-            m_rightTriggerTexture.ReleaseAndGetAddressOf()));
-
-    CreateShaderResourceView(device, m_rightTriggerTexture.Get(),
-        m_resourceDescriptors->GetCpuHandle(Descriptors::RightTrigger));
+    // ----- PREPARE SPRITE -----
+        // Encapsulation != giving reference. - Charles 2023
+    controller.PrepareImageResources(device, resourceUpload, m_resourceDescriptors, Descriptors::Controller);
+    leftTrigger.PrepareImageResources(device, resourceUpload, m_resourceDescriptors, Descriptors::LeftTrigger);
+    rightTrigger.PrepareImageResources(device, resourceUpload, m_resourceDescriptors, Descriptors::RightTrigger);
     //-----------------------------
 
     // Draw Resources
@@ -368,15 +368,10 @@ void Game::CreateDeviceDependentResources()
     m_spriteBatch = std::make_unique<SpriteBatch>(device, resourceUpload, pd);
     // --------------
 
-    // SET CENTER
-    XMUINT2 controllerSize = GetTextureSize(m_controllerTexture.Get());
-    XMUINT2 leftTriggerSize = GetTextureSize(m_leftTriggerTexture.Get());
-    XMUINT2 rightTriggerSize = GetTextureSize(m_rightTriggerTexture.Get());
-
-    //controller.SetOrigin(controllerSize);
-    imageHelper.SetImagePivot(m_controllerOrigin, controllerSize);
-    imageHelper.SetImagePivot(m_leftTriggerOrigin, leftTriggerSize);
-    imageHelper.SetImagePivot(m_rightTriggerOrigin, rightTriggerSize);
+    // SET IMAGE PIVOT
+    controller.SetImageOrigin();
+    leftTrigger.SetImageOrigin();
+    rightTrigger.SetImageOrigin();
     // ------------------
 
     auto uploadResourcesFinished = resourceUpload.End(
@@ -385,7 +380,7 @@ void Game::CreateDeviceDependentResources()
     // -- Prepare SHAPE/LINE Render --
     m_batch = std::make_unique<PrimitiveBatch<VertexType>>(device);
 
-    EffectPipelineStateDescription ed(
+    EffectPipelineStateDescription ed( 
         &VertexType::InputLayout,
         CommonStates::Opaque,
         CommonStates::DepthDefault,
@@ -416,19 +411,20 @@ void Game::CreateWindowSizeDependentResources()
 
     auto size = m_deviceResources->GetOutputSize();
 
-    std::cout << size.right << ", " << size.bottom << std::endl;
+    float horizontal = float(size.right);
+    float vertical = float(size.bottom);
 
-    imageHelper.SetImagePosition(m_titlePos, size, 2.f, 10.f);
-    imageHelper.SetImagePosition(m_connectPos, size, 4.f, 1.1f);
-    imageHelper.SetImagePosition(m_statusPos, size, 1.f, 1.1f);
-    imageHelper.SetImagePosition(m_controllerPos, size, 2.f, 2.f);
-    imageHelper.SetImagePosition(m_leftTriggerPos, size, 7.f, 4.f);
-    imageHelper.SetImagePosition(m_rightTriggerPos, size, 1.17f, 4.f);
+    tTitle.SetPosition((horizontal / 2.f), (vertical / 10.f));
+    tConnect.SetPosition((horizontal / 2.5f), (vertical / 1.1f));
+    tStatus.SetPosition((horizontal / 1.2f), (vertical / 1.1f));
 
+    controller.SetPosition((horizontal / 2.f), (vertical / 2.f));
+    leftTrigger.SetPosition((horizontal / 7.f), (vertical / 4.f));
+    rightTrigger.SetPosition((horizontal /1.17f), (vertical / 4.f));
 
     Matrix proj = Matrix::CreateScale(2.f / float(size.right), -2.f / float(size.bottom), 1.f) * Matrix::CreateTranslation(-1.f, 1.f, 0.f);
 
-    m_effect->SetProjection(proj);
+    m_effect->SetProjection( proj);
     m_lineEffect->SetProjection(proj);
 }
 
@@ -453,11 +449,11 @@ void Game::ResetAssets()
 {
     m_spriteBatch.reset();
     m_font.reset();
-    m_controllerTexture.Reset();
 
+    controller.ResetTexture();
+    leftTrigger.ResetTexture();
+    rightTrigger.ResetTexture();
 
-    m_leftTriggerTexture.Reset();
-    m_rightTriggerTexture.Reset();
     m_resourceDescriptors.reset();
     m_effect.reset();
     m_lineEffect.reset();
@@ -466,118 +462,94 @@ void Game::ResetAssets()
 
 void Game::SetTriggerPosition(DirectX::GamePad::State pad)
 {
-    leftStick.SetVec2(pad.thumbSticks.leftX, pad.thumbSticks.leftY);
-    rightStick.SetVec2(pad.thumbSticks.rightX, pad.thumbSticks.rightY);
+    leftStick.SetPoint2(pad.thumbSticks.leftX, pad.thumbSticks.leftY);
+    rightStick.SetPoint2(pad.thumbSticks.rightX, pad.thumbSticks.rightY);
 }
 
 void Game::CheckInputs()
 {
     // All the triangle's position have to be relative to the image positions.
+    DirectX::SimpleMath::Vector2 pos = controller.GetPosition();
 
     if (indA.GetDisplay())
     {
-        indA.SetPos(m_controllerPos.x + 108.f, m_controllerPos.y - 78.f);
+        indA.SetPosition();
         indA.DrawTriangle(m_batch);
     }
     if (indB.GetDisplay())
     {
-        indB.SetPos(m_controllerPos.x + 148.f, m_controllerPos.y - 120.f);
+        indB.SetPosition();
         indB.DrawTriangle(m_batch);
     }
     if (indX.GetDisplay())
     {
-        indX.SetPos(m_controllerPos.x + 68.f, m_controllerPos.y - 120.f);
+        indX.SetPosition();
         indX.DrawTriangle(m_batch);
     }
     if (indY.GetDisplay())
     {
-        indY.SetPos(m_controllerPos.x + 108.f, m_controllerPos.y - 160.f);
+        indY.SetPosition();
         indY.DrawTriangle(m_batch);
     }
     if (indStart.GetDisplay())
     {
-        indStart.SetPos(m_controllerPos.x + 0.f, m_controllerPos.y - 120.f);
+        indStart.SetPosition();
         indStart.DrawTriangle(m_batch);
     }
     if (indView.GetDisplay())
     {
-        indView.SetPos(m_controllerPos.x - 90.f, m_controllerPos.y - 120.f);
+        indView.SetPosition();
         indView.DrawTriangle(m_batch);
     }
     if (indDPadUp.GetDisplay())
     {
-        indDPadUp.SetPos(m_controllerPos.x - 123.f, m_controllerPos.y - 60.f);
+        indDPadUp.SetPosition();
         indDPadUp.DrawTriangle(m_batch);
     }
     if (indDPadDown.GetDisplay())
     {
-        indDPadDown.SetPos(m_controllerPos.x - 123.f, m_controllerPos.y + 10.f);
+        indDPadDown.SetPosition();
         indDPadDown.DrawTriangle(m_batch);
     }
     if (indDPadLeft.GetDisplay())
     {
-        indDPadLeft.SetPos(m_controllerPos.x - 160.f, m_controllerPos.y - 25.f);
+        indDPadLeft.SetPosition();
         indDPadLeft.DrawTriangle(m_batch);
     }
     if (indDPadRight.GetDisplay())
     {
-        indDPadRight.SetPos(m_controllerPos.x - 80.f, m_controllerPos.y - 25.f);
+        indDPadRight.SetPosition();
         indDPadRight.DrawTriangle(m_batch);
     }
     if (indLeftShoulder.GetDisplay())
     {
-        indLeftShoulder.SetPos(m_controllerPos.x - 200.f, m_controllerPos.y - 220.f);
+        indLeftShoulder.SetPosition();
         indLeftShoulder.DrawTriangle(m_batch);
     }
     if (indRightShoulder.GetDisplay())
     {
-        indRightShoulder.SetPos(m_controllerPos.x + 100.f, m_controllerPos.y - 220.f);
+        indRightShoulder.SetPosition();
         indRightShoulder.DrawTriangle(m_batch);
     }
     if (indLeftTrigger.GetDisplay())
     {     
-        indLeftTrigger.SetPos(m_leftTriggerPos.x - 50.f, m_leftTriggerPos.y - 30.f);
+        indLeftTrigger.SetPosition();
         indLeftTrigger.DrawTriangle(m_batch);
     }
     if (indRightTrigger.GetDisplay())
     {
-        indRightTrigger.SetPos(m_rightTriggerPos.x - 50.f, m_rightTriggerPos.y - 30.f);
+        indRightTrigger.SetPosition();
         indRightTrigger.DrawTriangle(m_batch);
     }
     if (indLeftStick.GetDisplay())
     {
-        indLeftStick.SetPos(m_controllerPos.x - 198.f, m_controllerPos.y - 120.f);
+        indLeftStick.SetPosition();
         indLeftStick.DrawTriangle(m_batch);
     }
     if (indRightStick.GetDisplay())
     {
-        indRightStick.SetPos(m_controllerPos.x + 32.f, m_controllerPos.y - 25.f);
+        indRightStick.SetPosition();
         indRightStick.DrawTriangle(m_batch);
     }
 }
 #pragma endregion
-
-/*
-Font:
-const wchar* text
-Vector2 pos
-color
-
-Sprite:
-Vector2 pos
-Vector2 origin
-color
-XMUIINT32 size
-texture
-
-Triangle:
-color
-v1 
-v2
-v3
-
-Line
-color
-v1 // based on gamepad input.
-v2 (origin)
-*/

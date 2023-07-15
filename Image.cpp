@@ -1,36 +1,57 @@
+#pragma once
+
 #include "pch.h"
 #include "Image.h"
 
 Image::Image()
 {}
 
-Image::Image(DirectX::XMVECTOR inp_color, float x, float y, std::string inp_imgLocation, RECT size)
-	: shapeColor(inp_color), imgLocation(inp_imgLocation)
+Image::Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, float inp_scale)
+	: imgLocation(inp_imgLocation)
 {
-	SetPosition(size, x, y);
+	m_color = inp_color;
+	m_scale = inp_scale;
+}
+
+Image::Image(DirectX::XMVECTOR inp_color, IDirXObject& inp_parentObj, std::string inp_imgLocation, float inp_scale)
+	: imgLocation(inp_imgLocation)
+{
+	m_color = inp_color;
+	this->m_parentObj = &inp_parentObj;
+	m_scale = inp_scale;
+}
+
+void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors,
+	int imageID)
+{
+	m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(imageID), GetTextureSize(m_texture.Get()),
+		m_position, nullptr, Colors::White, 0.f, m_origin, m_scale);
+}
+
+void Image::PrepareImageResources(ID3D12Device* device, DirectX::ResourceUploadBatch& resourceUpload, 
+	std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors, int imageID)
+{
+	DX::ThrowIfFailed(
+		CreateWICTextureFromFile(device, resourceUpload, GetWStringImgLocation().c_str(),
+			m_texture.ReleaseAndGetAddressOf()));
+	// Encapsulation != giving reference. 
+
+	CreateShaderResourceView(device, m_texture.Get(),
+		m_resourceDescriptors->GetCpuHandle(imageID));
+}
+
+void Image::ResetTexture()
+{
+	m_texture.Reset();
 }
 
 // Getters & Setters
-void Image::SetPosition(RECT size, float x, float y)
+void Image::SetImageOrigin()
 {
-	m_pos.x = float(size.right) / x;
-	m_pos.y = float(size.bottom) / y;
-}
+	XMUINT2 imageSize = GetTextureSize(m_texture.Get());
 
-void Image::SetOrigin(XMUINT2 image)
-{
-	m_origin.x = float(image.x / 2);
-	m_origin.y = float(image.y / 2);
-}
-
-void Image::SetColor(DirectX::XMVECTOR inp_color)
-{
-	shapeColor = inp_color;
-}
-
-DirectX::SimpleMath::Vector2 Image::GetPosition()
-{
-	return m_pos;
+	m_origin.x = float(imageSize.x / 2);
+	m_origin.y = float(imageSize.y / 2);
 }
 
 DirectX::SimpleMath::Vector2 Image::GetOrigin()
@@ -38,12 +59,7 @@ DirectX::SimpleMath::Vector2 Image::GetOrigin()
 	return m_origin;
 }
 
-DirectX::XMVECTOR Image::GetColor()
-{
-	return shapeColor;
-}
-
-Microsoft::WRL::ComPtr<ID3D12Resource> Image::GetTexture()
+Microsoft::WRL::ComPtr<ID3D12Resource>& Image::GetTexture()
 {
 	return m_texture;
 }
@@ -53,8 +69,7 @@ std::string Image::GetImgLocation()
 	return imgLocation;
 }
 
-const wchar_t* Image::GetWCharTImgLocation()
+std::wstring Image::GetWStringImgLocation()
 {
-	std::wstring widestr = std::wstring(imgLocation.begin(), imgLocation.end());
-	return widestr.c_str();
+	return std::wstring(imgLocation.begin(), imgLocation.end());
 }

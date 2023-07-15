@@ -7,10 +7,10 @@
 #include "pch.h"
 #include "DeviceResources.h"
 #include "StepTimer.h"
-#include "ImageObjectHelper.h"
 #include "Triangle.h"
 #include "Image.h"
 #include "Line.h"
+#include "Text.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -91,8 +91,6 @@ private:
     // std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
     std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 
-    ImageObjectHelper imageHelper;
-
     // -- TEXT Attributes --
     const wchar_t* t_title = L"Controller UI";
     DirectX::SimpleMath::Vector2 m_titlePos;
@@ -104,6 +102,10 @@ private:
     DirectX::XMVECTOR textColor = Colors::Black;
     float textXRatio = 2.f;
     float textYRatio = 10.f;
+
+    Text tTitle;
+    Text tConnect;
+    Text tStatus;
     //----------------------
 
     // -- IMAGE Attributes --
@@ -113,24 +115,6 @@ private:
     std::unique_ptr<DirectX::DescriptorHeap> m_resourceDescriptors;
     std::unique_ptr<DirectX::SpriteFont> m_font;
     std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-
-    // Prepare the drawing of png.
-    Microsoft::WRL::ComPtr<ID3D12Resource> m_controllerTexture;
-    Microsoft::WRL::ComPtr<ID3D12Resource> m_leftTriggerTexture;
-    Microsoft::WRL::ComPtr<ID3D12Resource> m_rightTriggerTexture;
-
-    // Controller Image Render 
-    DirectX::SimpleMath::Vector2 m_controllerPos;
-    DirectX::SimpleMath::Vector2 m_controllerOrigin;
-    DirectX::SimpleMath::Vector2 m_leftTriggerPos;
-    DirectX::SimpleMath::Vector2 m_leftTriggerOrigin;
-    DirectX::SimpleMath::Vector2 m_rightTriggerPos;
-    DirectX::SimpleMath::Vector2 m_rightTriggerOrigin;
-    // ----------------------
-
-    Image controller;
-    Image leftTrigger;
-    Image rightTrigger;
 
     enum Descriptors
     {
@@ -145,6 +129,10 @@ private:
     std::unique_ptr<DirectX::GamePad> m_gamePad;
     DirectX::GamePad::ButtonStateTracker m_buttons;
     // ------------------------
+
+    Image controller;
+    Image leftTrigger;
+    Image rightTrigger;
 
     bool isConnected = false;
 
