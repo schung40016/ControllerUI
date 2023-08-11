@@ -91,25 +91,13 @@ private:
     // std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
     std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 
+    GameObject controller;
+
     // -- TEXT Attributes --
-    const wchar_t* t_title = L"Controller UI";
-    DirectX::SimpleMath::Vector2 m_titlePos;
-
-    const wchar_t* t_connection = L"Controller Connection: ";
-    DirectX::SimpleMath::Vector2 m_connectPos;
-    DirectX::SimpleMath::Vector2 m_statusPos;
-
-    DirectX::XMVECTOR textColor = Colors::Black;
-    float textXRatio = 2.f;
-    float textYRatio = 10.f;
-
     Text tTitle;
     Text tConnect;
     Text tStatus;
     //----------------------
-
-    // -- IMAGE Attributes --
-    //
 
     // Prepares bitfont for sprite texts.
     std::unique_ptr<DirectX::DescriptorHeap> m_resourceDescriptors;
@@ -130,28 +118,13 @@ private:
     DirectX::GamePad::ButtonStateTracker m_buttons;
     // ------------------------
 
-    Image controller;
+    Image controllerImg;
     Image leftTrigger;
     Image rightTrigger;
 
     bool isConnected = false;
 
-    Triangle indA;
-    Triangle indB;
-    Triangle indX;
-    Triangle indY;
-    Triangle indView;
-    Triangle indStart;
-    Triangle indDPadUp;
-    Triangle indDPadDown;
-    Triangle indDPadLeft;
-    Triangle indDPadRight;
-    Triangle indLeftShoulder;
-    Triangle indRightShoulder;
-    Triangle indLeftTrigger;
-    Triangle indRightTrigger;
-    Triangle indLeftStick;
-    Triangle indRightStick;
+    std::vector<Triangle> buttonIndBank;
 
     Line leftStick;
     Line rightStick;

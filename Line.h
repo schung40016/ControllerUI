@@ -1,12 +1,12 @@
 #pragma once
 
 #include "./pch.h"
-#include "IDirXObject.h"
+#include "UIObject.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-class Line : public IDirXObject
+class Line : public UIObject
 {
 private:
 	DirectX::XMVECTOR shapeColor = DirectX::Colors::Black;
@@ -15,7 +15,7 @@ private:
 public:
 	Line();
 
-	Line(DirectX::XMVECTOR inp_shapeColor, IDirXObject& inp_parentObj, float inp_offsetX, float inp_offsetY, float inp_scale);
+	Line(DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale);
 
 	Line(DirectX::XMVECTOR inp_shapeColor, float v1x, float v1y, float v2x, float v2y, float inp_scale);
 

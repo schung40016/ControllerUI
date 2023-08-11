@@ -13,16 +13,17 @@ Text::Text(DirectX::XMVECTOR inp_color, std::string inp_text)
 	m_color = inp_color;
 }
 
-Text::Text(DirectX::XMVECTOR inp_color, IDirXObject& inp_parentObj, std::string inp_text)
+Text::Text(DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y)
 	: text(inp_text)
 {
 	m_color = inp_color;
 	m_parentObj = &inp_parentObj;
+	m_position = { inp_x, inp_y };
 }
 
 void Text::DrawText(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch)
 {
-	m_font->DrawString(m_spriteBatch.get(), GetWStringText().c_str(), m_position, m_color, 0.f, m_origin, m_scale);
+	m_font->DrawString(m_spriteBatch.get(), GetWStringText().c_str(), GetPosition(), m_color, 0.f, m_origin, GetScale());
 }
 
 // Getters & Setters

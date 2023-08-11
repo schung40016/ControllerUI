@@ -1,11 +1,11 @@
 #pragma once
 
 #include "./pch.h"
-#include "IDirXObject.h"
+#include "UIObject.h"
 
 using namespace DirectX;
 
-class Image : public IDirXObject
+class Image : public UIObject
 {
 private:
 	DirectX::SimpleMath::Vector2 m_origin = {0, 0};
@@ -16,9 +16,9 @@ public:
 
 	Image();
 
-	Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, float inp_scale);
+	Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale);
 
-	Image(DirectX::XMVECTOR inp_color, IDirXObject& inp_parentObj, std::string inp_imgLocation, float inp_scale);
+	Image(DirectX::XMVECTOR inp_color, UIObject& inp_parentObj, std::string inp_imgLocation, float inp_scale);
 
 	void RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors, int imageID);
 

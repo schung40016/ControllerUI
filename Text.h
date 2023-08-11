@@ -1,9 +1,9 @@
 #pragma once
 
 #include "./pch.h"
-#include "IDirXObject.h"
+#include "UIObject.h"
 
-class Text : public IDirXObject
+class Text : public UIObject
 {
 private:
 	std::string text = "";
@@ -14,7 +14,7 @@ public:
 	
 	Text(DirectX::XMVECTOR inp_color, std::string inp_text);
 
-	Text(DirectX::XMVECTOR inp_color, IDirXObject& inp_parentObj, std::string inp_text);
+	Text(DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y);
 
 	void DrawText(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch);
 

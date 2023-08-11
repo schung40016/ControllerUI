@@ -6,14 +6,16 @@
 Image::Image()
 {}
 
-Image::Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, float inp_scale)
-	: imgLocation(inp_imgLocation)
+Image::Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale)
+	: imgLocation(inp_imgLocation) 
 {
 	m_color = inp_color;
+	m_parentObj = &inp_parentObj;
+	m_position = {inp_x, inp_y};
 	m_scale = inp_scale;
 }
 
-Image::Image(DirectX::XMVECTOR inp_color, IDirXObject& inp_parentObj, std::string inp_imgLocation, float inp_scale)
+Image::Image(DirectX::XMVECTOR inp_color, UIObject& inp_parentObj, std::string inp_imgLocation, float inp_scale)
 	: imgLocation(inp_imgLocation)
 {
 	m_color = inp_color;
@@ -25,7 +27,7 @@ void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, st
 	int imageID)
 {
 	m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(imageID), GetTextureSize(m_texture.Get()),
-		m_position, nullptr, Colors::White, 0.f, m_origin, m_scale);
+		GetPosition(), nullptr, Colors::White, 0.f, m_origin, GetScale());
 }
 
 void Image::PrepareImageResources(ID3D12Device* device, DirectX::ResourceUploadBatch& resourceUpload, 

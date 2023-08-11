@@ -27,9 +27,6 @@
     <ClInclude Include="Triangle.h">
       <Filter>DirectXObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>DirectXObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Image.h">
       <Filter>DirectXObjects</Filter>
     </ClInclude>
@@ -39,7 +36,10 @@
     <ClInclude Include="Text.h">
       <Filter>DirectXObjects</Filter>
     </ClInclude>
-    <ClInclude Include="IDirXObject.h">
+    <ClInclude Include="UIObject.h">
+      <Filter>DirectXObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
       <Filter>DirectXObjects</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,7 +62,10 @@
     <ClCompile Include="Text.cpp">
       <Filter>DirectXObjects</Filter>
     </ClCompile>
-    <ClCompile Include="IDirXObject.cpp">
+    <ClCompile Include="UIObject.cpp">
+      <Filter>DirectXObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
       <Filter>DirectXObjects</Filter>
     </ClCompile>
   </ItemGroup>
