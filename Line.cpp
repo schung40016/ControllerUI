@@ -8,23 +8,23 @@ Line::Line()
 Line::Line(DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale)
     : shapeColor(inp_shapeColor)
 {
-    m_parentObj = &inp_parentObj;
-    m_scale = inp_scale;
-    m_position.x = inp_x;
-    m_position.y = inp_y;
+    gObj_parentObj = &inp_parentObj;
+    gObj_scale = inp_scale;
+    gObj_position.x = inp_x;
+    gObj_position.y = inp_y;
 }
 
 Line::Line(DirectX::XMVECTOR inp_shapeColor, float v1x, float v1y, float v2x, float v2y, float inp_scale)
 	: shapeColor(inp_shapeColor)
 {
-    m_position = { v1x, v1y };
+    gObj_position = { v1x, v1y };
     point2 = { v2x, v2y };
-    m_scale = inp_scale;
+    gObj_scale = inp_scale;
 }
 
-void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch)
+void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch) const
 {
-    Vector2 pos = GetPosition();
+    Vector2 pos = { gObj_position.x, gObj_position.y };
     float currScale = GetScale();
     float calcX = point2.x * lineSizeMultiplier * currScale + pos.x;
     float calcY = point2.y * lineSizeMultiplier * currScale * -1 + pos.y;

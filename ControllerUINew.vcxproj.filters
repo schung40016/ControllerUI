@@ -11,6 +11,9 @@
     <Filter Include="DirectXObjects">
       <UniqueIdentifier>{16158fd4-c95f-4b4f-bfd7-e99408b0dad0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectXObjects\DirectXUtility">
+      <UniqueIdentifier>{b301beb3-1ecd-46f1-ae5c-1f65230d0431}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -42,6 +45,12 @@
     <ClInclude Include="GameObject.h">
       <Filter>DirectXObjects</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXUtility.h">
+      <Filter>DirectXObjects\DirectXUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>DirectXObjects\DirectXUtility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -67,6 +76,15 @@
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>DirectXObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXUtility.cpp">
+      <Filter>DirectXObjects\DirectXUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="EnumData.h">
+      <Filter>DirectXObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>DirectXObjects\DirectXUtility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

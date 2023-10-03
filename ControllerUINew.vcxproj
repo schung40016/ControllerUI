@@ -200,7 +200,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="DirectXUtility.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Image.h" />
@@ -212,8 +214,11 @@
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DirectXUtility.cpp" />
+    <ClCompile Include="EnumData.h" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="UIObject.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Line.cpp" />

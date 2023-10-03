@@ -3,35 +3,27 @@
 #include "pch.h"
 #include "Image.h"
 
-Image::Image()
-{}
+Image::Image() {
 
-Image::Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale)
-	: imgLocation(inp_imgLocation) 
-{
-	m_color = inp_color;
-	m_parentObj = &inp_parentObj;
-	m_position = {inp_x, inp_y};
-	m_scale = inp_scale;
 }
 
-Image::Image(DirectX::XMVECTOR inp_color, UIObject& inp_parentObj, std::string inp_imgLocation, float inp_scale)
-	: imgLocation(inp_imgLocation)
+Image::Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale)
+	: imgLocation(inp_imgLocation), currEnum(inp_enum)
 {
-	m_color = inp_color;
-	this->m_parentObj = &inp_parentObj;
-	m_scale = inp_scale;
+	uiObj_color = inp_color;
+	gObj_parentObj = &inp_parentObj;
+	gObj_position = {inp_x, inp_y};
+	gObj_scale = inp_scale;
 }
 
-void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors,
-	int imageID)
+void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors)
 {
-	m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(imageID), GetTextureSize(m_texture.Get()),
+	m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
 		GetPosition(), nullptr, Colors::White, 0.f, m_origin, GetScale());
 }
 
 void Image::PrepareImageResources(ID3D12Device* device, DirectX::ResourceUploadBatch& resourceUpload, 
-	std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors, int imageID)
+	std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors)
 {
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, resourceUpload, GetWStringImgLocation().c_str(),
@@ -39,7 +31,7 @@ void Image::PrepareImageResources(ID3D12Device* device, DirectX::ResourceUploadB
 	// Encapsulation != giving reference. 
 
 	CreateShaderResourceView(device, m_texture.Get(),
-		m_resourceDescriptors->GetCpuHandle(imageID));
+		m_resourceDescriptors->GetCpuHandle(currEnum));
 }
 
 void Image::ResetTexture()
@@ -74,4 +66,9 @@ std::string Image::GetImgLocation()
 std::wstring Image::GetWStringImgLocation()
 {
 	return std::wstring(imgLocation.begin(), imgLocation.end());
+}
+
+EnumData::Descriptors Image::GetImgEnum()
+{
+	return currEnum;
 }

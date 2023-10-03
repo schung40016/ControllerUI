@@ -3,57 +3,56 @@
 
 GameObject::GameObject()
 {
-
 }
 
 GameObject::GameObject(float inp_x, float inp_y, float inp_size)
 {
-	m_position = { inp_x, inp_y };
-	m_originalSize = inp_size;
+	gObj_position = { inp_x, inp_y };
+	gObj_originalSize = inp_size;
 }
 
-DirectX::SimpleMath::Vector2 GameObject::GetPosition()
+DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 {
-	if (m_parentObj)
+	if (gObj_parentObj)
 	{
-		DirectX::SimpleMath::Vector2 temp = { (m_position.x * GetScale()) + m_parentObj->GetPosition().x, (m_position.y * GetScale()) + m_parentObj->GetPosition().y };
+		DirectX::SimpleMath::Vector2 temp = { (gObj_position.x * GetScale()) + gObj_parentObj->GetPosition().x, (gObj_position.y * GetScale()) + gObj_parentObj->GetPosition().y };
 		return temp;
 	}
 
-	return m_position;
+	return gObj_position;
 }
 
-float GameObject::GetScale()
+float GameObject::GetScale() const
 {
-	if (m_parentObj)
+	if (gObj_parentObj)
 	{
-		return m_parentObj->GetScale();
+		return gObj_parentObj->GetScale();
 	}
 
-	return m_scale;
+	return gObj_scale;
 }
 
-bool GameObject::GetDisplay()
+bool GameObject::GetDisplay() const 
 {
-	return m_display;
+	return gObj_display;
 }
 
 void GameObject::SetPosition(float inp_x, float inp_y)
 {
-	m_position = { inp_x, inp_y };
+	gObj_position = { inp_x, inp_y };
 }
 
 void GameObject::SetScale(float inp_size)
 {
-	m_scale = inp_size;
+	gObj_scale = inp_size;
 }
 
 void GameObject::CalcScale(float inp_size)
 {
-	m_scale = inp_size / m_originalSize;
+	gObj_scale = inp_size / gObj_originalSize;
 }
 
 void GameObject::SetDisplay(bool inp_display)
 {
-	m_display = inp_display;
+	gObj_display = inp_display;
 }

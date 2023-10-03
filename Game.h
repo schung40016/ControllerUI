@@ -7,10 +7,13 @@
 #include "pch.h"
 #include "DeviceResources.h"
 #include "StepTimer.h"
+#include "GameObject.h"
 #include "Triangle.h"
 #include "Image.h"
 #include "Line.h"
 #include "Text.h"
+#include "DirectXUtility.h"
+#include "GameObjectManager.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -59,12 +62,6 @@ public:
 
     // Properties
     void GetDefaultSize( int& width, int& height ) const noexcept;
-    
-    // For Drawing triangles.
-    void DrawTriangle(float x, float y);
-
-    // Draw Line.
-    void DrawStickOrientation(float ox, float oy, float p1, float p2);
 
 private:
 
@@ -77,8 +74,6 @@ private:
     void CreateWindowSizeDependentResources();
 
     // Custom functions:
-    void CheckInputs();
-    void ResetAssets();
     void SetTriggerPosition(DirectX::GamePad::State pad);
 
     // Device resources.
@@ -87,53 +82,15 @@ private:
     // Rendering loop timer.
     DX::StepTimer                               m_timer;
 
-    // If using the DirectX Tool Kit for DX12, uncomment this line:
-    // std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
-    std::unique_ptr<DirectX::GraphicsMemory> m_graphicsMemory;
 
-    GameObject controller;
-
-    // -- TEXT Attributes --
-    Text tTitle;
-    Text tConnect;
-    Text tStatus;
-    //----------------------
-
-    // Prepares bitfont for sprite texts.
-    std::unique_ptr<DirectX::DescriptorHeap> m_resourceDescriptors;
-    std::unique_ptr<DirectX::SpriteFont> m_font;
-    std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-
-    enum Descriptors
-    {
-        MyFont,
-        Controller,
-        LeftTrigger,
-        RightTrigger,
-        Count
-    };
+    // Instanstiate custom object.
+    DirectXUtility directXUtility;
 
     // -- GAMEPAD Attributes --
     std::unique_ptr<DirectX::GamePad> m_gamePad;
     DirectX::GamePad::ButtonStateTracker m_buttons;
     // ------------------------
 
-    Image controllerImg;
-    Image leftTrigger;
-    Image rightTrigger;
-
-    bool isConnected = false;
-
-    std::vector<Triangle> buttonIndBank;
-
-    Line leftStick;
-    Line rightStick;
-
-    // -- SHAPE Attributes --
-    using VertexType = DirectX::VertexPositionColor;
-
-    std::unique_ptr<DirectX::BasicEffect> m_effect;
-    std::unique_ptr<DirectX::BasicEffect> m_lineEffect;
-    std::unique_ptr<DirectX::PrimitiveBatch<VertexType>> m_batch;
-    // ----------------------
+    // Keeps track of our resources.
+    GameObjectManager resourceManager;
 };

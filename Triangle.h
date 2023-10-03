@@ -17,10 +17,7 @@ public:
 	Triangle(DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float input_scale, float inp_x, float inp_y);
 
 	// Draw Triangle.
-	void Draw(const std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& inp_batch);
-
-	// Set Color.
-	void SetColor(const DirectX::XMVECTOR& inp_color);
+	void Draw(const std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& inp_batch) const;
 
 	~Triangle();
 };

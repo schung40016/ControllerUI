@@ -1,34 +1,34 @@
 #include "pch.h"
 #include "UIObject.h"
 
-GameObject* UIObject::GetParentObj()
+std::shared_ptr<GameObject> UIObject::GetParentObj()
 {
-	return this->m_parentObj;
+	return std::shared_ptr<GameObject>(gObj_parentObj);
 }
 
 DirectX::XMVECTOR UIObject::GetColor()
 {
-	return m_color;
+	return uiObj_color;
 }
 
-float UIObject::GetScale()
+float UIObject::GetScale() const 
 {
-	if (m_parentObj)
+	if (gObj_parentObj)
 	{
-		return m_parentObj->GetScale();
+		return gObj_parentObj->GetScale();
 	}
 	else
 	{
-		return m_scale;
+		return gObj_scale;
 	}
 }
 
 void UIObject::SetParentObj(GameObject& inp_UIObject)
 {
-	this->m_parentObj = &inp_UIObject;
+	this->gObj_parentObj = &inp_UIObject;
 }
 
 void UIObject::SetColor(DirectX::XMVECTOR inp_color)
 {
-	m_color = inp_color;
+	uiObj_color = inp_color;
 }

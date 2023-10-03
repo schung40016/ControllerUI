@@ -29,45 +29,15 @@ void Game::Initialize(HWND window, int width, int height)
 
     auto size = m_deviceResources->GetOutputSize();
 
+    directXUtility = DirectXUtility();
+
     float horizontal = float(size.right);
     float vertical = float(size.bottom);
 
-    controller = GameObject((horizontal / 2.f), (vertical / 2.f), std::min(horizontal, vertical));
-
-    tTitle = Text(Colors::Black, "ControllerUI", controller, 0, -250.f);
-    tConnect = Text(Colors::Black, "Controller Connection: ", controller, -50.f, 250.f);
-    tStatus = Text(Colors::Black, "Connected", controller, 300.f, 250.f);
-
-    // Create a higher tier object to act as the parent for all these objects.
-    controllerImg = Image(Colors::White, ".\\Images\\gamepad.png", controller, 0.f, 0.f, 1.f);
-    leftTrigger = Image(Colors::White, ".\\Images\\LeftTrigger.png", controller, -290.f, -140.f, 1.f);
-    rightTrigger = Image(Colors::White, ".\\Images\\RightTrigger.png", controller, 290.f, -140.f, 1.f);
-
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, 108.f, -78.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, 148.f, -120.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, 68.f, -120.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, 108.f, -160.f));
-
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, 0.f, -120.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, -90.f, -120.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, -123.f, -60.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, -123.f, 10.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, -160.f, -25.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, -80.f, -25.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, -200.f, -220.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, 100.f, -220.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, leftTrigger, 1.f, -50.f, -30.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, rightTrigger, 1.f, -50.f, -30.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, -198.f, -120.f));
-    buttonIndBank.push_back(Triangle(Colors::HotPink, controllerImg, 1.f, 32.f, -25.f));
-
-    leftStick = Line(Colors::HotPink, controllerImg, -148.f, -78.f, 1.f);
-    rightStick = Line(Colors::HotPink, controllerImg, 80.f, 15.f, 1.f);
-
+    resourceManager = GameObjectManager(horizontal, vertical);
 
     m_deviceResources->CreateDeviceResources();
     CreateDeviceDependentResources();
-
 
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
@@ -111,31 +81,33 @@ void Game::Update(DX::StepTimer const& timer)
     {
         m_buttons.Update(pad);
 
-        isConnected = pad.IsConnected() ? true : false;
+        directXUtility.SetControllerConnected(pad.IsConnected());
 
-        buttonIndBank[0].SetDisplay(pad.IsAPressed());
-        buttonIndBank[1].SetDisplay(pad.IsBPressed());
-        buttonIndBank[2].SetDisplay(pad.IsXPressed());
-        buttonIndBank[3].SetDisplay(pad.IsYPressed());
-        buttonIndBank[4].SetDisplay(pad.IsStartPressed());
-        buttonIndBank[5].SetDisplay(pad.IsViewPressed());
+        std::unordered_map<std::string, Triangle>& triangles = resourceManager.GetTriObjBank();
+
+        triangles["A"].SetDisplay(pad.IsAPressed());
+        triangles["B"].SetDisplay(pad.IsBPressed());
+        triangles["X"].SetDisplay(pad.IsXPressed());
+        triangles["Y"].SetDisplay(pad.IsYPressed());
+        triangles["Start"].SetDisplay(pad.IsStartPressed());
+        triangles["View"].SetDisplay(pad.IsViewPressed());
 
         // Dpad
-        buttonIndBank[6].SetDisplay(pad.IsDPadUpPressed());
-        buttonIndBank[7].SetDisplay(pad.IsDPadDownPressed());
-        buttonIndBank[8].SetDisplay(pad.IsDPadLeftPressed());
-        buttonIndBank[9].SetDisplay(pad.IsDPadRightPressed());
+        triangles["DPadUp"].SetDisplay(pad.IsDPadUpPressed());
+        triangles["DPadDown"].SetDisplay(pad.IsDPadDownPressed());
+        triangles["DPadLeft"].SetDisplay(pad.IsDPadLeftPressed());
+        triangles["DPadRight"].SetDisplay(pad.IsDPadRightPressed());
 
         // Front Controller
-        buttonIndBank[10].SetDisplay(pad.IsLeftShoulderPressed());
-        buttonIndBank[11].SetDisplay(pad.IsRightShoulderPressed());
-        buttonIndBank[12].SetDisplay(pad.IsLeftTriggerPressed());
-        buttonIndBank[13].SetDisplay(pad.IsRightTriggerPressed());
+        triangles["LeftShoulder"].SetDisplay(pad.IsLeftShoulderPressed());
+        triangles["RightShoulder"].SetDisplay(pad.IsRightShoulderPressed());
+        triangles["LeftTrigger"].SetDisplay(pad.IsLeftTriggerPressed());
+        triangles["RightTrigger"].SetDisplay(pad.IsRightTriggerPressed());
 
         // Sticks
         SetTriggerPosition(pad);
-        buttonIndBank[14].SetDisplay(pad.IsLeftStickPressed());
-        buttonIndBank[15].SetDisplay(pad.IsRightStickPressed());
+        triangles["LeftStick"].SetDisplay(pad.IsLeftStickPressed());
+        triangles["RightStick"].SetDisplay(pad.IsRightStickPressed());
     }
     else
     {
@@ -160,75 +132,21 @@ void Game::Render()
 
     // Prepare the command list to render a new frame.
     m_deviceResources->Prepare();
-    Clear();
+    directXUtility.CleanScreen(m_deviceResources);
 
-    auto commandList = m_deviceResources->GetCommandList();
-    PIXBeginEvent(commandList, PIX_COLOR_DEFAULT, L"Render");
+    Text& controllerIndicator = resourceManager.GetTxtObjBank()["Status"];
 
-    // TODO: Add your rendering code here.
-
-    ID3D12DescriptorHeap* heaps[] = { m_resourceDescriptors->Heap() };
-    commandList->SetDescriptorHeaps(static_cast<UINT>(std::size(heaps)), heaps);
-
-    m_spriteBatch->Begin(commandList);
-    // -- RENDER TEXT --
-    // Prepare the text.
-    tTitle.SetOrigin(m_font);
-    tConnect.SetOrigin(m_font);
-
-    tTitle.DrawText(m_font, m_spriteBatch);
-    tConnect.DrawText(m_font, m_spriteBatch);
-
-    if (isConnected)
+    if (directXUtility.GetControllerConnected())
     {
-        tStatus.SetText("On");
+        controllerIndicator.SetText("On");
     }
     else
     {
-        tStatus.SetText("Off");
+        controllerIndicator.SetText("Off");
     }
 
-    tStatus.SetOrigin(m_font);
-    tStatus.DrawText(m_font, m_spriteBatch);
-    //------------------
-
-    // -- RENDER IMAGE --
-    controllerImg.RenderImage(m_spriteBatch, m_resourceDescriptors, Descriptors::Controller);
-    leftTrigger.RenderImage(m_spriteBatch, m_resourceDescriptors, Descriptors::LeftTrigger);
-    rightTrigger.RenderImage(m_spriteBatch, m_resourceDescriptors, Descriptors::RightTrigger);
-    // ------------------
-
-    m_spriteBatch->End();
-
-    // -- RENDER SHAPE --
-    m_effect->Apply(commandList);
-
-    m_batch->Begin(commandList);
-
-    CheckInputs();
-
-    m_batch->End();
-    //-------------------
-
-    // -- Render Line --
-    m_lineEffect->Apply(commandList);
-
-    m_batch->Begin(commandList);
-
-    leftStick.DrawStickOrientation(m_batch);
-    rightStick.DrawStickOrientation(m_batch);
-
-    m_batch->End();
-    // -----------------
-
-    PIXEndEvent(commandList);
-
-    // Show the new frame.
-    PIXBeginEvent(PIX_COLOR_DEFAULT, L"Present");
-    m_deviceResources->Present();
-    m_graphicsMemory->Commit(m_deviceResources->GetCommandQueue());
-
-    PIXEndEvent();
+    auto commandList = m_deviceResources->GetCommandList();
+    directXUtility.RenderAllGameObjects(m_deviceResources, commandList, resourceManager.GetTxtObjBank(), resourceManager.GetImgObjBank(), resourceManager.GetTriObjBank(), resourceManager.GetLnObjBank());
 }
 
 // Helper method to clear the back buffers.
@@ -262,26 +180,26 @@ void Game::OnActivated()
     // TODO: Game is becoming active window.
     m_gamePad->Resume();
     m_buttons.Reset();
-    isConnected = true;
+    directXUtility.SetControllerConnected(true);
 }
 
 void Game::OnDeactivated()
 {
     // TODO: Game is becoming background window.
-    isConnected = false;
+    directXUtility.SetControllerConnected(false);
     m_gamePad->Suspend();
 }
 
 void Game::OnSuspending()
 {
     // TODO: Game is being power-suspended (or minimized).
-    isConnected = false;
+    directXUtility.SetControllerConnected(false);
     m_gamePad->Suspend();
 }
 
 void Game::OnResuming()
 {
-    isConnected = true;
+    directXUtility.SetControllerConnected(true);
     m_timer.ResetElapsedTime();
 
     // TODO: Game is being power-resumed (or returning from minimize).
@@ -337,70 +255,7 @@ void Game::CreateDeviceDependentResources()
     }
 
     // TODO: Initialize device dependent objects here (independent of window size).
-    m_graphicsMemory = std::make_unique<GraphicsMemory>(device);
-
-    m_resourceDescriptors = std::make_unique<DescriptorHeap>(device,
-        Descriptors::Count);
-
-    ResourceUploadBatch resourceUpload(device);
-
-    resourceUpload.Begin();
-
-    // ----- TEXT STUFF -----
-    // Allocate resources for bitmap.
-    m_font = std::make_unique<SpriteFont>(device, resourceUpload,
-        L"myfile.spritefont",
-        m_resourceDescriptors->GetCpuHandle(Descriptors::MyFont),
-        m_resourceDescriptors->GetGpuHandle(Descriptors::MyFont));
-    //----------------------
-
-    // ----- PREPARE SPRITE -----
-    // Encapsulation != giving reference. - Charles 2023
-    controllerImg.PrepareImageResources(device, resourceUpload, m_resourceDescriptors, Descriptors::Controller);
-    leftTrigger.PrepareImageResources(device, resourceUpload, m_resourceDescriptors, Descriptors::LeftTrigger);
-    rightTrigger.PrepareImageResources(device, resourceUpload, m_resourceDescriptors, Descriptors::RightTrigger);
-    //-----------------------------
-
-    // Draw Resources
-    RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
-        m_deviceResources->GetDepthBufferFormat());
-
-    SpriteBatchPipelineStateDescription pd(rtState);
-    m_spriteBatch = std::make_unique<SpriteBatch>(device, resourceUpload, pd);
-    // --------------
-
-    // SET IMAGE PIVOT
-    controllerImg.SetImageOrigin();
-    leftTrigger.SetImageOrigin();
-    rightTrigger.SetImageOrigin();
-    // ------------------
-
-    auto uploadResourcesFinished = resourceUpload.End(
-        m_deviceResources->GetCommandQueue());
-
-    // -- Prepare SHAPE/LINE Render --
-    m_batch = std::make_unique<PrimitiveBatch<VertexType>>(device);
-
-    EffectPipelineStateDescription ed( 
-        &VertexType::InputLayout,
-        CommonStates::Opaque,
-        CommonStates::DepthDefault,
-        CommonStates::CullNone,
-        rtState);
-
-    EffectPipelineStateDescription line_pd(
-        &VertexPositionColor::InputLayout,
-        CommonStates::Opaque,
-        CommonStates::DepthDefault,
-        CommonStates::CullNone,
-        rtState,
-        D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE);
-
-    m_effect = std::make_unique<BasicEffect>(device, EffectFlags::VertexColor, ed);
-    m_lineEffect = std::make_unique<BasicEffect>(device, EffectFlags::VertexColor, line_pd);
-    // --------------------------
-
-    uploadResourcesFinished.wait();
+    directXUtility.PrepareDeviceDependentResources(m_deviceResources, device, resourceManager.GetImgObjBank());
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -408,29 +263,24 @@ void Game::CreateWindowSizeDependentResources()
 {
     // TODO: Initialize windows-size dependent objects here.
     auto viewport = m_deviceResources->GetScreenViewport();
-    m_spriteBatch->SetViewport(viewport);
 
     auto size = m_deviceResources->GetOutputSize();
 
     float horizontal = float(size.right);
     float vertical = float(size.bottom);
 
+    GameObject& controller = resourceManager.GetGameObjBank()["Controller"];
+
     controller.SetPosition((horizontal / 2.f), (vertical / 2.f));
     controller.CalcScale(std::min(horizontal, vertical));
 
-    Matrix proj = Matrix::CreateScale(2.f / float(size.right), -2.f / float(size.bottom), 1.f) * Matrix::CreateTranslation(-1.f, 1.f, 0.f);
-
-    m_effect->SetProjection( proj);
-    m_lineEffect->SetProjection(proj);
+    directXUtility.PrepareWindowDependentResources(size, viewport);
 }
 
 void Game::OnDeviceLost()
 {
-    // TODO: Add Direct3D resource cleanup here.
-    m_graphicsMemory.reset();
-
     // Resets Assets
-    ResetAssets();
+    directXUtility.ResetAssets(resourceManager.GetImgObjBank());
 }
 
 void Game::OnDeviceRestored()
@@ -440,39 +290,11 @@ void Game::OnDeviceRestored()
     CreateWindowSizeDependentResources();
 }
 
-// Custom functions to make things cleaner.
-void Game::ResetAssets()
-{
-    m_spriteBatch.reset();
-    m_font.reset();
-
-    controllerImg.ResetTexture();
-    leftTrigger.ResetTexture();
-    rightTrigger.ResetTexture();
-
-    m_resourceDescriptors.reset();
-    m_effect.reset();
-    m_lineEffect.reset();
-    m_batch.reset();
-}
-
 void Game::SetTriggerPosition(DirectX::GamePad::State pad)
 {
-    leftStick.SetPoint2(pad.thumbSticks.leftX, pad.thumbSticks.leftY);
-    rightStick.SetPoint2(pad.thumbSticks.rightX, pad.thumbSticks.rightY);
-}
+    std::unordered_map<std::string, Line>& lines = resourceManager.GetLnObjBank();
 
-void Game::CheckInputs()
-{
-    // All the triangle's position have to be relative to the image positions.
-    // Iterate through UI button class so that we can basically have a single for loop and call the set position and draw triangle once.
-
-    for (Triangle& currObject : buttonIndBank)
-    {
-        if (currObject.GetDisplay())
-        {
-            currObject.Draw(m_batch);
-        }
-    }
+    lines["LeftStick"].SetPoint2(pad.thumbSticks.leftX, pad.thumbSticks.leftY);
+    lines["RightStick"].SetPoint2(pad.thumbSticks.rightX, pad.thumbSticks.rightY);
 }
 #pragma endregion

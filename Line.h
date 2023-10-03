@@ -19,7 +19,7 @@ public:
 
 	Line(DirectX::XMVECTOR inp_shapeColor, float v1x, float v1y, float v2x, float v2y, float inp_scale);
 
-	void DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch);
+	void DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch) const;
 
 	// Getters & Setters
 	DirectX::SimpleMath::Vector2 GetPoint2();
