@@ -10,10 +10,10 @@ Image::Image() {
 Image::Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale)
 	: imgLocation(inp_imgLocation), currEnum(inp_enum)
 {
-	uiObj_color = inp_color;
-	gObj_parentObj = &inp_parentObj;
-	gObj_position = {inp_x, inp_y};
-	gObj_scale = inp_scale;
+	SetColor(inp_color);
+	SetParent(inp_parentObj);
+	SetPosition(inp_x, inp_y);
+	SetScale(inp_scale);
 }
 
 void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors)

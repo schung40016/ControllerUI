@@ -6,7 +6,7 @@
 
 class GameObject
 {
-protected: 
+private: 
 	DirectX::SimpleMath::Vector2 gObj_position = { 0, 0 };
 	float gObj_scale = 1.f;
 	GameObject* gObj_parentObj = nullptr;
@@ -20,15 +20,21 @@ public:
 
 	virtual DirectX::SimpleMath::Vector2 GetPosition() const;
 
+	virtual GameObject* GetParentObj() const;
+
 	virtual float GetScale() const;
 
 	virtual bool GetDisplay() const;
 
-	virtual void SetPosition(float x = 0, float y = 0);
-
-	virtual void SetScale(float inp_size);
-
 	virtual void CalcScale(float inp_size);
 
-	virtual void SetDisplay(bool inp_show);
+	virtual void SetPosition(const float x = 0, const float y = 0);
+
+	virtual void SetScale(const float inp_size);
+
+	virtual void SetParent(GameObject& inp_parentObj);
+
+	virtual void SetDisplay(const bool inp_show);
+
+	virtual void SetOriginalSize(const float inp_ogSize);
 };

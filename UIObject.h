@@ -5,17 +5,11 @@
 
 class UIObject : public GameObject
 {
-protected:
+private:
 	DirectX::XMVECTOR uiObj_color = DirectX::Colors::White;
 
 public:
-	virtual std::shared_ptr<GameObject> GetParentObj();
-
-	virtual DirectX::XMVECTOR GetColor();
-
-	virtual float GetScale() const override;
-
-	virtual void SetParentObj(GameObject& inp_DirXObject);
+	virtual DirectX::XMVECTOR GetColor() const;
 
 	virtual void SetColor(DirectX::XMVECTOR inp_color);
 };

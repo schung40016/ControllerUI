@@ -12,7 +12,7 @@ GameObjectManager::GameObjectManager(float horizontal, float vertical)
 	// Load all objects.
 	gameObjBank["Controller"] = GameObject((horizontal / 2.f), (vertical / 2.f), std::min(horizontal, vertical));
 
-    txtObjBank["Title"] = Text(DirectX::Colors::Black, "ControllerUI", gameObjBank["Controller"], 0, -250.f);
+    txtObjBank["Title"] = Text(DirectX::Colors::Black, "ControllerUI", gameObjBank["Controller"], 0.f, -250.f);
     txtObjBank["Connection"] = Text(DirectX::Colors::Black, "Controller Connection: ", gameObjBank["Controller"], -50.f, 250.f);
     txtObjBank["Status"] = Text(DirectX::Colors::Black, "Connected", gameObjBank["Controller"], 300.f, 250.f);
 

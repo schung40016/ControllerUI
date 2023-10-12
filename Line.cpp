@@ -8,23 +8,22 @@ Line::Line()
 Line::Line(DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale)
     : shapeColor(inp_shapeColor)
 {
-    gObj_parentObj = &inp_parentObj;
-    gObj_scale = inp_scale;
-    gObj_position.x = inp_x;
-    gObj_position.y = inp_y;
+    SetParent(inp_parentObj);
+    SetScale(inp_scale);
+    SetPosition(inp_x, inp_y );
 }
 
 Line::Line(DirectX::XMVECTOR inp_shapeColor, float v1x, float v1y, float v2x, float v2y, float inp_scale)
 	: shapeColor(inp_shapeColor)
 {
-    gObj_position = { v1x, v1y };
+    SetPosition(v1x, v1y);
     point2 = { v2x, v2y };
-    gObj_scale = inp_scale;
+    SetScale(inp_scale);
 }
 
 void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch) const
 {
-    Vector2 pos = { gObj_position.x, gObj_position.y };
+    Vector2 pos = GetPosition();
     float currScale = GetScale();
     float calcX = point2.x * lineSizeMultiplier * currScale + pos.x;
     float calcY = point2.y * lineSizeMultiplier * currScale * -1 + pos.y;

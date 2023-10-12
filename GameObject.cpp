@@ -22,6 +22,11 @@ DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 	return gObj_position;
 }
 
+GameObject* GameObject::GetParentObj() const 
+{
+	return gObj_parentObj;
+}
+
 float GameObject::GetScale() const
 {
 	if (gObj_parentObj)
@@ -37,22 +42,32 @@ bool GameObject::GetDisplay() const
 	return gObj_display;
 }
 
-void GameObject::SetPosition(float inp_x, float inp_y)
-{
-	gObj_position = { inp_x, inp_y };
-}
-
-void GameObject::SetScale(float inp_size)
-{
-	gObj_scale = inp_size;
-}
-
 void GameObject::CalcScale(float inp_size)
 {
 	gObj_scale = inp_size / gObj_originalSize;
 }
 
-void GameObject::SetDisplay(bool inp_display)
+void GameObject::SetPosition(const float inp_x, const float inp_y)
+{
+	gObj_position = { inp_x, inp_y };
+}
+
+void GameObject::SetScale(const float inp_size)
+{
+	gObj_scale = inp_size;
+}
+
+void GameObject::SetParent(GameObject& inp_parentObj)
+{
+	gObj_parentObj = &inp_parentObj;
+}
+
+void GameObject::SetDisplay(const bool inp_display)
 {
 	gObj_display = inp_display;
+}
+
+void GameObject::SetOriginalSize(const float inp_ogSize)
+{
+	gObj_originalSize = inp_ogSize;
 }
