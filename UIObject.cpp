@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "UIObject.h"
 
-DirectX::XMVECTOR UIObject::GetColor() const 
+const DirectX::XMVECTOR UIObject::GetColor() const 
 {
 	return uiObj_color;
 }

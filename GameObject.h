@@ -18,13 +18,13 @@ public:
 
 	GameObject(float inp_x, float inp_y, float inp_size);
 
-	virtual DirectX::SimpleMath::Vector2 GetPosition() const;
+	virtual const DirectX::SimpleMath::Vector2 GetPosition() const;
 
-	virtual GameObject* GetParentObj() const;
+	virtual const GameObject* GetParentObj() const;
 
-	virtual float GetScale() const;
+	virtual const float GetScale() const;
 
-	virtual bool GetDisplay() const;
+	virtual const bool GetDisplay() const;
 
 	virtual void CalcScale(float inp_size);
 

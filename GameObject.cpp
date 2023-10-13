@@ -11,7 +11,7 @@ GameObject::GameObject(float inp_x, float inp_y, float inp_size)
 	gObj_originalSize = inp_size;
 }
 
-DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
+const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 {
 	if (gObj_parentObj)
 	{
@@ -22,12 +22,12 @@ DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 	return gObj_position;
 }
 
-GameObject* GameObject::GetParentObj() const 
+const GameObject* GameObject::GetParentObj() const 
 {
 	return gObj_parentObj;
 }
 
-float GameObject::GetScale() const
+const float GameObject::GetScale() const
 {
 	if (gObj_parentObj)
 	{
@@ -37,7 +37,7 @@ float GameObject::GetScale() const
 	return gObj_scale;
 }
 
-bool GameObject::GetDisplay() const 
+const bool GameObject::GetDisplay() const 
 {
 	return gObj_display;
 }

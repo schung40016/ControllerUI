@@ -9,7 +9,7 @@ private:
 	DirectX::XMVECTOR uiObj_color = DirectX::Colors::White;
 
 public:
-	virtual DirectX::XMVECTOR GetColor() const;
+	virtual const DirectX::XMVECTOR GetColor() const;
 
 	virtual void SetColor(DirectX::XMVECTOR inp_color);
 };
