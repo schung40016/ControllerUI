@@ -9,7 +9,7 @@ class GameObject
 private: 
 	DirectX::SimpleMath::Vector2 gObj_position = { 0, 0 };
 	float gObj_scale = 1.f;
-	GameObject* gObj_parentObj = nullptr;
+	std::shared_ptr<GameObject> gObj_parentObj = nullptr;
 	bool gObj_display = false;
 	float gObj_originalSize = 1.f;
 
@@ -18,23 +18,23 @@ public:
 
 	GameObject(float inp_x, float inp_y, float inp_size);
 
-	virtual const DirectX::SimpleMath::Vector2 GetPosition() const;
+	const DirectX::SimpleMath::Vector2 GetPosition() const;
 
-	virtual const GameObject* GetParentObj() const;
+	const std::shared_ptr<GameObject> GetParentObj() const;
 
-	virtual const float GetScale() const;
+	const float GetScale() const;
 
-	virtual const bool GetDisplay() const;
+	const bool GetDisplay() const;
 
-	virtual void CalcScale(float inp_size);
+	void CalcScale(float inp_size);
 
-	virtual void SetPosition(const float x = 0, const float y = 0);
+	void SetPosition(const float x = 0, const float y = 0);
 
-	virtual void SetScale(const float inp_size);
+	void SetScale(const float inp_size);
 
-	virtual void SetParent(GameObject& inp_parentObj);
+	void SetParent(GameObject& inp_parentObj);
 
-	virtual void SetDisplay(const bool inp_show);
+	void SetDisplay(const bool inp_show);
 
-	virtual void SetOriginalSize(const float inp_ogSize);
+	void SetOriginalSize(const float inp_ogSize);
 };

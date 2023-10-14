@@ -22,7 +22,7 @@ const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 	return gObj_position;
 }
 
-const GameObject* GameObject::GetParentObj() const 
+const std::shared_ptr<GameObject> GameObject::GetParentObj() const
 {
 	return gObj_parentObj;
 }
@@ -37,7 +37,7 @@ const float GameObject::GetScale() const
 	return gObj_scale;
 }
 
-const bool GameObject::GetDisplay() const 
+const bool GameObject::GetDisplay() const
 {
 	return gObj_display;
 }
@@ -59,7 +59,7 @@ void GameObject::SetScale(const float inp_size)
 
 void GameObject::SetParent(GameObject& inp_parentObj)
 {
-	gObj_parentObj = &inp_parentObj;
+	gObj_parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
 }
 
 void GameObject::SetDisplay(const bool inp_display)
