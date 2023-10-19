@@ -14,6 +14,15 @@
     <Filter Include="DirectXObjects\DirectXUtility">
       <UniqueIdentifier>{b301beb3-1ecd-46f1-ae5c-1f65230d0431}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UIObjects">
+      <UniqueIdentifier>{3751d4c2-02ef-4081-9868-585f5ba260c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIObjects\ModelObjects">
+      <UniqueIdentifier>{2707d525-d565-4ddc-bb50-709703184c7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIObjects\Shapes">
+      <UniqueIdentifier>{f8bbccbc-4a8f-4cfe-aa7f-19f91352e096}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -27,21 +36,6 @@
     <ClInclude Include="d3dx12.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Triangle.h">
-      <Filter>DirectXObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>DirectXObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Line.h">
-      <Filter>DirectXObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>DirectXObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="UIObject.h">
-      <Filter>DirectXObjects</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>DirectXObjects</Filter>
     </ClInclude>
@@ -51,6 +45,24 @@
     <ClInclude Include="GameObjectManager.h">
       <Filter>DirectXObjects\DirectXUtility</Filter>
     </ClInclude>
+    <ClInclude Include="UIObject.h">
+      <Filter>UIObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>UIObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>UIObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>UIObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>UIObjects\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>UIObjects\Shapes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -58,21 +70,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DeviceResources.cpp">
       <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>DirectXObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>DirectXObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Line.cpp">
-      <Filter>DirectXObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>DirectXObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="UIObject.cpp">
-      <Filter>DirectXObjects</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>DirectXObjects</Filter>
@@ -85,6 +82,24 @@
     </ClCompile>
     <ClCompile Include="GameObjectManager.cpp">
       <Filter>DirectXObjects\DirectXUtility</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>UIObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>UIObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>UIObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObject.cpp">
+      <Filter>UIObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>UIObjects\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>UIObjects\Shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

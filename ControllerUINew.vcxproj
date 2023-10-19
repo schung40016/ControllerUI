@@ -203,6 +203,7 @@
     <ClInclude Include="DirectXUtility.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Image.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="UIObject.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Line.cpp" />
