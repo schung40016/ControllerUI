@@ -9,8 +9,10 @@ GameObjectManager::GameObjectManager()
 
 GameObjectManager::GameObjectManager(float horizontal, float vertical)
 {
-	// Load all objects.
-	gameObjBank["Controller"] = GameObject((horizontal / 2.f), (vertical / 2.f), std::min(horizontal, vertical));
+    // Load all objects. 
+    // Gamepad default position: (horizontal / 2.f), (vertical / 2.f).
+    gameObjBank["Controller"] = GameObject({(horizontal / 10.f), (vertical / 9.0f)}, 2500.f);
+    gameObjBank["Ground"] = GameObject({ 650.f, 800.f }, 1.f);
 
     txtObjBank["Title"] = Text(DirectX::Colors::Black, "ControllerUI", gameObjBank["Controller"], 0.f, -250.f);
     txtObjBank["Connection"] = Text(DirectX::Colors::Black, "Controller Connection: ", gameObjBank["Controller"], -50.f, 250.f);
@@ -41,6 +43,11 @@ GameObjectManager::GameObjectManager(float horizontal, float vertical)
 
     lnObjBank["LeftStick"] = Line(DirectX::Colors::HotPink, imgObjBank["Gamepad"], -148.f, -78.f, 1.f);
     lnObjBank["RightStick"] = Line(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 80.f, 15.f, 1.f);
+
+    shpObjBank["Ground"] = new Quad(DirectX::Colors::DarkGray, gameObjBank["Ground"], 1.f, 0, 0, 800.f, 200.f, true);
+
+    // Player
+    // - consist of a square.
 }
 
 // Getters & Setters.
@@ -67,4 +74,9 @@ std::unordered_map<std::string, Triangle>& GameObjectManager::GetTriObjBank()
 std::unordered_map<std::string, Line>& GameObjectManager::GetLnObjBank()
 {
 	return lnObjBank;
+}
+
+std::unordered_map<std::string, Shape*>& GameObjectManager::GetShpObjBank()
+{
+    return shpObjBank;
 }

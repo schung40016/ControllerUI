@@ -17,11 +17,11 @@
     <Filter Include="UIObjects">
       <UniqueIdentifier>{3751d4c2-02ef-4081-9868-585f5ba260c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UIObjects\ModelObjects">
-      <UniqueIdentifier>{2707d525-d565-4ddc-bb50-709703184c7e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UIObjects\Shapes">
       <UniqueIdentifier>{f8bbccbc-4a8f-4cfe-aa7f-19f91352e096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIObjects\Components">
+      <UniqueIdentifier>{2707d525-d565-4ddc-bb50-709703184c7e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +63,22 @@
     <ClInclude Include="Triangle.h">
       <Filter>UIObjects\Shapes</Filter>
     </ClInclude>
+    <ClInclude Include="Quad.h">
+      <Filter>UIObjects\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>UIObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>UIObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>UIObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>UIObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -100,6 +116,22 @@
     </ClCompile>
     <ClCompile Include="Shape.cpp">
       <Filter>UIObjects\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="Quad.cpp">
+      <Filter>UIObjects\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>UIObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>UIObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>UIObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Component.cpp">
+      <Filter>UIObjects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -50,7 +50,7 @@ void Game::Initialize(HWND window, int width, int height)
     */
 
     // Set up gamepad
-    m_gamePad = std::make_unique<GamePad>();
+    inputManager = InputManager::GetInstance();
 }
 
 #pragma region Frame Update
@@ -72,47 +72,36 @@ void Game::Update(DX::StepTimer const& timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
 
+    inputManager = InputManager::GetInstance();
     // TODO: Add your game logic here.
+    inputManager->UpdateButtons();
 
-    // Checks whether user pressed a button
-    auto pad = m_gamePad->GetState(0);
+    std::unordered_map<std::string, Triangle>& triangles = resourceManager.GetTriObjBank();
 
-    if (pad.IsConnected())
-    {
-        m_buttons.Update(pad);
+    triangles["A"].SetDisplay(inputManager->a);
+    triangles["B"].SetDisplay(inputManager->b);
+    triangles["X"].SetDisplay(inputManager->x);
+    triangles["Y"].SetDisplay(inputManager->y);
+    triangles["Start"].SetDisplay(inputManager->start);
+    triangles["View"].SetDisplay(inputManager->view);
 
-        directXUtility.SetControllerConnected(pad.IsConnected());
+    triangles["DPadUp"].SetDisplay(inputManager->dPadUp);
+    triangles["DPadDown"].SetDisplay(inputManager->dPadDown);
+    triangles["DPadLeft"].SetDisplay(inputManager->dPadLeft);
+    triangles["DPadRight"].SetDisplay(inputManager->dPadRight);
 
-        std::unordered_map<std::string, Triangle>& triangles = resourceManager.GetTriObjBank();
+    triangles["LeftShoulder"].SetDisplay(inputManager->leftShoulder);
+    triangles["RightShoulder"].SetDisplay(inputManager->rightShoulder);
+    triangles["LeftTrigger"].SetDisplay(inputManager->leftTrigger);
+    triangles["RightTrigger"].SetDisplay(inputManager->rightTrigger);
 
-        triangles["A"].SetDisplay(pad.IsAPressed());
-        triangles["B"].SetDisplay(pad.IsBPressed());
-        triangles["X"].SetDisplay(pad.IsXPressed());
-        triangles["Y"].SetDisplay(pad.IsYPressed());
-        triangles["Start"].SetDisplay(pad.IsStartPressed());
-        triangles["View"].SetDisplay(pad.IsViewPressed());
+    triangles["leftStick"].SetDisplay(inputManager->leftStick);
+    triangles["rightStick"].SetDisplay(inputManager->rightStick);
 
-        // Dpad
-        triangles["DPadUp"].SetDisplay(pad.IsDPadUpPressed());
-        triangles["DPadDown"].SetDisplay(pad.IsDPadDownPressed());
-        triangles["DPadLeft"].SetDisplay(pad.IsDPadLeftPressed());
-        triangles["DPadRight"].SetDisplay(pad.IsDPadRightPressed());
+    std::unordered_map<std::string, Line>& lines = resourceManager.GetLnObjBank();
 
-        // Front Controller
-        triangles["LeftShoulder"].SetDisplay(pad.IsLeftShoulderPressed());
-        triangles["RightShoulder"].SetDisplay(pad.IsRightShoulderPressed());
-        triangles["LeftTrigger"].SetDisplay(pad.IsLeftTriggerPressed());
-        triangles["RightTrigger"].SetDisplay(pad.IsRightTriggerPressed());
-
-        // Sticks
-        SetTriggerPosition(pad);
-        triangles["LeftStick"].SetDisplay(pad.IsLeftStickPressed());
-        triangles["RightStick"].SetDisplay(pad.IsRightStickPressed());
-    }
-    else
-    {
-        m_buttons.Reset();
-    }
+    lines["LeftStick"].SetPoint2(inputManager->leftStickPos.x, inputManager->leftStickPos.y);
+    lines["RightStick"].SetPoint2(inputManager->rightStickPos.x, inputManager->rightStickPos.y);
 
     elapsedTime;
 
@@ -146,7 +135,7 @@ void Game::Render()
     }
 
     auto commandList = m_deviceResources->GetCommandList();
-    directXUtility.RenderAllGameObjects(m_deviceResources, commandList, resourceManager.GetTxtObjBank(), resourceManager.GetImgObjBank(), resourceManager.GetTriObjBank(), resourceManager.GetLnObjBank());
+    directXUtility.RenderAllGameObjects(m_deviceResources, commandList, resourceManager.GetTxtObjBank(), resourceManager.GetImgObjBank(), resourceManager.GetTriObjBank(), resourceManager.GetLnObjBank(), resourceManager.GetShpObjBank());
 }
 
 // Helper method to clear the back buffers.
@@ -178,8 +167,8 @@ void Game::Clear()
 void Game::OnActivated()
 {
     // TODO: Game is becoming active window.
-    m_gamePad->Resume();
-    m_buttons.Reset();
+    inputManager->ResumeGamepad();
+    inputManager->ResetButtons();
     directXUtility.SetControllerConnected(true);
 }
 
@@ -187,14 +176,14 @@ void Game::OnDeactivated()
 {
     // TODO: Game is becoming background window.
     directXUtility.SetControllerConnected(false);
-    m_gamePad->Suspend();
+    inputManager->SuspendGamepad();
 }
 
 void Game::OnSuspending()
 {
     // TODO: Game is being power-suspended (or minimized).
     directXUtility.SetControllerConnected(false);
-    m_gamePad->Suspend();
+    inputManager->SuspendGamepad();
 }
 
 void Game::OnResuming()
@@ -203,8 +192,8 @@ void Game::OnResuming()
     m_timer.ResetElapsedTime();
 
     // TODO: Game is being power-resumed (or returning from minimize).
-    m_gamePad->Resume();
-    m_buttons.Reset();
+    inputManager->ResumeGamepad();
+    inputManager->ResetButtons();
 }
 
 void Game::OnWindowMoved()
@@ -232,8 +221,8 @@ void Game::OnWindowSizeChanged(int width, int height)
 void Game::GetDefaultSize(int& width, int& height) const noexcept
 {
     // TODO: Change to desired default window size (note minimum size is 320x200).
-    width = 800;
-    height = 600;
+    width = 1300;
+    height = 975;
 }
 #pragma endregion
 
@@ -271,7 +260,7 @@ void Game::CreateWindowSizeDependentResources()
 
     GameObject& controller = resourceManager.GetGameObjBank()["Controller"];
 
-    controller.SetPosition((horizontal / 2.f), (vertical / 2.f));
+    controller.SetPosition({(horizontal / 10.f), (vertical / 9.0f)});
     controller.CalcScale(std::min(horizontal, vertical));
 
     directXUtility.PrepareWindowDependentResources(size, viewport);
@@ -290,11 +279,4 @@ void Game::OnDeviceRestored()
     CreateWindowSizeDependentResources();
 }
 
-void Game::SetTriggerPosition(DirectX::GamePad::State pad)
-{
-    std::unordered_map<std::string, Line>& lines = resourceManager.GetLnObjBank();
-
-    lines["LeftStick"].SetPoint2(pad.thumbSticks.leftX, pad.thumbSticks.leftY);
-    lines["RightStick"].SetPoint2(pad.thumbSticks.rightX, pad.thumbSticks.rightY);
-}
 #pragma endregion

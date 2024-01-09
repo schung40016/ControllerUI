@@ -10,13 +10,13 @@ Line::Line(DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, float in
 {
     SetParent(inp_parentObj);
     SetScale(inp_scale);
-    SetPosition(inp_x, inp_y );
+    SetPosition({ inp_x, inp_y});
 }
 
 Line::Line(DirectX::XMVECTOR inp_shapeColor, float v1x, float v1y, float v2x, float v2y, float inp_scale)
 	: shapeColor(inp_shapeColor)
 {
-    SetPosition(v1x, v1y);
+    SetPosition({ v1x, v1y });
     point2 = { v2x, v2y };
     SetScale(inp_scale);
 }

@@ -14,6 +14,7 @@
 #include "Text.h"
 #include "DirectXUtility.h"
 #include "GameObjectManager.h"
+#include "InputManager.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -74,7 +75,7 @@ private:
     void CreateWindowSizeDependentResources();
 
     // Custom functions:
-    void SetTriggerPosition(DirectX::GamePad::State pad);
+    // void SetTriggerPosition(DirectX::GamePad::State pad);
 
     // Device resources.
     std::unique_ptr<DX::DeviceResources>        m_deviceResources;
@@ -82,13 +83,13 @@ private:
     // Rendering loop timer.
     DX::StepTimer                               m_timer;
 
-
     // Instanstiate custom object.
     DirectXUtility directXUtility;
 
     // -- GAMEPAD Attributes --
-    std::unique_ptr<DirectX::GamePad> m_gamePad;
-    DirectX::GamePad::ButtonStateTracker m_buttons;
+    //std::unique_ptr<DirectX::GamePad> m_gamePad;
+    //DirectX::GamePad::ButtonStateTracker m_buttons;
+    InputManager* inputManager;
     // ------------------------
 
     // Keeps track of our resources.

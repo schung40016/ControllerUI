@@ -30,21 +30,26 @@ void DirectXUtility::CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_d
 }
 
 void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects,
-    std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Triangle>& shpObjects, std::unordered_map<std::string, Line>& lnObjects )
+    std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Shape*>& shpObjects)
 {
     PIXBeginEvent(commandList, PIX_COLOR_DEFAULT, L"Render");
 
     ID3D12DescriptorHeap* heaps[] = { m_resourceDescriptors->Heap() };
     commandList->SetDescriptorHeaps(static_cast<UINT>(std::size(heaps)), heaps);
 
+    // --- Controller ---
     // Render Text and Image objects
     RenderSpriteBatchObjects(commandList, txtObjects, imgObjects);
 
     // Render Triangles
-    RenderShapeObjects(commandList, shpObjects);
+    RenderShapeObjects(commandList, triObjects);
 
     // Render Lines
     RenderLineObjects(commandList, lnObjects);
+    // ------------------
+
+    // Render all shape objects
+    RenderShapeObjects(commandList, shpObjects);
 
     PIXEndEvent(commandList);
 
@@ -86,6 +91,20 @@ void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, 
     m_batch->Begin(commandList);
 
     CheckInputs(shpObjects);
+
+    m_batch->End();
+}
+
+void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Shape*>& shpObjects)
+{
+    m_effect->Apply(commandList);
+
+    m_batch->Begin(commandList);
+
+    for (const auto& currObject : shpObjects)
+    {
+        currObject.second->Draw(m_batch);
+    }
 
     m_batch->End();
 }
@@ -187,10 +206,7 @@ void DirectXUtility::CheckInputs(const std::unordered_map<std::string, Triangle>
 
     for (const auto& currObject : shpObjects)
     {
-        if (currObject.second.GetDisplay())
-        {
-            currObject.second.Draw(m_batch);
-        }
+        currObject.second.Draw(m_batch);
     }
 }
 

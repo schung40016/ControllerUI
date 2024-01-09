@@ -2,6 +2,7 @@
 
 #include "pch.h";
 #include "EnumData.h";
+#include "Component.h";
 #include <iostream>
 
 class GameObject
@@ -12,11 +13,13 @@ private:
 	std::shared_ptr<GameObject> gObj_parentObj = nullptr;
 	bool gObj_display = false;
 	float gObj_originalSize = 1.f;
+	int layerMask = 0;
+	std::vector<Component> components = {};
 
 public: 
 	GameObject();
 
-	GameObject(float inp_x, float inp_y, float inp_size);
+	GameObject(DirectX::SimpleMath::Vector2 inp_position, float inp_size);
 
 	const DirectX::SimpleMath::Vector2 GetPosition() const;
 
@@ -26,9 +29,11 @@ public:
 
 	const bool GetDisplay() const;
 
+	const int GetLayerMask() const;
+
 	void CalcScale(float inp_size);
 
-	void SetPosition(const float x = 0, const float y = 0);
+	void SetPosition(DirectX::SimpleMath::Vector2 inp_position);
 
 	void SetScale(const float inp_size);
 
@@ -37,4 +42,6 @@ public:
 	void SetDisplay(const bool inp_show);
 
 	void SetOriginalSize(const float inp_ogSize);
+
+	void SetLayerMask(const int inp_layerMask);
 };

@@ -199,11 +199,17 @@
     </FXCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DirectXUtility.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="Quad.h" />
     <ClInclude Include="UIObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Image.h" />
@@ -215,12 +221,18 @@
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="DirectXUtility.cpp" />
     <ClCompile Include="EnumData.h" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Quad.cpp" />
     <ClCompile Include="UIObject.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Line.cpp" />

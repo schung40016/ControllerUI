@@ -10,7 +10,7 @@ private:
 	float width = 1.f;
 
 public:
-	virtual void Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch) const = 0;
+	virtual void Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch) const;
 
 	float GetLength() const;
 
@@ -22,7 +22,5 @@ public:
 
 	// TO-DO:
 	// Create a physics controller/rigidbody that can be attached to gameobject.
-	// - gravity.
-	// - mass
-	// Create shape object. 
+	// - will use Standard axis theorem to calculate collission detectin
 };

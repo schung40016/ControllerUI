@@ -5,18 +5,25 @@
 #include <Image.h>
 #include <Text.h>
 #include <Triangle.h>
+#include <Shape.h>
+#include <Quad.h>
 #include <Line.h>
 #include <unordered_map>
+#include <Collider.h>
 
 class GameObjectManager {
 
 private:
-	// Objects here.
+	// Controller objects here.
 	std::unordered_map<std::string, GameObject> gameObjBank = {};
 	std::unordered_map<std::string, Image> imgObjBank = {};
 	std::unordered_map<std::string, Text> txtObjBank = {};
 	std::unordered_map<std::string, Triangle> triObjBank = {};
 	std::unordered_map<std::string, Line> lnObjBank = {};
+	std::vector<Collider> colliderBank = {};
+
+	// Renders any 
+	std::unordered_map<std::string, Shape*> shpObjBank = {};
 
 public:
 	GameObjectManager();
@@ -33,4 +40,6 @@ public:
 	std::unordered_map<std::string, Triangle>& GetTriObjBank();
 
 	std::unordered_map<std::string, Line>& GetLnObjBank();
+
+	std::unordered_map<std::string, Shape*>& GetShpObjBank();
 };

@@ -5,9 +5,9 @@ GameObject::GameObject()
 {
 }
 
-GameObject::GameObject(float inp_x, float inp_y, float inp_size)
+GameObject::GameObject(DirectX::SimpleMath::Vector2 inp_position, float inp_size)
 {
-	gObj_position = { inp_x, inp_y };
+	gObj_position = inp_position;
 	gObj_originalSize = inp_size;
 }
 
@@ -42,14 +42,19 @@ const bool GameObject::GetDisplay() const
 	return gObj_display;
 }
 
+const int GameObject::GetLayerMask() const
+{
+	return layerMask;
+}
+
 void GameObject::CalcScale(float inp_size)
 {
 	gObj_scale = inp_size / gObj_originalSize;
 }
 
-void GameObject::SetPosition(const float inp_x, const float inp_y)
+void GameObject::SetPosition(const DirectX::SimpleMath::Vector2 inp_position)
 {
-	gObj_position = { inp_x, inp_y };
+	gObj_position = inp_position;
 }
 
 void GameObject::SetScale(const float inp_size)

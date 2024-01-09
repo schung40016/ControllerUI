@@ -14,14 +14,19 @@ Triangle::Triangle(DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, floa
 	SetColor(colorInput);
 	SetParent(inp_parentObj);
 	SetScale(inp_scale);
-	SetPosition(inp_x, inp_y);
+	SetPosition({ inp_x, inp_y });
 	SetLength(inp_len);
 	SetWidth(inp_wid);
 }
 
 // Draw Triangle.
-void Triangle::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& inp_batch) const  
+void Triangle::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& inp_batch) const
 {
+	if (GetDisplay() == false)
+	{
+		return;
+	}
+
 	DirectX::SimpleMath::Vector2 newPos = GetPosition();
 	float currScale = GetScale();
 
@@ -29,10 +34,6 @@ void Triangle::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<VertexPosition
 	float calcWid = GetWidth() / 2.0f;
 
 	DirectX::XMVECTOR currColor = GetColor();
-
-	//VertexPositionColor v1(Vector3(newPos.x + 50.f * currScale, newPos.y + 18.75f * currScale, 0.f), currColor);
-	//VertexPositionColor v2(Vector3(newPos.x + 75.f * currScale, newPos.y + 56.25f * currScale, 0.f), currColor);
-	//VertexPositionColor v3(Vector3(newPos.x + 25.f * currScale, newPos.y + 56.25f * currScale, 0.f), currColor);
 
 	VertexPositionColor v1(Vector3(newPos.x, newPos.y - calcLen * currScale, 0.f), currColor);
 	VertexPositionColor v2(Vector3(newPos.x + calcWid * currScale, newPos.y + calcLen * currScale, 0.f), currColor);

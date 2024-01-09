@@ -12,7 +12,7 @@ Image::Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData:
 {
 	SetColor(inp_color);
 	SetParent(inp_parentObj);
-	SetPosition(inp_x, inp_y);
+	SetPosition({ inp_x, inp_y });
 	SetScale(inp_scale);
 }
 

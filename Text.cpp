@@ -18,7 +18,7 @@ Text::Text(DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_pa
 {
 	SetColor(inp_color);
 	SetParent(inp_parentObj);
-	SetPosition(inp_x, inp_y);
+	SetPosition({ inp_x, inp_y });
 }
 
 void Text::DrawText(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch)

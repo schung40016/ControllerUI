@@ -3,6 +3,10 @@
 #include "pch.h"
 #include "Shape.h"
 
+void Shape::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch) const
+{
+}
+
 float Shape::GetLength() const
 {
 	return length;

@@ -7,6 +7,7 @@
 #include "Text.h"
 #include "Line.h"
 #include "Triangle.h"
+#include "UIObject.h"
 
 class DirectXUtility {
 private: 
@@ -32,11 +33,13 @@ public:
     void CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_deviceResources);
 
     void RenderAllGameObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects,
-        std::unordered_map<std::string, Triangle>& shpObjects, std::unordered_map<std::string, Line>& lnObjects);
+        std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Shape*>& shpObjects);
 
     void RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects);
 
     void RenderShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects);
+
+    void RenderShapeObjects(ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Shape*>& shpObjects);
 
     void RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects);
 
