@@ -8,13 +8,11 @@
 #include "DeviceResources.h"
 #include "StepTimer.h"
 #include "GameObject.h"
-#include "Triangle.h"
-#include "Image.h"
-#include "Line.h"
-#include "Text.h"
 #include "DirectXUtility.h"
 #include "GameObjectManager.h"
 #include "InputManager.h"
+#include "Controller.h"
+#include "World.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -87,11 +85,12 @@ private:
     DirectXUtility directXUtility;
 
     // -- GAMEPAD Attributes --
-    //std::unique_ptr<DirectX::GamePad> m_gamePad;
-    //DirectX::GamePad::ButtonStateTracker m_buttons;
-    InputManager* inputManager;
+    InputManager* inputManager = InputManager::GetInstance();
     // ------------------------
 
     // Keeps track of our resources.
-    GameObjectManager resourceManager;
+    GameObjectManager* resourceManager = GameObjectManager::GetInstance();
+    
+    // Initialize all game objects here. 
+    World gameWorld;
 };

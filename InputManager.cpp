@@ -13,7 +13,9 @@ void InputManager::UpdateButtons()
 {
 	auto pad = m_gamePad->GetState(0);
 
-	if (pad.IsConnected())
+	isConnected = pad.IsConnected();
+
+	if (isConnected)
 	{
 		m_buttons.Update(pad);
 

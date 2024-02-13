@@ -8,7 +8,6 @@ class Text : public UIObject
 private:
 	std::string text = "";
 	DirectX::SimpleMath::Vector2 m_origin = { 0, 0 };
-
 public:
 	Text();
 	

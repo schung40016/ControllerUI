@@ -19,8 +19,4 @@ public:
 	void SetLength(float inp_len);
 	 
 	void SetWidth(float inp_wid);
-
-	// TO-DO:
-	// Create a physics controller/rigidbody that can be attached to gameobject.
-	// - will use Standard axis theorem to calculate collission detectin
 };

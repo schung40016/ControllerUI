@@ -1,9 +1,11 @@
 #pragma once
 
-#include "pch.h";
-#include "EnumData.h";
-#include "Component.h";
+#include "pch.h"
+#include "EnumData.h"
+#include "Component.h"
 #include <iostream>
+
+class GameObjectManager;
 
 class GameObject
 {
@@ -14,12 +16,17 @@ private:
 	bool gObj_display = false;
 	float gObj_originalSize = 1.f;
 	int layerMask = 0;
-	std::vector<Component> components = {};
+	std::vector<Component*> components = {};
+
+protected:
+	GameObjectManager* resourceManager;
 
 public: 
 	GameObject();
+	
+	GameObject(DirectX::SimpleMath::Vector2 inp_position, float inp_size, std::vector<Component*> inp_components);
 
-	GameObject(DirectX::SimpleMath::Vector2 inp_position, float inp_size);
+	void UpdateComponents(float deltaTime);
 
 	const DirectX::SimpleMath::Vector2 GetPosition() const;
 
@@ -44,4 +51,8 @@ public:
 	void SetOriginalSize(const float inp_ogSize);
 
 	void SetLayerMask(const int inp_layerMask);
+
+	void SetComponents(const std::vector<Component*>& inp_components);
+
+	void MovePosition(const DirectX::SimpleMath::Vector2 inp_position);
 };

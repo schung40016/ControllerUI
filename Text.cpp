@@ -2,15 +2,18 @@
 
 #include "pch.h"
 #include "Text.h"  
+#include "GameObjectManager.h"
 
 Text::Text()
 {
+	resourceManager = GameObjectManager::GetInstance();
 }
 
 Text::Text(DirectX::XMVECTOR inp_color, std::string inp_text)
 	: text(inp_text)
 {
 	SetColor(inp_color);
+	resourceManager->AddTxtObj(*this);
 }
 
 Text::Text(DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y)

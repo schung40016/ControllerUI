@@ -201,6 +201,7 @@
   <ItemGroup>
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="DirectXUtility.h" />
     <ClInclude Include="GameObject.h" />
@@ -219,10 +220,12 @@
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Triangle.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="DirectXUtility.cpp" />
     <ClCompile Include="EnumData.h" />
     <ClCompile Include="Game.cpp" />
@@ -246,6 +249,7 @@
     </ClCompile>
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

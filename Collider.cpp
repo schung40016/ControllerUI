@@ -3,7 +3,18 @@
 #include "pch.h";
 #include "Collider.h";
 
-Collider::Collider()
+Collider::Collider(GameObject& inp_parentObj, std::vector<DirectX::SimpleMath::Vector2>& inp_vertices)
+{
+	parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
+	vertices = inp_vertices;
+
+	for (int i = 0; i < inp_vertices.size(); ++i)
+	{
+		vertexLines.emplace_back(Line(DirectX::Colors::Red, inp_parentObj, inp_vertices[i], inp_vertices[i % inp_vertices.size()], 1.0f));
+	}
+}
+
+void Collider::Update(float deltaTime)
 {
 }
 

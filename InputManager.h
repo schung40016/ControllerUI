@@ -17,7 +17,7 @@ private:
 	InputManager();
 
 public:
-	boolean a = true;
+	boolean a = false;
 	boolean b = false;
 	boolean x = false;
 	boolean y = false;

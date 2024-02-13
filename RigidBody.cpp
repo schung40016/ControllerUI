@@ -9,14 +9,10 @@ void RigidBody::Update(float deltaTime)		// Performs all calculations.
 	ApplyForce(deltaTime);
 }
 
-RigidBody::RigidBody(GameObject& inp_parentObj, const std::vector<DirectX::SimpleMath::Vector2>& inp_vertices)
+RigidBody::RigidBody(GameObject& inp_parentObj, bool inp_isKinematic, float inp_fMass, 
+	float inp_fAcceleration) : bIsKinematic(bIsKinematic), fMass(inp_fMass), fAcceleration(inp_fAcceleration)
 {
 	parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
-}
-
-RigidBody::RigidBody(GameObject& inp_parentObj, const std::vector<DirectX::SimpleMath::Vector2>& inp_vertices, bool inp_canCollide, bool inp_isKinematic,
-	float inp_mass, float fAcceleration)
-{
 }
 
 void RigidBody::ApplyGravity(float deltaTime)
@@ -24,7 +20,7 @@ void RigidBody::ApplyGravity(float deltaTime)
 	// Apply gravity here.
 	if (bIsKinematic)
 	{
-		DirectX::SimpleMath::Vector2 calcPos = parentObj->GetPosition() + velocity * deltaTime;
+		DirectX::SimpleMath::Vector2 calcPos = parentObj->GetPosition() + velocity;
 
 		parentObj->SetPosition(calcPos);
 		velocity = velocity + gravityVelocity * deltaTime;

@@ -2,9 +2,10 @@
 
 #include "pch.h"
 #include "Image.h"
+#include "GameObjectManager.h"
 
 Image::Image() {
-
+	resourceManager = GameObjectManager::GetInstance();
 }
 
 Image::Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale)
@@ -14,6 +15,7 @@ Image::Image(DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData:
 	SetParent(inp_parentObj);
 	SetPosition({ inp_x, inp_y });
 	SetScale(inp_scale);
+	resourceManager->AddImgObj(*this);
 }
 
 void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors)

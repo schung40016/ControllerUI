@@ -3,80 +3,97 @@
 #include "pch.h"
 #include "GameObjectManager.h"
 
-GameObjectManager::GameObjectManager()
+GameObjectManager* GameObjectManager::instance = NULL;
+
+GameObjectManager* GameObjectManager::GetInstance()
 {
+    if (instance == NULL)
+    {
+        instance = new GameObjectManager();
+        return instance;
+    }
+    
+    return instance;
 }
 
-GameObjectManager::GameObjectManager(float horizontal, float vertical)
+GameObjectManager::GameObjectManager()
 {
-    // Load all objects. 
-    // Gamepad default position: (horizontal / 2.f), (vertical / 2.f).
-    gameObjBank["Controller"] = GameObject({(horizontal / 10.f), (vertical / 9.0f)}, 2500.f);
-    gameObjBank["Ground"] = GameObject({ 650.f, 800.f }, 1.f);
+    //gameObjBank["Ground"] = GameObject({ 650.f, 800.f }, 1.f);
+    //shpObjBank["Ground"] = new Quad(DirectX::Colors::DarkGray, gameObjBank["Ground"], 1.f, 0, 0, 800.f, 200.f, true);
 
-    txtObjBank["Title"] = Text(DirectX::Colors::Black, "ControllerUI", gameObjBank["Controller"], 0.f, -250.f);
-    txtObjBank["Connection"] = Text(DirectX::Colors::Black, "Controller Connection: ", gameObjBank["Controller"], -50.f, 250.f);
-    txtObjBank["Status"] = Text(DirectX::Colors::Black, "Connected", gameObjBank["Controller"], 300.f, 250.f);
+    //std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = { { 0.f, 0.f }, {0.f, 50.f}, {50.f, -50.f}, {0, -50.f} };
 
-    // Create a higher tier object to act as the parent for all these objects.
-    imgObjBank["Gamepad"] = Image(DirectX::Colors::White, ".\\Images\\gamepad.png", EnumData::Descriptors::Controller, gameObjBank["Controller"], 0.f, 0.f, 1.f);
-    imgObjBank["LeftTrigger"] = Image(DirectX::Colors::White, ".\\Images\\LeftTrigger.png", EnumData::Descriptors::LeftTrigger, gameObjBank["Controller"], -290.f, -140.f, 1.f);
-    imgObjBank["RightTrigger"] = Image(DirectX::Colors::White, ".\\Images\\RightTrigger.png", EnumData::Descriptors::RightTrigger, gameObjBank["Controller"], 290.f, -140.f, 1.f);
+    //// Create the player.
+    //gameObjBank["Player"] = GameObject({ 650.f, 650.f }, 1.f);
 
-    triObjBank["A"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, 159.f, -38.f, 40.f, 40.f);
-    triObjBank["B"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, 199.f, -80.f, 40.f, 40.f);
-    triObjBank["X"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, 119.f, -80.f, 40.f, 40.f);
-    triObjBank["Y"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, 159.f, -120.f, 40.f, 40.f);
+    //gameObjBank["Player"].SetComponents({
+    //    new PlayerController(gameObjBank["Player"]),
+    //    new RigidBody(gameObjBank["Player"], 10.f)
+    //    //Collider(gameObjBank["Player"], p2),  
+    //    //RigidBody(gameObjBank["Player"], {1, 0}, true, 10.f, 1.f),
+    //});
 
-    triObjBank["Start"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, 51.f, -80.f, 40.f, 40.f);
-    triObjBank["View"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, -39.f, -80.f, 40.f, 40.f);
-    triObjBank["DPadUp"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, -72.f, -20.f, 40.f, 40.f);
-    triObjBank["DPadDown"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, -72.f, 50.f, 40.f, 40.f);
-    triObjBank["DPadLeft"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, -109.f, 15.f, 40.f, 40.f);
-    triObjBank["DPadRight"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, -39.f, 15.f, 40.f, 40.f);
-    triObjBank["LeftShoulder"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, -149.f, -180.f, 40.f, 40.f);
-    triObjBank["RightShoulder"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, 151.f, -180.f, 40.f, 40.f);
-    triObjBank["LeftTrigger"] = Triangle(DirectX::Colors::HotPink, imgObjBank["LeftTrigger"], 1.f, 1.f, 10.f, 40.f, 40.f);
-    triObjBank["RightTrigger"] = Triangle(DirectX::Colors::HotPink, imgObjBank["RightTrigger"], 1.f, 1.f, 10.f, 40.f, 40.f);
-    triObjBank["LeftStick"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, -147.f, -80.f, 40.f, 40.f);
-    triObjBank["RightStick"] = Triangle(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 1.f, 83.f, 15.f, 40.f, 40.f);
-
-    lnObjBank["LeftStick"] = Line(DirectX::Colors::HotPink, imgObjBank["Gamepad"], -148.f, -78.f, 1.f);
-    lnObjBank["RightStick"] = Line(DirectX::Colors::HotPink, imgObjBank["Gamepad"], 80.f, 15.f, 1.f);
-
-    shpObjBank["Ground"] = new Quad(DirectX::Colors::DarkGray, gameObjBank["Ground"], 1.f, 0, 0, 800.f, 200.f, true);
-
-    // Player
-    // - consist of a square.
+    //shpObjBank.emplace_back(new Quad(DirectX::Colors::Aqua, gameObjBank["Player"], 1.f, 0, 0, 50.f, 50.f, true));
 }
 
 // Getters & Setters.
-std::unordered_map<std::string, GameObject>& GameObjectManager::GetGameObjBank()
+std::vector<GameObject>& GameObjectManager::GetGameObjBank()
 {
 	return gameObjBank;
 }
 
-std::unordered_map<std::string, Image>& GameObjectManager::GetImgObjBank()
+std::vector<Image>& GameObjectManager::GetImgObjBank()
 {
 	return imgObjBank;
 }
 
-std::unordered_map<std::string, Text>& GameObjectManager::GetTxtObjBank()
+std::vector<Text>& GameObjectManager::GetTxtObjBank()
 {
 	return txtObjBank;
 }
 
-std::unordered_map<std::string, Triangle>& GameObjectManager::GetTriObjBank()
+std::vector<Triangle>& GameObjectManager::GetTriObjBank()
 {
 	return triObjBank;
 }
 
-std::unordered_map<std::string, Line>& GameObjectManager::GetLnObjBank()
+std::vector<Line>& GameObjectManager::GetLnObjBank()
 {
 	return lnObjBank;
 }
 
-std::unordered_map<std::string, Shape*>& GameObjectManager::GetShpObjBank()
+std::vector<Quad>& GameObjectManager::GetQuadObjBank()
 {
-    return shpObjBank;
+    return quadObjBank;
+}
+
+// Adders
+void GameObjectManager::AddGameObj(const GameObject& inp_gameObject)
+{
+    gameObjBank.emplace_back(inp_gameObject);
+}
+
+void GameObjectManager::AddImgObj(const Image& inp_imgObj)
+{
+    imgObjBank.emplace_back(inp_imgObj);
+}
+
+void GameObjectManager::AddTxtObj(const Text& inp_txtObj)
+{
+    txtObjBank.emplace_back(inp_txtObj);
+}
+
+void GameObjectManager::AddTriObj(const Triangle& inp_triObj)
+{
+    triObjBank.emplace_back(inp_triObj);
+}
+
+void GameObjectManager::AddLnObj(const Line& inp_lnObj)
+{
+    lnObjBank.emplace_back(inp_lnObj);
+}
+
+void GameObjectManager::AddQuadObj(const Quad& inp_quadObj)
+{
+    quadObjBank.push_back(inp_quadObj);
 }

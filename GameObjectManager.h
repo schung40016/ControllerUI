@@ -1,7 +1,6 @@
 #pragma once
 
 #include "pch.h"
-#include <GameObject.h>
 #include <Image.h>
 #include <Text.h>
 #include <Triangle.h>
@@ -11,35 +10,56 @@
 #include <unordered_map>
 #include <Collider.h>
 
+class GameObject;
+
 class GameObjectManager {
 
 private:
-	// Controller objects here.
-	std::unordered_map<std::string, GameObject> gameObjBank = {};
-	std::unordered_map<std::string, Image> imgObjBank = {};
-	std::unordered_map<std::string, Text> txtObjBank = {};
-	std::unordered_map<std::string, Triangle> triObjBank = {};
-	std::unordered_map<std::string, Line> lnObjBank = {};
+	static GameObjectManager* instance;
+
+	// Store all objects here.
+	std::vector<GameObject> gameObjBank = {};
+	std::vector<Image> imgObjBank = {};
+	std::vector<Text> txtObjBank = {};
+	std::vector<Triangle> triObjBank = {};
+	std::vector<Line> lnObjBank = {};
 	std::vector<Collider> colliderBank = {};
+	std::vector<Quad> quadObjBank = {};
 
-	// Renders any 
-	std::unordered_map<std::string, Shape*> shpObjBank = {};
-
-public:
+	// Constructor.
 	GameObjectManager();
 
-	GameObjectManager(float horizontal, float vertical);
+public:
+	// Don't implement.
+	GameObjectManager(const GameObjectManager& obj) = delete;
+
+	// Allow others to get a share of the object.
+	static GameObjectManager* GetInstance();
 
 	// Getters & Setters.
-	std::unordered_map<std::string, GameObject>& GetGameObjBank();
+	std::vector<GameObject>& GetGameObjBank();
 
-	std::unordered_map<std::string, Image>& GetImgObjBank();
+	std::vector<Image>& GetImgObjBank();
 	
-	std::unordered_map<std::string, Text>& GetTxtObjBank();
+	std::vector<Text>& GetTxtObjBank();
 	
-	std::unordered_map<std::string, Triangle>& GetTriObjBank();
+	std::vector<Triangle>& GetTriObjBank();
 
-	std::unordered_map<std::string, Line>& GetLnObjBank();
+	std::vector<Line>& GetLnObjBank();
 
-	std::unordered_map<std::string, Shape*>& GetShpObjBank();
+	std::vector<Quad>& GetQuadObjBank();
+
+
+	// Adders.
+	void AddGameObj(const GameObject& inp_gameObject);
+
+	void AddImgObj(const Image& inp_imgObj);
+
+	void AddTxtObj(const Text& inp_txtObj);
+
+	void AddTriObj(const Triangle& inp_triObj);
+
+	void AddLnObj(const Line& inp_lnObj);
+
+	void AddQuadObj(const Quad& inp_quadObj);
 };

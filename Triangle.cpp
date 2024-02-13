@@ -2,10 +2,12 @@
 
 #include "pch.h"
 #include "Triangle.h"
+#include "GameObjectManager.h"
 
 // Constructor
 Triangle::Triangle()
 {
+	resourceManager = GameObjectManager::GetInstance();
 }
 
 // Create a instance of an equallateral triangle at a specified position.
@@ -17,6 +19,7 @@ Triangle::Triangle(DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, floa
 	SetPosition({ inp_x, inp_y });
 	SetLength(inp_len);
 	SetWidth(inp_wid);
+	resourceManager->AddTriObj(*this);
 }
 
 // Draw Triangle.

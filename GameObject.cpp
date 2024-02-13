@@ -1,14 +1,27 @@
 #include "pch.h"
 #include "GameObject.h"
+#include "GameObjectManager.h"
 
 GameObject::GameObject()
 {
+	resourceManager = GameObjectManager::GetInstance();
 }
 
-GameObject::GameObject(DirectX::SimpleMath::Vector2 inp_position, float inp_size)
+GameObject::GameObject(DirectX::SimpleMath::Vector2 inp_position, float inp_size, std::vector<Component*> inp_components)
 {
+	resourceManager = GameObjectManager::GetInstance();
 	gObj_position = inp_position;
 	gObj_originalSize = inp_size;
+	components = inp_components;
+	resourceManager->AddGameObj(*this);
+}
+
+void GameObject::UpdateComponents(float deltaTime)
+{
+	for (auto& comp : components)
+	{
+ 		comp->Update(deltaTime);
+	}
 }
 
 const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
@@ -75,4 +88,14 @@ void GameObject::SetDisplay(const bool inp_display)
 void GameObject::SetOriginalSize(const float inp_ogSize)
 {
 	gObj_originalSize = inp_ogSize;
+}
+
+void GameObject::SetComponents(const std::vector<Component*>& inp_components)
+{
+	components = inp_components;
+}
+
+void GameObject::MovePosition(const DirectX::SimpleMath::Vector2 inp_position)
+{
+	gObj_position += inp_position;
 }

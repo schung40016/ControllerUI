@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "Quad.h"
+#include "GameObjectManager.h"
 
 // Constructor
 Quad::Quad()
@@ -11,6 +12,8 @@ Quad::Quad()
 // Create a instance of an equallateral triangle at a specified position.
 Quad::Quad(DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid, bool inp_display)
 {
+	resourceManager = GameObjectManager::GetInstance();
+
 	SetColor(colorInput);
 	SetParent(inp_parentObj);
 	SetScale(inp_scale);
@@ -18,6 +21,7 @@ Quad::Quad(DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_sc
 	SetLength(inp_len);
 	SetWidth(inp_wid);
 	SetDisplay(inp_display);
+	resourceManager->AddQuadObj(*this);
 }
 
 // Draw Triangle.

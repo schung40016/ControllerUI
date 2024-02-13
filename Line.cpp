@@ -1,23 +1,27 @@
 #include "pch.h"
 #include "Line.h"
+#include "GameObjectManager.h"
 
 Line::Line()
 {
+    resourceManager = GameObjectManager::GetInstance();
 }
 
-Line::Line(DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale)
+Line::Line(DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale)
     : shapeColor(inp_shapeColor)
 {
     SetParent(inp_parentObj);
     SetScale(inp_scale);
-    SetPosition({ inp_x, inp_y});
+    SetPosition(inp_pt2);
+    resourceManager->AddLnObj(*this);
 }
 
-Line::Line(DirectX::XMVECTOR inp_shapeColor, float v1x, float v1y, float v2x, float v2y, float inp_scale)
+Line::Line(DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale)
 	: shapeColor(inp_shapeColor)
 {
-    SetPosition({ v1x, v1y });
-    point2 = { v2x, v2y };
+    SetParent(inp_parentObj);
+    SetPosition(inp_pt1);
+    point2 = inp_pt2;
     SetScale(inp_scale);
 }
 

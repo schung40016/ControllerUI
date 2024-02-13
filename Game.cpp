@@ -25,6 +25,9 @@ Game::~Game()
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height)
 {   
+    const char* message = "Hello, Output window!";
+    OutputDebugStringA(message);
+
     m_deviceResources->SetWindow(window, width, height);
 
     auto size = m_deviceResources->GetOutputSize();
@@ -34,7 +37,7 @@ void Game::Initialize(HWND window, int width, int height)
     float horizontal = float(size.right);
     float vertical = float(size.bottom);
 
-    resourceManager = GameObjectManager(horizontal, vertical);
+    gameWorld.Initialize();
 
     m_deviceResources->CreateDeviceResources();
     CreateDeviceDependentResources();
@@ -48,9 +51,6 @@ void Game::Initialize(HWND window, int width, int height)
     m_timer.SetFixedTimeStep(true);
     m_timer.SetTargetElapsedSeconds(1.0 / 60);
     */
-
-    // Set up gamepad
-    inputManager = InputManager::GetInstance();
 }
 
 #pragma region Frame Update
@@ -72,36 +72,15 @@ void Game::Update(DX::StepTimer const& timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
 
-    inputManager = InputManager::GetInstance();
+    std::vector<GameObject>& gameObjs = resourceManager->GetGameObjBank();
+
     // TODO: Add your game logic here.
     inputManager->UpdateButtons();
 
-    std::unordered_map<std::string, Triangle>& triangles = resourceManager.GetTriObjBank();
-
-    triangles["A"].SetDisplay(inputManager->a);
-    triangles["B"].SetDisplay(inputManager->b);
-    triangles["X"].SetDisplay(inputManager->x);
-    triangles["Y"].SetDisplay(inputManager->y);
-    triangles["Start"].SetDisplay(inputManager->start);
-    triangles["View"].SetDisplay(inputManager->view);
-
-    triangles["DPadUp"].SetDisplay(inputManager->dPadUp);
-    triangles["DPadDown"].SetDisplay(inputManager->dPadDown);
-    triangles["DPadLeft"].SetDisplay(inputManager->dPadLeft);
-    triangles["DPadRight"].SetDisplay(inputManager->dPadRight);
-
-    triangles["LeftShoulder"].SetDisplay(inputManager->leftShoulder);
-    triangles["RightShoulder"].SetDisplay(inputManager->rightShoulder);
-    triangles["LeftTrigger"].SetDisplay(inputManager->leftTrigger);
-    triangles["RightTrigger"].SetDisplay(inputManager->rightTrigger);
-
-    triangles["leftStick"].SetDisplay(inputManager->leftStick);
-    triangles["rightStick"].SetDisplay(inputManager->rightStick);
-
-    std::unordered_map<std::string, Line>& lines = resourceManager.GetLnObjBank();
-
-    lines["LeftStick"].SetPoint2(inputManager->leftStickPos.x, inputManager->leftStickPos.y);
-    lines["RightStick"].SetPoint2(inputManager->rightStickPos.x, inputManager->rightStickPos.y);
+    for (auto& curr : gameObjs)
+    {
+        curr.UpdateComponents(elapsedTime);
+    }
 
     elapsedTime;
 
@@ -123,19 +102,8 @@ void Game::Render()
     m_deviceResources->Prepare();
     directXUtility.CleanScreen(m_deviceResources);
 
-    Text& controllerIndicator = resourceManager.GetTxtObjBank()["Status"];
-
-    if (directXUtility.GetControllerConnected())
-    {
-        controllerIndicator.SetText("On");
-    }
-    else
-    {
-        controllerIndicator.SetText("Off");
-    }
-
     auto commandList = m_deviceResources->GetCommandList();
-    directXUtility.RenderAllGameObjects(m_deviceResources, commandList, resourceManager.GetTxtObjBank(), resourceManager.GetImgObjBank(), resourceManager.GetTriObjBank(), resourceManager.GetLnObjBank(), resourceManager.GetShpObjBank());
+    directXUtility.RenderAllGameObjects(m_deviceResources, commandList, resourceManager->GetTxtObjBank(), resourceManager->GetImgObjBank(), resourceManager->GetTriObjBank(), resourceManager->GetLnObjBank(), resourceManager->GetQuadObjBank());
 }
 
 // Helper method to clear the back buffers.
@@ -169,26 +137,22 @@ void Game::OnActivated()
     // TODO: Game is becoming active window.
     inputManager->ResumeGamepad();
     inputManager->ResetButtons();
-    directXUtility.SetControllerConnected(true);
 }
 
 void Game::OnDeactivated()
 {
     // TODO: Game is becoming background window.
-    directXUtility.SetControllerConnected(false);
     inputManager->SuspendGamepad();
 }
 
 void Game::OnSuspending()
 {
     // TODO: Game is being power-suspended (or minimized).
-    directXUtility.SetControllerConnected(false);
     inputManager->SuspendGamepad();
 }
 
 void Game::OnResuming()
 {
-    directXUtility.SetControllerConnected(true);
     m_timer.ResetElapsedTime();
 
     // TODO: Game is being power-resumed (or returning from minimize).
@@ -244,7 +208,7 @@ void Game::CreateDeviceDependentResources()
     }
 
     // TODO: Initialize device dependent objects here (independent of window size).
-    directXUtility.PrepareDeviceDependentResources(m_deviceResources, device, resourceManager.GetImgObjBank());
+    directXUtility.PrepareDeviceDependentResources(m_deviceResources, device, resourceManager->GetImgObjBank());
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -258,10 +222,10 @@ void Game::CreateWindowSizeDependentResources()
     float horizontal = float(size.right);
     float vertical = float(size.bottom);
 
-    GameObject& controller = resourceManager.GetGameObjBank()["Controller"];
+    std::vector<GameObject>& controller = resourceManager->GetGameObjBank();
 
-    controller.SetPosition({(horizontal / 10.f), (vertical / 9.0f)});
-    controller.CalcScale(std::min(horizontal, vertical));
+    //controller.SetPosition({(horizontal / 10.f), (vertical / 9.0f)});
+    //controller.CalcScale(std::min(horizontal, vertical));
 
     directXUtility.PrepareWindowDependentResources(size, viewport);
 }
@@ -269,7 +233,7 @@ void Game::CreateWindowSizeDependentResources()
 void Game::OnDeviceLost()
 {
     // Resets Assets
-    directXUtility.ResetAssets(resourceManager.GetImgObjBank());
+    directXUtility.ResetAssets(resourceManager->GetImgObjBank());
 }
 
 void Game::OnDeviceRestored()
