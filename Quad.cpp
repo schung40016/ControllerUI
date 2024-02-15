@@ -9,7 +9,6 @@ Quad::Quad()
 {
 }
 
-// Create a instance of an equallateral triangle at a specified position.
 Quad::Quad(DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid, bool inp_display)
 {
 	resourceManager = GameObjectManager::GetInstance();
@@ -40,7 +39,7 @@ void Quad::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPos
 
 	DirectX::XMVECTOR currColor = GetColor();
 
-	DirectX::VertexPositionColor v1(DirectX::SimpleMath::Vector3(newPos.x + calcLen * currScale, newPos.y - calcWid * currScale, 0.f), currColor);
+	DirectX::VertexPositionColor v1(DirectX::SimpleMath::Vector3(newPos.x + calcLen * currScale, newPos.y - calcWid * currScale, 0.f), currColor);	// problem: quad's parent points to the gameobj in world.h, and gameobjectmanager holds a new copy.
 	DirectX::VertexPositionColor v2(DirectX::SimpleMath::Vector3(newPos.x + calcLen * currScale, newPos.y + calcWid * currScale, 0.f), currColor);
 	DirectX::VertexPositionColor v3(DirectX::SimpleMath::Vector3(newPos.x - calcLen * currScale, newPos.y + calcWid * currScale, 0.f), currColor);
 	DirectX::VertexPositionColor v4(DirectX::SimpleMath::Vector3(newPos.x - calcLen * currScale, newPos.y - calcWid * currScale, 0.f), currColor);

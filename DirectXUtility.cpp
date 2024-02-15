@@ -2,9 +2,11 @@
 
 #include "pch.h"
 #include "DirectXUtility.h"
+#include "GameObjectManager.h"
 
 DirectXUtility::DirectXUtility()
 {   
+    resourceManager = GameObjectManager::GetInstance();
 }
 
 void DirectXUtility::CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_deviceResources)

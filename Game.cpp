@@ -37,9 +37,9 @@ void Game::Initialize(HWND window, int width, int height)
     float horizontal = float(size.right);
     float vertical = float(size.bottom);
 
-    gameWorld.Initialize();
-
     m_deviceResources->CreateDeviceResources();
+
+    gameWorld.Initialize();
     CreateDeviceDependentResources();
 
     m_deviceResources->CreateWindowSizeDependentResources();
@@ -72,14 +72,14 @@ void Game::Update(DX::StepTimer const& timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
 
-    std::vector<GameObject>& gameObjs = resourceManager->GetGameObjBank();
+    std::vector<GameObject*> gameObjs = resourceManager->GetGameObjBank();
 
     // TODO: Add your game logic here.
     inputManager->UpdateButtons();
 
-    for (auto& curr : gameObjs)
+    for (GameObject* curr : gameObjs)
     {
-        curr.UpdateComponents(elapsedTime);
+        curr->UpdateComponents(elapsedTime);
     }
 
     elapsedTime;
@@ -222,10 +222,13 @@ void Game::CreateWindowSizeDependentResources()
     float horizontal = float(size.right);
     float vertical = float(size.bottom);
 
-    std::vector<GameObject>& controller = resourceManager->GetGameObjBank();
+    std::vector<GameObject*>& gameObjs = resourceManager->GetGameObjBank();
 
-    //controller.SetPosition({(horizontal / 10.f), (vertical / 9.0f)});
-    //controller.CalcScale(std::min(horizontal, vertical));
+    for (GameObject* curr : gameObjs)
+    {
+        curr->SetPosition({horizontal, vertical});
+        curr->CalcScale(std::min(horizontal, vertical));
+    }
 
     directXUtility.PrepareWindowDependentResources(size, viewport);
 }

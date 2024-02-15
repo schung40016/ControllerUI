@@ -18,7 +18,7 @@ private:
 	static GameObjectManager* instance;
 
 	// Store all objects here.
-	std::vector<GameObject> gameObjBank = {};
+	std::vector<GameObject*> gameObjBank = {};
 	std::vector<Image> imgObjBank = {};
 	std::vector<Text> txtObjBank = {};
 	std::vector<Triangle> triObjBank = {};
@@ -37,7 +37,7 @@ public:
 	static GameObjectManager* GetInstance();
 
 	// Getters & Setters.
-	std::vector<GameObject>& GetGameObjBank();
+	std::vector<GameObject*>& GetGameObjBank();
 
 	std::vector<Image>& GetImgObjBank();
 	
@@ -51,7 +51,7 @@ public:
 
 
 	// Adders.
-	void AddGameObj(const GameObject& inp_gameObject);
+	void AddGameObj(GameObject* inp_gameObject);
 
 	void AddImgObj(const Image& inp_imgObj);
 

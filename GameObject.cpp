@@ -13,7 +13,7 @@ GameObject::GameObject(DirectX::SimpleMath::Vector2 inp_position, float inp_size
 	gObj_position = inp_position;
 	gObj_originalSize = inp_size;
 	components = inp_components;
-	resourceManager->AddGameObj(*this);
+	resourceManager->AddGameObj(this);
 }
 
 void GameObject::UpdateComponents(float deltaTime)
@@ -62,6 +62,7 @@ const int GameObject::GetLayerMask() const
 
 void GameObject::CalcScale(float inp_size)
 {
+	test = inp_size;
 	gObj_scale = inp_size / gObj_originalSize;
 }
 

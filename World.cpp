@@ -17,11 +17,9 @@ void World::Initialize()
     });
     playerShape = Quad(DirectX::Colors::Aqua, player, 1.f, 0, 0, 50.f, 50.f, true);
 
-    controller = GameObject({ 500.f, 500.f }, 1.f, {
+    controller = GameObject({ 500.f, 500.f }, 10.f, {
         new Controller(controller)
     });          // this gets destroyed. We need to somehow keep it alive.
-
-    std::cout << "hi";
 }
 
 //gameObjBank["Player"].SetComponents({
@@ -32,15 +30,3 @@ void World::Initialize()
 //});
 
 //shpObjBank.emplace_back(new Quad(DirectX::Colors::Aqua, gameObjBank["Player"], 1.f, 0, 0, 50.f, 50.f, true));
-
-/* ask charles this:
-
-    player.SetComponents({
-        new PlayerController(player),
-        new RigidBody(player, 10.f)
-    });
-
-    controller.SetComponents({
-        new Controller(controller)
-    });
-*/

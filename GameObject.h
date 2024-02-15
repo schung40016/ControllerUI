@@ -17,6 +17,7 @@ private:
 	float gObj_originalSize = 1.f;
 	int layerMask = 0;
 	std::vector<Component*> components = {};
+	float test = 0.f;
 
 protected:
 	GameObjectManager* resourceManager;

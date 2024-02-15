@@ -37,7 +37,7 @@ GameObjectManager::GameObjectManager()
 }
 
 // Getters & Setters.
-std::vector<GameObject>& GameObjectManager::GetGameObjBank()
+std::vector<GameObject*>& GameObjectManager::GetGameObjBank()
 {
 	return gameObjBank;
 }
@@ -68,7 +68,7 @@ std::vector<Quad>& GameObjectManager::GetQuadObjBank()
 }
 
 // Adders
-void GameObjectManager::AddGameObj(const GameObject& inp_gameObject)
+void GameObjectManager::AddGameObj(GameObject* inp_gameObject)
 {
     gameObjBank.emplace_back(inp_gameObject);
 }

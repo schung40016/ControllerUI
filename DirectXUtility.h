@@ -25,6 +25,8 @@ private:
     std::unique_ptr<DirectX::BasicEffect> m_effect;
     std::unique_ptr<DirectX::BasicEffect> m_lineEffect;
     std::unique_ptr<DirectX::PrimitiveBatch<VertexType>> m_batch;
+
+    GameObjectManager* resourceManager;
     
 public: 
     DirectXUtility();
