@@ -72,14 +72,14 @@ void Game::Update(DX::StepTimer const& timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
 
-    std::vector<GameObject*> gameObjs = resourceManager->GetGameObjBank();
+    std::unordered_map<std::string, GameObject> gameObjs = resourceManager->GetGameObjBank();
 
     // TODO: Add your game logic here.
     inputManager->UpdateButtons();
 
-    for (GameObject* curr : gameObjs)
+    for (auto &curr : gameObjs)
     {
-        curr->UpdateComponents(elapsedTime);
+        curr.second.UpdateComponents(elapsedTime);
     }
 
     elapsedTime;
@@ -222,12 +222,12 @@ void Game::CreateWindowSizeDependentResources()
     float horizontal = float(size.right);
     float vertical = float(size.bottom);
 
-    std::vector<GameObject*>& gameObjs = resourceManager->GetGameObjBank();
+    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
 
-    for (GameObject* curr : gameObjs)
+    for (auto &curr : gameObjs)
     {
-        curr->SetPosition({horizontal, vertical});
-        curr->CalcScale(std::min(horizontal, vertical));
+        //curr.second.SetPosition({horizontal, vertical});
+        curr.second.CalcScale(std::min(horizontal, vertical));
     }
 
     directXUtility.PrepareWindowDependentResources(size, viewport);

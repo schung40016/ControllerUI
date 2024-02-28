@@ -18,13 +18,12 @@ private:
 	static GameObjectManager* instance;
 
 	// Store all objects here.
-	std::vector<GameObject*> gameObjBank = {};
-	std::vector<Image> imgObjBank = {};
-	std::vector<Text> txtObjBank = {};
-	std::vector<Triangle> triObjBank = {};
-	std::vector<Line> lnObjBank = {};
-	std::vector<Collider> colliderBank = {};
-	std::vector<Quad> quadObjBank = {};
+	std::unordered_map<std::string, GameObject> gameObjBank = {};
+	std::unordered_map<std::string, Image> imgObjBank = {};
+	std::unordered_map<std::string, Text> txtObjBank = {};
+	std::unordered_map<std::string, Triangle> triObjBank = {};
+	std::unordered_map<std::string, Line> lnObjBank = {};
+	std::unordered_map<std::string, Quad> quadObjBank = {};
 
 	// Constructor.
 	GameObjectManager();
@@ -37,29 +36,40 @@ public:
 	static GameObjectManager* GetInstance();
 
 	// Getters & Setters.
-	std::vector<GameObject*>& GetGameObjBank();
+	std::unordered_map<std::string, GameObject>& GetGameObjBank();
 
-	std::vector<Image>& GetImgObjBank();
+	std::unordered_map<std::string, Image>& GetImgObjBank();
 	
-	std::vector<Text>& GetTxtObjBank();
+	std::unordered_map<std::string, Text>& GetTxtObjBank();
 	
-	std::vector<Triangle>& GetTriObjBank();
+	std::unordered_map<std::string, Triangle>& GetTriObjBank();
 
-	std::vector<Line>& GetLnObjBank();
+	std::unordered_map<std::string, Line>& GetLnObjBank();
 
-	std::vector<Quad>& GetQuadObjBank();
+	std::unordered_map<std::string, Quad>& GetQuadObjBank();
 
+	GameObject& GetGameObj(const std::string id);
+
+	Image& GetImgObj(const std::string id);
+
+	Text& GetTxtObj(const std::string id);
+
+	Triangle& GetTriObj(const std::string id);
+
+	Line& GetLnObj(const std::string id);
+
+	Quad& GetQuadObj(const std::string id);
 
 	// Adders.
-	void AddGameObj(GameObject* inp_gameObject);
+	void AddGameObj(std::string id, const GameObject& inp_gameObject);
 
-	void AddImgObj(const Image& inp_imgObj);
+	void AddImgObj(std::string id, const Image& inp_imgObj);
 
-	void AddTxtObj(const Text& inp_txtObj);
+	void AddTxtObj(std::string id, const Text& inp_txtObj);
 
-	void AddTriObj(const Triangle& inp_triObj);
+	void AddTriObj(std::string id, const Triangle& inp_triObj);
 
-	void AddLnObj(const Line& inp_lnObj);
+	void AddLnObj(std::string id, const Line& inp_lnObj);
 
-	void AddQuadObj(const Quad& inp_quadObj);
+	void AddQuadObj(std::string id, const Quad& inp_quadObj);
 };

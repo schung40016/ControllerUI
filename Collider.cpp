@@ -8,9 +8,13 @@ Collider::Collider(GameObject& inp_parentObj, std::vector<DirectX::SimpleMath::V
 	parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
 	vertices = inp_vertices;
 
+	std::string parentName = parentObj->GetName() + " - ColliderLine ";
+
 	for (int i = 0; i < inp_vertices.size(); ++i)
 	{
-		vertexLines.emplace_back(Line(DirectX::Colors::Red, inp_parentObj, inp_vertices[i], inp_vertices[i % inp_vertices.size()], 1.0f));
+		std::string colliderName = parentName + std::to_string(i);
+
+		vertexLines.emplace_back(Line(colliderName, Colors::DeepPink, inp_parentObj, inp_vertices[i], inp_vertices[(i + 1) % inp_vertices.size()], 1.0f));
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "Line.h"
 #include "Image.h"
 #include "InputManager.h"
+#include "GameObjectManager.h"
 
 class Controller : public Component
 {

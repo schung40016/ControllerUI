@@ -33,26 +33,26 @@ public:
 
     void CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_deviceResources);
 
-    void RenderAllGameObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, std::vector<Text>& txtObjects, std::vector<Image>& imgObjects,
-        std::vector<Triangle>& triObjects, std::vector<Line>& lnObjects, std::vector<Quad>& shpObjects);
+    void RenderAllGameObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects,
+        std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Quad>& quadObjects);
 
-    void RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::vector<Text>& txtObjects, std::vector<Image>& imgObjects);
+    void RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects);
 
-    void RenderShapeObjects(ID3D12GraphicsCommandList* commandList, std::vector<Triangle>& shpObjects);
+    void RenderShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects);
 
-    void RenderShapeObjects(ID3D12GraphicsCommandList* commandList, const std::vector<Quad>& quadObjects);
+    void RenderShapeObjects(ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects);
 
-    void RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::vector<Line>& lnObjects);
+    void RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects);
 
-    void PrepareDeviceDependentResources(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12Device* device, std::vector<Image>& imgObjects);
+    void PrepareDeviceDependentResources(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12Device* device, std::unordered_map<std::string, Image>& imgObjects);
 
     void PrepareWindowDependentResources(RECT size, const D3D12_VIEWPORT& viewport);
 
-    void CheckInputs(const std::vector<Triangle>& shpObjects);
+    void CheckInputs(const std::unordered_map<std::string, Triangle>& shpObjects);
 
-    void ResetAssets(std::vector<Image>& imgObjects);
+    void ResetAssets(std::unordered_map<std::string, Image>& imgObjects);
 
-    void SetButtonDisplays(const std::vector<Triangle>& shpObjects);
+    void SetButtonDisplays(std::unordered_map<std::string, Triangle>& shpObjects);
 
     // Getters & Setters,
     bool GetControllerConnected();

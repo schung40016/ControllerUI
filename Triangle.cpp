@@ -11,15 +11,16 @@ Triangle::Triangle()
 }
 
 // Create a instance of an equallateral triangle at a specified position.
-Triangle::Triangle(DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid)
+Triangle::Triangle(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid)
 {
+	SetName(id);
 	SetColor(colorInput);
 	SetParent(inp_parentObj);
 	SetScale(inp_scale);
 	SetPosition({ inp_x, inp_y });
 	SetLength(inp_len);
 	SetWidth(inp_wid);
-	resourceManager->AddTriObj(*this);
+	resourceManager->AddTriObj(id, *this);
 }
 
 // Draw Triangle.

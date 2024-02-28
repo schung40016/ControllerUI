@@ -31,8 +31,8 @@ void DirectXUtility::CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_d
     PIXEndEvent(commandList);
 }
 
-void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, std::vector<Text>& txtObjects,
-    std::vector<Image>& imgObjects, std::vector<Triangle>& triObjects, std::vector<Line>& lnObjects, std::vector<Quad>& quadObjects)
+void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects,
+    std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Quad>& quadObjects)
 {
     PIXBeginEvent(commandList, PIX_COLOR_DEFAULT, L"Render");
 
@@ -46,12 +46,12 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     // Render Triangles
     RenderShapeObjects(commandList, triObjects);
 
+    // Render all shape objects
+    RenderShapeObjects(commandList, quadObjects);
+
     // Render Lines
     RenderLineObjects(commandList, lnObjects);
     // ------------------
-
-    // Render all shape objects
-    RenderShapeObjects(commandList, quadObjects);
 
     PIXEndEvent(commandList);
 
@@ -63,7 +63,7 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     PIXEndEvent();
 }
 
-void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::vector<Text>& txtObjects, std::vector<Image>& imgObjects)
+void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects)
 {
     m_spriteBatch->Begin(commandList);
     // -- RENDER TEXT --
@@ -71,22 +71,22 @@ void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* command
 
     for (auto& current : txtObjects)
     {
-        current.SetOrigin(m_font);
-        current.DrawText(m_font, m_spriteBatch);
+        current.second.SetOrigin(m_font);
+        current.second.DrawText(m_font, m_spriteBatch);
     }
     //------------------
 
     // -- RENDER IMAGE --
     for (auto& current : imgObjects)
     {
-        current.RenderImage(m_spriteBatch, m_resourceDescriptors);
+        current.second.RenderImage(m_spriteBatch, m_resourceDescriptors);
     }
     // ------------------
 
     m_spriteBatch->End();
 }
 
-void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, std::vector<Triangle>& shpObjects)
+void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects)
 {
     m_effect->Apply(commandList);
 
@@ -97,7 +97,7 @@ void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, 
     m_batch->End();
 }
 
-void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, const std::vector<Quad>& quadObjects)
+void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects)
 {
     m_effect->Apply(commandList);
 
@@ -105,13 +105,13 @@ void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, 
 
     for (const auto& currObject : quadObjects)
     {
-        currObject.Draw(m_batch);
+        currObject.second.Draw(m_batch);
     }
 
     m_batch->End();
 }
 
-void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::vector<Line>& lnObjects)
+void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects)
 {
     m_lineEffect->Apply(commandList);
 
@@ -119,13 +119,13 @@ void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, s
 
     for (auto& current : lnObjects)
     {
-        current.DrawStickOrientation(m_batch);
+        current.second.DrawStickOrientation(m_batch);
     }
 
     m_batch->End();
 }
 
-void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12Device* device, std::vector<Image>& imgObjects)
+void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12Device* device, std::unordered_map<std::string, Image>& imgObjects)
 {
     m_graphicsMemory = std::make_unique<GraphicsMemory>(device);
 
@@ -144,7 +144,7 @@ void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::D
     // ----- PREPARE SPRITE -----
     for (auto& current : imgObjects)
     {
-        current.PrepareImageResources(device, resourceUpload, m_resourceDescriptors);
+        current.second.PrepareImageResources(device, resourceUpload, m_resourceDescriptors);
     }
     //-----------------------------
 
@@ -159,7 +159,7 @@ void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::D
     // SET IMAGE PIVOT
     for (auto& current : imgObjects)
     {
-        current.SetImageOrigin();
+        current.second.SetImageOrigin();
     }
     // ------------------
 
@@ -201,18 +201,18 @@ void DirectXUtility::PrepareWindowDependentResources(RECT size, const D3D12_VIEW
     m_lineEffect->SetProjection(proj);
 }
 
-void DirectXUtility::CheckInputs(const std::vector<Triangle>& shpObjects)
+void DirectXUtility::CheckInputs(const std::unordered_map<std::string, Triangle>& shpObjects)
 {
     // All the triangle's position have to be relative to the image positions.
     // Iterate through UI button class so that we can basically have a single for loop and call the set position and draw triangle once.
 
     for (const auto& currObject : shpObjects)
     {
-        currObject.Draw(m_batch);
+        currObject.second.Draw(m_batch);
     }
 }
 
-void DirectXUtility::ResetAssets(std::vector<Image>& imgObjects)
+void DirectXUtility::ResetAssets(std::unordered_map<std::string, Image>& imgObjects)
 {
     m_graphicsMemory.reset();
     m_spriteBatch.reset();
@@ -220,16 +220,11 @@ void DirectXUtility::ResetAssets(std::vector<Image>& imgObjects)
 
     for (auto& current : imgObjects)
     {
-        current.ResetTexture();
+        current.second.ResetTexture();
     }
 
     m_resourceDescriptors.reset();
     m_effect.reset();
     m_lineEffect.reset();
     m_batch.reset();
-}
-
-void DirectXUtility::SetButtonDisplays(const std::vector<Triangle>& shpObjects)
-{
-
 }

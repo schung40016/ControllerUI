@@ -4,16 +4,17 @@
 
 GameObject::GameObject()
 {
+	name = "Not Initialized";
 	resourceManager = GameObjectManager::GetInstance();
 }
 
-GameObject::GameObject(DirectX::SimpleMath::Vector2 inp_position, float inp_size, std::vector<Component*> inp_components)
+GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size)
 {
+	name = id;
 	resourceManager = GameObjectManager::GetInstance();
 	gObj_position = inp_position;
 	gObj_originalSize = inp_size;
-	components = inp_components;
-	resourceManager->AddGameObj(this);
+	resourceManager->AddGameObj(id, *this);
 }
 
 void GameObject::UpdateComponents(float deltaTime)
@@ -24,11 +25,20 @@ void GameObject::UpdateComponents(float deltaTime)
 	}
 }
 
+const std::string GameObject::GetName()
+{
+	return name;
+}
+
 const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 {
 	if (gObj_parentObj)
 	{
-		DirectX::SimpleMath::Vector2 temp = { (gObj_position.x * GetScale()) + gObj_parentObj->GetPosition().x, (gObj_position.y * GetScale()) + gObj_parentObj->GetPosition().y };
+		float scale = GetScale();
+		DirectX:SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPosition();
+		//float calcX = gObj_position.x * scale + parent_pos.x;
+		//float calcY = gObj_position.y * scale + parent_pos.y;
+		DirectX::SimpleMath::Vector2 temp = { parent_pos.x, parent_pos.y };
 		return temp;
 	}
 
@@ -62,8 +72,12 @@ const int GameObject::GetLayerMask() const
 
 void GameObject::CalcScale(float inp_size)
 {
-	test = inp_size;
 	gObj_scale = inp_size / gObj_originalSize;
+}
+
+void GameObject::SetName(std::string inp_name)
+{
+	name = inp_name;
 }
 
 void GameObject::SetPosition(const DirectX::SimpleMath::Vector2 inp_position)

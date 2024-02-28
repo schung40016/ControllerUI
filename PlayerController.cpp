@@ -5,7 +5,7 @@ PlayerController::PlayerController(GameObject& inp_parentObj)
 {
 	parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
 	rb = new RigidBody(inp_parentObj);
-	std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = { { 0.f, 0.f }, {0.f, 50.f}, {50.f, -50.f}, {0, -50.f} };
+	std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = { { -25.f, 25.f }, {25.f, 25.f}, {25.f, -25.f}, {-25.f, -25.f} };
 	collider = new Collider(inp_parentObj, playerCollisionBox);
 }
 

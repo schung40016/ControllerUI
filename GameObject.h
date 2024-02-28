@@ -10,6 +10,7 @@ class GameObjectManager;
 class GameObject
 {
 private: 
+	std::string name = "";
 	DirectX::SimpleMath::Vector2 gObj_position = { 0, 0 };
 	float gObj_scale = 1.f;
 	std::shared_ptr<GameObject> gObj_parentObj = nullptr;
@@ -25,9 +26,11 @@ protected:
 public: 
 	GameObject();
 	
-	GameObject(DirectX::SimpleMath::Vector2 inp_position, float inp_size, std::vector<Component*> inp_components);
+	GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size);
 
 	void UpdateComponents(float deltaTime);
+
+	const std::string GetName();
 
 	const DirectX::SimpleMath::Vector2 GetPosition() const;
 
@@ -40,6 +43,8 @@ public:
 	const int GetLayerMask() const;
 
 	void CalcScale(float inp_size);
+
+	void SetName(std::string inp_name);
 
 	void SetPosition(DirectX::SimpleMath::Vector2 inp_position);
 

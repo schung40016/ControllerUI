@@ -9,19 +9,21 @@ Text::Text()
 	resourceManager = GameObjectManager::GetInstance();
 }
 
-Text::Text(DirectX::XMVECTOR inp_color, std::string inp_text)
+Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text)
 	: text(inp_text)
 {
+	SetName(id);
 	SetColor(inp_color);
-	resourceManager->AddTxtObj(*this);
+	resourceManager->AddTxtObj(id, *this);
 }
 
-Text::Text(DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y)
+Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y)
 	: text(inp_text)
 {
 	SetColor(inp_color);
 	SetParent(inp_parentObj);
 	SetPosition({ inp_x, inp_y });
+	resourceManager->AddTxtObj(id, *this);
 }
 
 void Text::DrawText(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch)

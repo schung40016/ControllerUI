@@ -37,63 +37,93 @@ GameObjectManager::GameObjectManager()
 }
 
 // Getters & Setters.
-std::vector<GameObject*>& GameObjectManager::GetGameObjBank()
+std::unordered_map<std::string, GameObject>& GameObjectManager::GetGameObjBank()
 {
 	return gameObjBank;
 }
 
-std::vector<Image>& GameObjectManager::GetImgObjBank()
+std::unordered_map<std::string, Image>& GameObjectManager::GetImgObjBank()
 {
 	return imgObjBank;
 }
 
-std::vector<Text>& GameObjectManager::GetTxtObjBank()
+std::unordered_map<std::string, Text>& GameObjectManager::GetTxtObjBank()
 {
 	return txtObjBank;
 }
 
-std::vector<Triangle>& GameObjectManager::GetTriObjBank()
+std::unordered_map<std::string, Triangle>& GameObjectManager::GetTriObjBank()
 {
 	return triObjBank;
 }
 
-std::vector<Line>& GameObjectManager::GetLnObjBank()
+std::unordered_map<std::string, Line>& GameObjectManager::GetLnObjBank()
 {
 	return lnObjBank;
 }
 
-std::vector<Quad>& GameObjectManager::GetQuadObjBank()
+std::unordered_map<std::string, Quad>& GameObjectManager::GetQuadObjBank()
 {
     return quadObjBank;
 }
 
+GameObject& GameObjectManager::GetGameObj(const std::string id)
+{
+    return gameObjBank[id];
+}
+
+Image& GameObjectManager::GetImgObj(const std::string id)
+{
+    return imgObjBank[id];
+}
+
+Text& GameObjectManager::GetTxtObj(const std::string id)
+{
+    return txtObjBank[id];
+}
+
+Triangle& GameObjectManager::GetTriObj(const std::string id)
+{
+    return triObjBank[id];
+}
+
+Line& GameObjectManager::GetLnObj(const std::string id)
+{
+    return lnObjBank[id];
+}
+
+Quad& GameObjectManager::GetQuadObj(const std::string id)
+{
+    return quadObjBank[id];
+}
+
 // Adders
-void GameObjectManager::AddGameObj(GameObject* inp_gameObject)
+void GameObjectManager::AddGameObj(std::string id, const GameObject& inp_gameObject)
 {
-    gameObjBank.emplace_back(inp_gameObject);
+    gameObjBank[id] = inp_gameObject;
 }
 
-void GameObjectManager::AddImgObj(const Image& inp_imgObj)
+void GameObjectManager::AddImgObj(std::string id, const Image& inp_imgObj)
 {
-    imgObjBank.emplace_back(inp_imgObj);
+    imgObjBank[id] = inp_imgObj;
 }
 
-void GameObjectManager::AddTxtObj(const Text& inp_txtObj)
+void GameObjectManager::AddTxtObj(std::string id, const Text& inp_txtObj)
 {
-    txtObjBank.emplace_back(inp_txtObj);
+    txtObjBank[id] = inp_txtObj;
 }
 
-void GameObjectManager::AddTriObj(const Triangle& inp_triObj)
+void GameObjectManager::AddTriObj(std::string id, const Triangle& inp_triObj)
 {
-    triObjBank.emplace_back(inp_triObj);
+    triObjBank[id] = inp_triObj;
 }
 
-void GameObjectManager::AddLnObj(const Line& inp_lnObj)
+void GameObjectManager::AddLnObj(std::string id, const Line& inp_lnObj)
 {
-    lnObjBank.emplace_back(inp_lnObj);
+    lnObjBank[id] = inp_lnObj;
 }
 
-void GameObjectManager::AddQuadObj(const Quad& inp_quadObj)
+void GameObjectManager::AddQuadObj(std::string id, const Quad& inp_quadObj)
 {
-    quadObjBank.push_back(inp_quadObj);
+    quadObjBank[id] = inp_quadObj;
 }

@@ -11,9 +11,9 @@ private:
 public:
 	Text();
 	
-	Text(DirectX::XMVECTOR inp_color, std::string inp_text);
+	Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text);
 
-	Text(DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y);
+	Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y);
 
 	void DrawText(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch);
 

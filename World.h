@@ -6,11 +6,16 @@
 #include "RigidBody.h"
 #include "Collider.h"
 #include "PlayerController.h"
+#include "GameObjectManager.h"
 
 // Responsible for initializing all our game objects.
 class World
 {
 private:
+    const int defaultSizeMult = 975.f;
+
+    GameObjectManager* resourceManager;
+
     GameObject ground;
     Quad groundShape;
 
@@ -18,7 +23,6 @@ private:
     GameObject player;
     Quad playerShape;
     GameObject controller;
-
 public:
 	World();
 

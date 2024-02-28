@@ -7,19 +7,31 @@ World::World()
 
 void World::Initialize()
 {
-    ground = GameObject({ 650.f, 800.f }, 1.f, {});
-    groundShape = Quad(DirectX::Colors::DarkGray, ground, 1.f, 0, 0, 800.f, 200.f, true);
+    resourceManager = GameObjectManager::GetInstance();
+
+    ground = GameObject("ground", { 650.f, 800.f }, defaultSizeMult);
+    GameObject& refGround = resourceManager->GetGameObj("ground");
+    groundShape = Quad("groundShape", DirectX::Colors::DarkGray, resourceManager->GetGameObj("ground"), 1.f, 0, 0, 800.f, 200.f, true);
+    std::vector<DirectX::SimpleMath::Vector2> groundCollisionBox = { { -400.f, 100.f }, {400.f, 100.f}, {400.f, -100.f}, {-400.f, -100.f} };
+    refGround.SetComponents({
+        new Collider(refGround, groundCollisionBox)
+    });
 
     // Create the player.
-    player = GameObject({ 650.f, 650.f }, 1.f, {
-        new PlayerController(player),
-        new RigidBody(player, 10.f)
-    });
-    playerShape = Quad(DirectX::Colors::Aqua, player, 1.f, 0, 0, 50.f, 50.f, true);
+    player = GameObject("player", { 650.f, 650.f }, defaultSizeMult);
 
-    controller = GameObject({ 500.f, 500.f }, 10.f, {
-        new Controller(controller)
-    });          // this gets destroyed. We need to somehow keep it alive.
+    GameObject& tempPlayer = resourceManager->GetGameObj("player");
+    tempPlayer.SetComponents({
+        new PlayerController(tempPlayer),
+        new RigidBody(tempPlayer, 10.f)
+    });
+    playerShape = Quad("playerShape", DirectX::Colors::Aqua, tempPlayer, 1.f, 0, 0, 50.f, 50.f, true);
+
+    controller = GameObject("controller", { 150.f, 100.f }, 3 * defaultSizeMult);
+    GameObject& refController = resourceManager->GetGameObj("controller");    
+    refController.SetComponents({
+        new Controller(refController)
+    });
 }
 
 //gameObjBank["Player"].SetComponents({

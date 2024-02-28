@@ -10,14 +10,15 @@ class Line : public UIObject
 {
 private:
 	DirectX::XMVECTOR shapeColor = DirectX::Colors::Black;
+	DirectX::SimpleMath::Vector2 point1 = { 0.f, 0.f };
 	DirectX::SimpleMath::Vector2 point2 = { 0.f, 0.f }; // 2nd point.
 	float lineSizeMultiplier = 30.f;
 public:
 	Line();
 
-	Line(DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale);
+	Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale);
 
-	Line(DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale);
+	Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale);
 
 	void DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch) const;
 

@@ -7,12 +7,12 @@
 // Constructor
 Quad::Quad()
 {
+	resourceManager = GameObjectManager::GetInstance();
 }
 
-Quad::Quad(DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid, bool inp_display)
+Quad::Quad(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid, bool inp_display)
 {
-	resourceManager = GameObjectManager::GetInstance();
-
+	SetName(id);
 	SetColor(colorInput);
 	SetParent(inp_parentObj);
 	SetScale(inp_scale);
@@ -20,7 +20,7 @@ Quad::Quad(DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_sc
 	SetLength(inp_len);
 	SetWidth(inp_wid);
 	SetDisplay(inp_display);
-	resourceManager->AddQuadObj(*this);
+	resourceManager->AddQuadObj(id, *this);
 }
 
 // Draw Triangle.
