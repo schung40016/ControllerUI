@@ -17,7 +17,7 @@ GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position
 	resourceManager->AddGameObj(id, *this);
 }
 
-void GameObject::UpdateComponents(float deltaTime)
+void GameObject::Update(float deltaTime)
 {
 	for (auto& comp : components)
 	{
@@ -25,7 +25,7 @@ void GameObject::UpdateComponents(float deltaTime)
 	}
 }
 
-const std::string GameObject::GetName()
+const std::string GameObject::GetName() const
 {
 	return name;
 }
@@ -36,9 +36,9 @@ const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 	{
 		float scale = GetScale();
 		DirectX:SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPosition();
-		//float calcX = gObj_position.x * scale + parent_pos.x;
-		//float calcY = gObj_position.y * scale + parent_pos.y;
-		DirectX::SimpleMath::Vector2 temp = { parent_pos.x, parent_pos.y };
+		float calcX = gObj_position.x * scale + parent_pos.x;
+		float calcY = gObj_position.y * scale + parent_pos.y;
+		DirectX::SimpleMath::Vector2 temp = { calcX, calcY };
 		return temp;
 	}
 

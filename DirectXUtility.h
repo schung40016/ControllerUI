@@ -31,6 +31,8 @@ private:
 public: 
     DirectXUtility();
 
+    void UpdateGameObjects(float elapsedTime);
+
     void CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_deviceResources);
 
     void RenderAllGameObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects,

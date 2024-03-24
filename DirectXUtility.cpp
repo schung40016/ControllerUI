@@ -9,6 +9,28 @@ DirectXUtility::DirectXUtility()
     resourceManager = GameObjectManager::GetInstance();
 }
 
+void DirectXUtility::UpdateGameObjects(float elapsedTime)
+{
+    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
+    std::unordered_map<std::string, BoxCollider>& colliders = resourceManager->GetColliderObjBank();
+
+    for (auto& curr : gameObjs)
+    {
+        curr.second.Update(elapsedTime);
+    }
+
+    // CHeck for any collisions.
+    for (auto& curr_pair : colliders)
+    {
+        for (auto& curr_childPair : colliders) {
+            if (curr_pair.first != curr_childPair.first)
+            {
+                curr_pair.second.IsColliding_DIAG_STATIC(curr_childPair.second);
+            }
+        }
+    }
+}
+
 void DirectXUtility::CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_deviceResources)
 {
     auto commandList = m_deviceResources->GetCommandList();

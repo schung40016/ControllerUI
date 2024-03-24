@@ -28,9 +28,9 @@ public:
 	
 	GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size);
 
-	void UpdateComponents(float deltaTime);
+	void Update(float deltaTime);
 
-	const std::string GetName();
+	const std::string GetName() const;
 
 	const DirectX::SimpleMath::Vector2 GetPosition() const;
 
@@ -61,4 +61,6 @@ public:
 	void SetComponents(const std::vector<Component*>& inp_components);
 
 	void MovePosition(const DirectX::SimpleMath::Vector2 inp_position);
+
+	void MoveToOriginalPosition();
 };

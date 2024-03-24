@@ -8,7 +8,7 @@
 #include <Quad.h>
 #include <Line.h>
 #include <unordered_map>
-#include <Collider.h>
+#include <BoxCollider.h>
 
 class GameObject;
 
@@ -24,6 +24,7 @@ private:
 	std::unordered_map<std::string, Triangle> triObjBank = {};
 	std::unordered_map<std::string, Line> lnObjBank = {};
 	std::unordered_map<std::string, Quad> quadObjBank = {};
+	std::unordered_map<std::string, BoxCollider> colliderObjBank = {};
 
 	// Constructor.
 	GameObjectManager();
@@ -47,6 +48,8 @@ public:
 	std::unordered_map<std::string, Line>& GetLnObjBank();
 
 	std::unordered_map<std::string, Quad>& GetQuadObjBank();
+
+	std::unordered_map<std::string, BoxCollider>& GetColliderObjBank();
 
 	GameObject& GetGameObj(const std::string id);
 
@@ -72,4 +75,6 @@ public:
 	void AddLnObj(std::string id, const Line& inp_lnObj);
 
 	void AddQuadObj(std::string id, const Quad& inp_quadObj);
+
+	void AddColliderObj(std::string id, const BoxCollider& inp_colliderObj);
 };

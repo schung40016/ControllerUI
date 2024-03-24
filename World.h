@@ -4,7 +4,7 @@
 #include "Quad.h"
 #include "Controller.h"
 #include "RigidBody.h"
-#include "Collider.h"
+#include "BoxCollider.h"
 #include "PlayerController.h"
 #include "GameObjectManager.h"
 

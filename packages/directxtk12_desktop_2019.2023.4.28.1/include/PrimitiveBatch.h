@@ -85,24 +85,24 @@ namespace DirectX
             PrimitiveBatch& operator= (PrimitiveBatch const&) = delete;
 
             // Similar to the D3D9 API DrawPrimitiveUP.
-            void Draw(D3D_PRIMITIVE_TOPOLOGY topology, _In_reads_(vertexCount) TVertex const* vertices, size_t vertexCount)
+            void Draw(D3D_PRIMITIVE_TOPOLOGY topology, _In_reads_(vertexCount) TVertex const* localVertices, size_t vertexCount)
             {
                 void* mappedVertices;
 
                 PrimitiveBatchBase::Draw(topology, false, nullptr, 0, vertexCount, &mappedVertices);
 
-                memcpy(mappedVertices, vertices, vertexCount * sizeof(TVertex));
+                memcpy(mappedVertices, localVertices, vertexCount * sizeof(TVertex));
             }
 
 
             // Similar to the D3D9 API DrawIndexedPrimitiveUP.
-            void DrawIndexed(D3D_PRIMITIVE_TOPOLOGY topology, _In_reads_(indexCount) uint16_t const* indices, size_t indexCount, _In_reads_(vertexCount) TVertex const* vertices, size_t vertexCount)
+            void DrawIndexed(D3D_PRIMITIVE_TOPOLOGY topology, _In_reads_(indexCount) uint16_t const* indices, size_t indexCount, _In_reads_(vertexCount) TVertex const* localVertices, size_t vertexCount)
             {
                 void* mappedVertices;
 
                 PrimitiveBatchBase::Draw(topology, true, indices, indexCount, vertexCount, &mappedVertices);
 
-                memcpy(mappedVertices, vertices, vertexCount * sizeof(TVertex));
+                memcpy(mappedVertices, localVertices, vertexCount * sizeof(TVertex));
             }
 
 

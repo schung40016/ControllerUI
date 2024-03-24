@@ -72,15 +72,10 @@ void Game::Update(DX::StepTimer const& timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
 
-    std::unordered_map<std::string, GameObject> gameObjs = resourceManager->GetGameObjBank();
-
     // TODO: Add your game logic here.
     inputManager->UpdateButtons();
 
-    for (auto &curr : gameObjs)
-    {
-        curr.second.UpdateComponents(elapsedTime);
-    }
+    directXUtility.UpdateGameObjects(elapsedTime);
 
     elapsedTime;
 

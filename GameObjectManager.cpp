@@ -18,22 +18,6 @@ GameObjectManager* GameObjectManager::GetInstance()
 
 GameObjectManager::GameObjectManager()
 {
-    //gameObjBank["Ground"] = GameObject({ 650.f, 800.f }, 1.f);
-    //shpObjBank["Ground"] = new Quad(DirectX::Colors::DarkGray, gameObjBank["Ground"], 1.f, 0, 0, 800.f, 200.f, true);
-
-    //std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = { { 0.f, 0.f }, {0.f, 50.f}, {50.f, -50.f}, {0, -50.f} };
-
-    //// Create the player.
-    //gameObjBank["Player"] = GameObject({ 650.f, 650.f }, 1.f);
-
-    //gameObjBank["Player"].SetComponents({
-    //    new PlayerController(gameObjBank["Player"]),
-    //    new RigidBody(gameObjBank["Player"], 10.f)
-    //    //Collider(gameObjBank["Player"], p2),  
-    //    //RigidBody(gameObjBank["Player"], {1, 0}, true, 10.f, 1.f),
-    //});
-
-    //shpObjBank.emplace_back(new Quad(DirectX::Colors::Aqua, gameObjBank["Player"], 1.f, 0, 0, 50.f, 50.f, true));
 }
 
 // Getters & Setters.
@@ -65,6 +49,11 @@ std::unordered_map<std::string, Line>& GameObjectManager::GetLnObjBank()
 std::unordered_map<std::string, Quad>& GameObjectManager::GetQuadObjBank()
 {
     return quadObjBank;
+}
+
+std::unordered_map<std::string, BoxCollider>& GameObjectManager::GetColliderObjBank()
+{
+    return colliderObjBank;
 }
 
 GameObject& GameObjectManager::GetGameObj(const std::string id)
@@ -126,4 +115,9 @@ void GameObjectManager::AddLnObj(std::string id, const Line& inp_lnObj)
 void GameObjectManager::AddQuadObj(std::string id, const Quad& inp_quadObj)
 {
     quadObjBank[id] = inp_quadObj;
+}
+
+void GameObjectManager::AddColliderObj(std::string id, const BoxCollider& inp_colliderObj)
+{
+    colliderObjBank[id] = inp_colliderObj;
 }

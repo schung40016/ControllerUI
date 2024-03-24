@@ -13,16 +13,22 @@ void World::Initialize()
     GameObject& refGround = resourceManager->GetGameObj("ground");
     groundShape = Quad("groundShape", DirectX::Colors::DarkGray, resourceManager->GetGameObj("ground"), 1.f, 0, 0, 800.f, 200.f, true);
     std::vector<DirectX::SimpleMath::Vector2> groundCollisionBox = { { -400.f, 100.f }, {400.f, 100.f}, {400.f, -100.f}, {-400.f, -100.f} };
+    BoxCollider groundCollider = BoxCollider(refGround, groundCollisionBox, false);
+    resourceManager->AddColliderObj("groundCollider", groundCollider);
     refGround.SetComponents({
-        new Collider(refGround, groundCollisionBox)
+        &resourceManager->GetColliderObjBank()["groundCollider"]
     });
 
     // Create the player.
     player = GameObject("player", { 650.f, 650.f }, defaultSizeMult);
 
     GameObject& tempPlayer = resourceManager->GetGameObj("player");
+    std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = { { -25.f, 25.f }, {25.f, 25.f}, {25.f, -25.f}, {-25.f, -25.f} };
+    BoxCollider playerCollider(tempPlayer, playerCollisionBox, true);
+    resourceManager->AddColliderObj("playerCollider", playerCollider);
     tempPlayer.SetComponents({
-        new PlayerController(tempPlayer),
+        &resourceManager->GetColliderObjBank()["playerCollider"],
+        new PlayerController(tempPlayer, resourceManager->GetColliderObjBank()["playerCollider"]),
         new RigidBody(tempPlayer, 10.f)
     });
     playerShape = Quad("playerShape", DirectX::Colors::Aqua, tempPlayer, 1.f, 0, 0, 50.f, 50.f, true);

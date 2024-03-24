@@ -14,7 +14,7 @@ Controller::Controller(GameObject& inp_parentObj)
     // Create a higher tier object to act as the parent for all these objects.
     gamePad = Image("gamePad", DirectX::Colors::White, ".\\Images\\gamepad.png", EnumData::Descriptors::Controller, inp_parentObj, 0.f, 0.f, 1.f);   // xbox controller
     imgLeftTrigger = Image("imgLeftTrigger", DirectX::Colors::White, ".\\Images\\LeftTrigger.png", EnumData::Descriptors::LeftTrigger, inp_parentObj, -290.f, -140.f, 1.f);    // left trigger.
-    imgRightTrigger = Image("imgRightTrigger", DirectX::Colors::White, ".\\Images\\RightTrigger.png", EnumData::Descriptors::RightTrigger, inp_parentObj, -290.f, -140.f, 1.f);  // right trigger.
+    imgRightTrigger = Image("imgRightTrigger", DirectX::Colors::White, ".\\Images\\RightTrigger.png", EnumData::Descriptors::RightTrigger, inp_parentObj, 290.f, -140.f, 1.f);  // right trigger.
 
     a = Triangle("a", DirectX::Colors::HotPink, gamePad, 1.f, 159.f, -38.f, 40.f, 40.f); // a
     b = Triangle("b", DirectX::Colors::HotPink, gamePad, 1.f, 199.f, -80.f, 40.f, 40.f); // b
@@ -34,8 +34,8 @@ Controller::Controller(GameObject& inp_parentObj)
     Triangle leftStick = Triangle("leftStick", DirectX::Colors::HotPink, gamePad, 1.f, -147.f, -80.f, 40.f, 40.f);    // left stick
     Triangle rightstick = Triangle("rightStick", DirectX::Colors::HotPink, gamePad, 1.f, 83.f, 15.f, 40.f, 40.f);  // right stick
     
-    //Line leftStickDir = Line("leftStickDir", DirectX::Colors::HotPink, gamePad, {-148.f, -78.f}, 1.f); // left stick direction
-    //Line rightStickDir = Line("rightStickDir", DirectX::Colors::HotPink, gamePad, {80.f, 15.f}, 1.f);   // right stick direction
+    Line leftStickDir = Line("leftStickDir", DirectX::Colors::HotPink, gamePad, {-148.f, -78.f}, 1.f); // left stick direction
+    Line rightStickDir = Line("rightStickDir", DirectX::Colors::HotPink, gamePad, {80.f, 15.f}, 1.f);   // right stick direction
 }
 
 void Controller::Update(float deltaTime)
@@ -45,6 +45,7 @@ void Controller::Update(float deltaTime)
     // Update resource data manager triangles not here.
     GameObjectManager* resourceManager = GameObjectManager::GetInstance();
     std::unordered_map<std::string, Triangle>& refTriangleBank = resourceManager->GetTriObjBank();
+    std::unordered_map<std::string, Line>& refLineBank = resourceManager->GetLnObjBank();
 
     refTriangleBank["a"].SetDisplay(inputManager->a);
     refTriangleBank["b"].SetDisplay(inputManager->b);
@@ -60,14 +61,14 @@ void Controller::Update(float deltaTime)
 
     refTriangleBank["leftShoulder"].SetDisplay(inputManager->leftShoulder);
     refTriangleBank["rightShoulder"].SetDisplay(inputManager->rightShoulder);
-    refTriangleBank["leftStick"].SetDisplay(inputManager->leftTrigger);
-    refTriangleBank["rightStick"].SetDisplay(inputManager->rightTrigger);
+    refTriangleBank["leftTrigger"].SetDisplay(inputManager->leftTrigger);
+    refTriangleBank["rightTrigger"].SetDisplay(inputManager->rightTrigger);
 
-    leftStick.SetDisplay(inputManager->leftStick);
-    rightStick.SetDisplay(inputManager->rightStick);
+    refTriangleBank["leftStick"].SetDisplay(inputManager->leftStick);
+    refTriangleBank["rightStick"].SetDisplay(inputManager->rightStick);
 
-    leftStickDir.SetPoint2(inputManager->leftStickPos.x, inputManager->leftStickPos.y);
-    rightStickDir.SetPoint2(inputManager->rightStickPos.x, inputManager->rightStickPos.y);
+    refLineBank["leftStickDir"].SetPoint2(inputManager->leftStickPos.x * fStickLineMultiplier, inputManager->leftStickPos.y * -fStickLineMultiplier);
+    refLineBank["rightStickDir"].SetPoint2(inputManager->rightStickPos.x * fStickLineMultiplier, inputManager->rightStickPos.y * -fStickLineMultiplier);
 }
 
 /*

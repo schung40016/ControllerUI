@@ -45,6 +45,7 @@ private:
     Triangle leftStick;    // left stick
     Triangle rightStick;  // right stick
 
+    float fStickLineMultiplier = 10.f;
     Line leftStickDir; // left stick direction
     Line rightStickDir;   // right stick direction
 

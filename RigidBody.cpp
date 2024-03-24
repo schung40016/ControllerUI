@@ -20,7 +20,7 @@ void RigidBody::ApplyGravity(float deltaTime)
 	// Apply gravity here.
 	if (bIsKinematic)
 	{
-		DirectX::SimpleMath::Vector2 calcPos = parentObj->GetPosition() + velocity;
+		DirectX::SimpleMath::Vector2 calcPos = parentObj->GetPosition() + velocity * deltaTime;
 
 		parentObj->SetPosition(calcPos);
 		velocity = velocity + gravityVelocity * deltaTime;
