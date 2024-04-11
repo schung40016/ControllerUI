@@ -14,9 +14,7 @@ private:
 	std::shared_ptr<GameObject> parentObj = nullptr; // Need it for applying movement.
 	RigidBody* rb = nullptr; // need it for the jump force.
 	BoxCollider collider;	// Detect when the player hits an object. 
-	float fSpeed = 2.f;
-	DirectX::SimpleMath::Vector2 actVelocity = { 0, 0 };
-	DirectX::SimpleMath::Vector2 goalVelocity = { 0, 0 };
+	float fSpeed = 20.f;
 
 public:
 	PlayerController(GameObject& inp_parentObj, BoxCollider& inp_collider);
@@ -28,6 +26,4 @@ public:
 	void Movement(float dt);
 
 	void Jump();
-
-	float Interpoplate(float goalPosition, float currPosition, float dt);
 };

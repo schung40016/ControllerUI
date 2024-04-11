@@ -14,6 +14,9 @@ private:
 	DirectX::SimpleMath::Vector2 velocity = {0.f, 0.f};		// vector pointing to right.
 	DirectX::SimpleMath::Vector2 gravityVelocity = { 0.f, fAcceleration };
 	DirectX::SimpleMath::Vector2 accumulatedForce = { 0, 0 };
+	DirectX::SimpleMath::Vector2 actVelocity = { 0, 0 };
+	DirectX::SimpleMath::Vector2 totalGoalVelocity = { 0, 0 };
+	float smoothness = 10.f;
 
 
 public:
@@ -30,4 +33,6 @@ public:
 	void AddForce(DirectX::SimpleMath::Vector2 force);
 
 	void ApplyForce(float deltaTime);
+
+	float Interpoplate(float goalPosition, float currPosition, float dt);
 };

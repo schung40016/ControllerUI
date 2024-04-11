@@ -31,6 +31,8 @@ private:
 public: 
     DirectXUtility();
 
+    void AwakeGameObjects();
+
     void UpdateGameObjects(float elapsedTime);
 
     void CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_deviceResources);

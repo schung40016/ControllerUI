@@ -38,7 +38,6 @@ float RigidBody::GetMass()
 }
 
 // Need to add a player controller
-
 void RigidBody::AddForce(DirectX::SimpleMath::Vector2 inp_force)
 {
 	accumulatedForce += inp_force;
@@ -53,7 +52,27 @@ void RigidBody::ApplyForce(float deltaTime)
 	// Reset accumulatedForce for the next time it is called.
 	accumulatedForce = { 0, 0 };
 	// Update parent object's position.
-	DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
-	parentPos += velocity * deltaTime;
-	parentObj->SetPosition(parentPos);
+	//DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
+
+	actVelocity.x = Interpoplate(velocity.x, actVelocity.x, deltaTime * smoothness);
+	actVelocity.y = Interpoplate(velocity.y, actVelocity.y, deltaTime * smoothness);
+
+	parentObj->MovePosition(actVelocity);
+
+	//parentObj->SetPosition(parentPos);
+}
+
+float RigidBody::Interpoplate(float goalPosition, float currPosition, float dt)
+{
+	float pos_diff = goalPosition - currPosition;
+
+	if (pos_diff > dt)
+	{
+		return currPosition + dt;
+	}
+	if (pos_diff < -dt)
+	{
+		return currPosition - dt;
+	}
+	return goalPosition;
 }

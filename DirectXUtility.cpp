@@ -9,6 +9,16 @@ DirectXUtility::DirectXUtility()
     resourceManager = GameObjectManager::GetInstance();
 }
 
+void DirectXUtility::AwakeGameObjects()
+{
+    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
+
+    for (auto& curr : gameObjs)
+    {
+        curr.second.Awake();
+    }
+}
+
 void DirectXUtility::UpdateGameObjects(float elapsedTime)
 {
     std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();

@@ -40,6 +40,8 @@ void Game::Initialize(HWND window, int width, int height)
     m_deviceResources->CreateDeviceResources();
 
     gameWorld.Initialize();
+
+    directXUtility.AwakeGameObjects();
     CreateDeviceDependentResources();
 
     m_deviceResources->CreateWindowSizeDependentResources();

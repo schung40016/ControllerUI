@@ -18,6 +18,7 @@ private:
 	float gObj_originalSize = 1.f;
 	int layerMask = 0;
 	std::vector<Component*> components = {};
+	std::unordered_map<std::string, Component*> colliderObjBank = {};
 	float test = 0.f;
 
 protected:
@@ -27,6 +28,8 @@ public:
 	GameObject();
 	
 	GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size);
+
+	void Awake();
 
 	void Update(float deltaTime);
 
@@ -56,11 +59,10 @@ public:
 
 	void SetOriginalSize(const float inp_ogSize);
 
-	void SetLayerMask(const int inp_layerMask);
-
 	void SetComponents(const std::vector<Component*>& inp_components);
 
 	void MovePosition(const DirectX::SimpleMath::Vector2 inp_position);
 
-	void MoveToOriginalPosition();
+	template <typename T>
+	T* GetComponent();
 };
