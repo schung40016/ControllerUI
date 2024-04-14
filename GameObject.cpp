@@ -122,16 +122,3 @@ void GameObject::MovePosition(const DirectX::SimpleMath::Vector2 inp_position)
 {
 	gObj_position += inp_position;
 }
-
-template <typename T> 
-T* GameObject::GetComponent() 
-{
-	for (const Component* ptr : components)
-	{
-		if (typeid(ptr) == typeid(T))
-		{
-			return ptr;
-		}
-	}
-	return nullptr;
-}

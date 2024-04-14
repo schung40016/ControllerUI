@@ -63,6 +63,19 @@ public:
 
 	void MovePosition(const DirectX::SimpleMath::Vector2 inp_position);
 
-	template <typename T>
-	T* GetComponent();
+	template <typename T> 
+	inline T* GetComponent()
+	{
+		for (Component* ptr : components)
+		{
+			std::string typeName = typeid(*ptr).name();
+			std::string typeName2 = typeid(T).name();
+
+			if (typeName.compare(typeName2) == 0)
+			{
+				return dynamic_cast<T*>(ptr);
+			}
+		}
+		return nullptr;
+	}
 };
