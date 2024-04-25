@@ -22,7 +22,7 @@ void DirectXUtility::AwakeGameObjects()
 void DirectXUtility::UpdateGameObjects(float elapsedTime)
 {
     std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
-    std::unordered_map<std::string, BoxCollider>& colliders = resourceManager->GetColliderObjBank();
+    std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
 
     for (auto& curr : gameObjs)
     {
@@ -30,12 +30,16 @@ void DirectXUtility::UpdateGameObjects(float elapsedTime)
     }
 
     // CHeck for any collisions.
-    for (auto& curr_pair : colliders)
+    for (auto& curr_layer : colliderLayers)
     {
-        for (auto& curr_childPair : colliders) {
-            if (curr_pair.first != curr_childPair.first)
+        for (auto& curr_child : curr_layer.second)
+        {
+            for (auto& curr_child2 : curr_layer.second)
             {
-                curr_pair.second.IsColliding_DIAG_STATIC(curr_childPair.second);
+                if (curr_child.first != curr_child2.first)
+                {
+                    curr_child.second.IsColliding_DIAG_STATIC(curr_child2.second);
+                }
             }
         }
     }

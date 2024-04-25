@@ -11,4 +11,9 @@ public:
         RightTrigger,
         Count
     };
+
+    enum ColliderLayers
+    {
+        Object,
+    };
 };

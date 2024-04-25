@@ -5,6 +5,7 @@
 
 void RigidBody::Update(float deltaTime)		// Performs all calculations.
 {
+	CheckIfGrounded();
 	ApplyGravity(deltaTime);
 	ApplyForce(deltaTime);
 }
@@ -18,7 +19,7 @@ RigidBody::RigidBody(GameObject& inp_parentObj, bool inp_isKinematic, float inp_
 void RigidBody::ApplyGravity(float deltaTime)
 {
 	// Apply gravity here.
-	if (bIsKinematic)
+	if (bIsKinematic && !grounded)
 	{
 		DirectX::SimpleMath::Vector2 calcPos = parentObj->GetPosition() + velocity * deltaTime;
 
@@ -52,14 +53,10 @@ void RigidBody::ApplyForce(float deltaTime)
 	// Reset accumulatedForce for the next time it is called.
 	accumulatedForce = { 0, 0 };
 	// Update parent object's position.
-	//DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
-
 	actVelocity.x = Interpoplate(velocity.x, actVelocity.x, deltaTime * smoothness);
 	actVelocity.y = Interpoplate(velocity.y, actVelocity.y, deltaTime * smoothness);
 
 	parentObj->MovePosition(actVelocity);
-
-	//parentObj->SetPosition(parentPos);
 }
 
 float RigidBody::Interpoplate(float goalPosition, float currPosition, float dt)
@@ -68,6 +65,7 @@ float RigidBody::Interpoplate(float goalPosition, float currPosition, float dt)
 
 	if (pos_diff > dt)
 	{
+		velocity.y = 0.f;
 		return currPosition + dt;
 	}
 	if (pos_diff < -dt)
@@ -75,4 +73,25 @@ float RigidBody::Interpoplate(float goalPosition, float currPosition, float dt)
 		return currPosition - dt;
 	}
 	return goalPosition;
+}
+
+void RigidBody::CheckIfGrounded()
+{
+	float parentY = parentObj->GetPosition().y;
+	float totalY = abs(prevPosition.y - parentY);
+
+	if (totalY < 0.1)
+	{
+		grounded = true;
+	}
+	else
+	{
+		grounded = false;
+	}
+	prevPosition = parentObj->GetPosition();
+}
+
+boolean RigidBody::isGrounded()
+{
+	return grounded;
 }

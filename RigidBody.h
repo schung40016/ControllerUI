@@ -17,6 +17,12 @@ private:
 	DirectX::SimpleMath::Vector2 actVelocity = { 0, 0 };
 	DirectX::SimpleMath::Vector2 totalGoalVelocity = { 0, 0 };
 	float smoothness = 10.f;
+	
+
+	// Grounded variables.
+	boolean grounded = false;
+	float isGroundedErrorMargin = 0.1f;
+	DirectX::SimpleMath::Vector2 prevPosition = { 0, 0 };
 
 
 public:
@@ -35,4 +41,8 @@ public:
 	void ApplyForce(float deltaTime);
 
 	float Interpoplate(float goalPosition, float currPosition, float dt);
+
+	void CheckIfGrounded();
+
+	boolean isGrounded();
 };

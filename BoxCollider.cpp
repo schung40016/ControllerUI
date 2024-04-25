@@ -153,7 +153,7 @@ bool BoxCollider::IsColliding_DIAG_STATIC(BoxCollider& other)
 				DirectX::SimpleMath::Vector2 line_r2s = poly2->worldVertices[q];
 				DirectX::SimpleMath::Vector2 line_r2e = poly2->worldVertices[(q + 1) % poly2->worldVertices.size()];	// neighboring point.
 
-				// Standdard "off the shelf" line segment intersection.
+				// Standard "off the shelf" line segment intersection.
 				float h = (line_r2e.x - line_r2s.x) * (line_r1s.y - line_r1e.y) - (line_r1s.x - line_r1e.x) * (line_r2e.y - line_r2s.y);
 				float t1 = ((line_r2s.y - line_r2e.y) * (line_r1s.x - line_r2s.x) + (line_r2e.x - line_r2s.x) * (line_r1s.y - line_r2s.y)) / h;
 				float t2 = ((line_r1s.y - line_r1e.y) * (line_r1s.x - line_r2s.x) + (line_r1e.x - line_r1s.x) * (line_r1s.y - line_r2s.y)) / h;

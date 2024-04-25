@@ -51,7 +51,7 @@ std::unordered_map<std::string, Quad>& GameObjectManager::GetQuadObjBank()
     return quadObjBank;
 }
 
-std::unordered_map<std::string, BoxCollider>& GameObjectManager::GetColliderObjBank()
+std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& GameObjectManager::GetColliderObjBank()
 {
     return colliderObjBank;
 }
@@ -117,7 +117,11 @@ void GameObjectManager::AddQuadObj(std::string id, const Quad& inp_quadObj)
     quadObjBank[id] = inp_quadObj;
 }
 
-void GameObjectManager::AddColliderObj(std::string id, const BoxCollider& inp_colliderObj)
+void GameObjectManager::AddColliderObj(int id, std::string objId , const BoxCollider& inp_colliderObj)
 {
-    colliderObjBank[id] = inp_colliderObj;
+    if (colliderObjBank[id].empty())
+    {
+        colliderObjBank[id] = {};
+    }
+    colliderObjBank[id][objId] = inp_colliderObj;
 }
