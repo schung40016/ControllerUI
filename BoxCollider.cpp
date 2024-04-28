@@ -24,8 +24,6 @@ BoxCollider::BoxCollider(GameObject& inp_parentObj, std::vector<DirectX::SimpleM
 
 		vertexLines.emplace_back(Line(colliderName, Colors::DeepPink, inp_parentObj, inp_vertices[i], inp_vertices[(i + 1) % inp_vertices.size()], 1.0f));
 	}
-
-
 }
 
 void BoxCollider::Update(float deltaTime)
@@ -187,6 +185,11 @@ bool BoxCollider::CanCollide()
 std::shared_ptr<GameObject> BoxCollider::GetParent() const
 {
 	return parentObj;
+}
+
+std::vector<DirectX::SimpleMath::Vector2> BoxCollider::GetWorldPositions()
+{
+	return worldVertices;
 }
 
 void BoxCollider::SetWorldPositions()

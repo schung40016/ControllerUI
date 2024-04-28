@@ -26,6 +26,9 @@
     <Filter Include="Custom Objects">
       <UniqueIdentifier>{56ec1277-06e6-4ed5-be38-42b3e35baf97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{8aa379ca-2dd0-4724-b35f-d3fcf338e3d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -88,6 +91,9 @@
     <ClInclude Include="World.h">
       <Filter>Custom Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Raycast.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -147,6 +153,9 @@
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Custom Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Raycast.cpp">
+      <Filter>Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -27,6 +27,8 @@ private:
 	std::unordered_map<std::string, Quad> quadObjBank = {};
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>> colliderObjBank = {};
 
+	std::vector<std::pair<int, int>> colliderPairs = {};
+
 	// Constructor.
 	GameObjectManager();
 
@@ -52,6 +54,8 @@ public:
 
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& GetColliderObjBank();
 
+	std::vector<std::pair<int, int>>& GetColliderLayerPairs();
+
 	GameObject& GetGameObj(const std::string id);
 
 	Image& GetImgObj(const std::string id);
@@ -76,6 +80,8 @@ public:
 	void AddLnObj(std::string id, const Line& inp_lnObj);
 
 	void AddQuadObj(std::string id, const Quad& inp_quadObj);
+
+	void AddColliderLayerPair(std::pair<int, int>& inp_pair);
 
 	void AddColliderObj(int id, std::string objId, const BoxCollider& inp_colliderObj);
 };

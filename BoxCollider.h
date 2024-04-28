@@ -22,6 +22,10 @@ public:
 
 	BoxCollider(GameObject& inp_parentObj, std::vector<DirectX::SimpleMath::Vector2>& inp_vertices, bool inp_isMovable);
 
+	std::vector<DirectX::SimpleMath::Vector2> GetWorldPositions();
+
+	std::shared_ptr<GameObject> GetParent() const;
+
 	DirectX::SimpleMath::Vector2 GetEdgeNormal(const DirectX::SimpleMath::Vector2& v1, const DirectX::SimpleMath::Vector2& v2) const;
 
 	bool IsColliding_SAT(BoxCollider& other);
@@ -33,8 +37,6 @@ public:
 	bool IsColliding_DIAG_STATIC(BoxCollider& other);
 
 	bool CanCollide();
-
-	std::shared_ptr<GameObject> GetParent() const;
 
 	void SetWorldPositions();
 };

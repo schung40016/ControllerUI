@@ -23,6 +23,10 @@ private:
     GameObject player;
     Quad playerShape;
     GameObject controller;
+
+    std::vector<std::pair<int, int>> worldColliderLayerPairs;
+
+    void PrepCollisionLayers();
 public:
 	World();
 

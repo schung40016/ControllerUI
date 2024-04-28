@@ -77,18 +77,20 @@ float RigidBody::Interpoplate(float goalPosition, float currPosition, float dt)
 
 void RigidBody::CheckIfGrounded()
 {
-	float parentY = parentObj->GetPosition().y;
-	float totalY = abs(prevPosition.y - parentY);
+	bool grounded = Raycast::CastRaycast(parentObj->GetPosition(), { 0, -1 }, EnumData::ColliderLayers::Ground, 27.f);
 
-	if (totalY < 0.1)
-	{
-		grounded = true;
-	}
-	else
-	{
-		grounded = false;
-	}
-	prevPosition = parentObj->GetPosition();
+	//float parentY = parentObj->GetPosition().y;
+	//float totalY = abs(prevPosition.y - parentY);
+
+	//if (totalY < 0.1)
+	//{
+	//	grounded = true;
+	//}
+	//else
+	//{
+	//	grounded = false;
+	//}
+	//prevPosition = parentObj->GetPosition();
 }
 
 boolean RigidBody::isGrounded()

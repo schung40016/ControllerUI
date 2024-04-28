@@ -27,7 +27,7 @@ private:
     std::unique_ptr<DirectX::PrimitiveBatch<VertexType>> m_batch;
 
     GameObjectManager* resourceManager;
-    
+
 public: 
     DirectXUtility();
 
@@ -57,6 +57,8 @@ public:
     void ResetAssets(std::unordered_map<std::string, Image>& imgObjects);
 
     void SetButtonDisplays(std::unordered_map<std::string, Triangle>& shpObjects);
+
+    void UpdateCollisions();
 
     // Getters & Setters,
     bool GetControllerConnected();

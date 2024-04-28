@@ -56,6 +56,11 @@ std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& GameObjec
     return colliderObjBank;
 }
 
+std::vector<std::pair<int, int>>& GameObjectManager::GetColliderLayerPairs()
+{
+    return colliderPairs;
+}
+
 GameObject& GameObjectManager::GetGameObj(const std::string id)
 {
     return gameObjBank[id];
@@ -115,6 +120,11 @@ void GameObjectManager::AddLnObj(std::string id, const Line& inp_lnObj)
 void GameObjectManager::AddQuadObj(std::string id, const Quad& inp_quadObj)
 {
     quadObjBank[id] = inp_quadObj;
+}
+
+void GameObjectManager::AddColliderLayerPair(std::pair<int, int>& inp_pair)
+{
+    colliderPairs.emplace_back(inp_pair);
 }
 
 void GameObjectManager::AddColliderObj(int id, std::string objId , const BoxCollider& inp_colliderObj)

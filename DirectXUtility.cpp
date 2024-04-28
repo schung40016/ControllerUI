@@ -7,6 +7,7 @@
 DirectXUtility::DirectXUtility()
 {   
     resourceManager = GameObjectManager::GetInstance();
+    //PrepCollisionLayers();
 }
 
 void DirectXUtility::AwakeGameObjects()
@@ -22,27 +23,14 @@ void DirectXUtility::AwakeGameObjects()
 void DirectXUtility::UpdateGameObjects(float elapsedTime)
 {
     std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
-    std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
 
     for (auto& curr : gameObjs)
     {
         curr.second.Update(elapsedTime);
     }
 
-    // CHeck for any collisions.
-    for (auto& curr_layer : colliderLayers)
-    {
-        for (auto& curr_child : curr_layer.second)
-        {
-            for (auto& curr_child2 : curr_layer.second)
-            {
-                if (curr_child.first != curr_child2.first)
-                {
-                    curr_child.second.IsColliding_DIAG_STATIC(curr_child2.second);
-                }
-            }
-        }
-    }
+    // Check for any collisions between objects from the same layer..
+    UpdateCollisions();
 }
 
 void DirectXUtility::CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_deviceResources)
@@ -263,4 +251,36 @@ void DirectXUtility::ResetAssets(std::unordered_map<std::string, Image>& imgObje
     m_effect.reset();
     m_lineEffect.reset();
     m_batch.reset();
+}
+
+void DirectXUtility::UpdateCollisions()
+{
+    std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
+    std::vector<std::pair<int, int>>& colliderPairs = resourceManager->GetColliderLayerPairs();
+
+    // Check for any collisions between objects from the same layer..
+    //for (auto& curr_layer : colliderLayers)
+    //{
+    //    for (auto& curr_child : curr_layer.second)
+    //    {
+    //        for (auto& curr_child2 : curr_layer.second)
+    //        {
+    //            if (curr_child.first != curr_child2.first)
+    //            {
+    //                curr_child.second.IsColliding_DIAG_STATIC(curr_child2.second);
+    //            }
+    //        }
+    //    }
+    //}
+
+    for (int i = 0; i < colliderPairs.size(); i++)
+    {
+        for (auto& curr_firstCollider : colliderLayers[colliderPairs[i].first])
+        {
+            for (auto& curr_SecCollider : colliderLayers[colliderPairs[i].second])
+            {
+                curr_firstCollider.second.IsColliding_DIAG_STATIC(curr_SecCollider.second);
+            }
+        }
+    }
 }

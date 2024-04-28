@@ -1,8 +1,9 @@
 #pragma once
 
 #include "pch.h"
-#include <GameObject.h>;
+#include "GameObject.h"
 #include "Component.h"
+#include "Raycast.h"
 
 class RigidBody : public Component {
 private:

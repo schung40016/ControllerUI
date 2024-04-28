@@ -14,6 +14,7 @@ public:
 
     enum ColliderLayers
     {
-        Object,
+        Player,
+        Ground
     };
 };

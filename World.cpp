@@ -26,16 +26,16 @@ void World::Initialize()
     BoxCollider groundCollider = BoxCollider(refGround, groundCollisionBox, false);
     BoxCollider playerCollider(tempPlayer, playerCollisionBox, true);
 
-    resourceManager->AddColliderObj(EnumData::ColliderLayers::Object, "groundCollider", groundCollider);
-    resourceManager->AddColliderObj(EnumData::ColliderLayers::Object, "playerCollider", playerCollider);
+    resourceManager->AddColliderObj(EnumData::ColliderLayers::Ground, "groundCollider", groundCollider);
+    resourceManager->AddColliderObj(EnumData::ColliderLayers::Player, "playerCollider", playerCollider);
 
     refGround.SetComponents({
-        &resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Object]["groundCollider"]
+        &resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Ground]["groundCollider"]
     });
 
     tempPlayer.SetComponents({
-        &resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Object]["playerCollider"],
-        new PlayerController(tempPlayer, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Object]["playerCollider"]),
+        &resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player]["playerCollider"],
+        new PlayerController(tempPlayer, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player]["playerCollider"]),
         new RigidBody(tempPlayer, 10.f)
     });
 
@@ -45,6 +45,29 @@ void World::Initialize()
     refController.SetComponents({
         new Controller(refController)
     });
+
+    PrepCollisionLayers();
+}
+
+void World::PrepCollisionLayers()
+{
+    std::vector<std::vector<int>> colliderLayerMapping = {};
+
+    colliderLayerMapping.push_back({ EnumData::ColliderLayers::Ground, EnumData::ColliderLayers::Player });
+    colliderLayerMapping.push_back({ EnumData::ColliderLayers::Ground });
+
+    for (int i = 0; i < colliderLayerMapping.size(); i++)
+    {
+        for (int j = 0; j < colliderLayerMapping[i].size(); j++)
+        {
+            worldColliderLayerPairs.emplace_back(std::make_pair(i, j));
+        }
+    }
+
+    for (int i = 0; i < worldColliderLayerPairs.size(); i++)
+    {
+        resourceManager->AddColliderLayerPair(worldColliderLayerPairs[i]);
+    }
 }
 
 //gameObjBank["Player"].SetComponents({
