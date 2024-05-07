@@ -2,7 +2,7 @@
 
 #include "pch.h"
 #include "Quad.h"
-#include "GameObjectManager.h"
+#include "Source/Managers/GameObjectManager.h"
 
 // Constructor
 Quad::Quad()

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pch.h"
-#include "GameObject.h"
+#include "Source/Game/GameObject.h"
 
 class UIObject : public GameObject
 {

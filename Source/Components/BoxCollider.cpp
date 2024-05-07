@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pch.h";
-#include "GameObjectManager.h";
+#include "Source/Managers/GameObjectManager.h";
 #include "BoxCollider.h";
 
 BoxCollider::BoxCollider()

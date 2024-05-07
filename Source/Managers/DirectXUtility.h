@@ -1,14 +1,14 @@
 #pragma once
 
 #include "pch.h"
-#include <DeviceResources.h>
-#include "GameObject.h"
-#include "Image.h"
-#include "Text.h"
-#include "Line.h"
-#include "Quad.h"
-#include "Triangle.h"
-#include "UIObject.h"
+#include "DeviceResources.h"
+#include "Source/Game/GameObject.h"
+#include "Source/UI_Objects/Image.h"
+#include "Source/UI_Objects/Text.h"
+#include "Source/UI_Objects/Line.h"
+#include "Source/UI_Objects/Shapes/Quad.h"
+#include "Source/UI_Objects/Shapes/Triangle.h"
+#include "Source/UI_Objects/UIObject.h"
 
 class DirectXUtility {
 private: 

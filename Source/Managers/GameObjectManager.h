@@ -1,15 +1,15 @@
 #pragma once
 
 #include "pch.h"
-#include <Image.h>
-#include <Text.h>
-#include <Triangle.h>
-#include <Shape.h>
-#include <Quad.h>
-#include <Line.h>
+#include <Source/UI_Objects/Image.h>
+#include <Source/UI_Objects/Text.h>
+#include <Source/UI_Objects/Shapes/Triangle.h>
+#include <Source/UI_Objects/Shapes/Shape.h>
+#include <Source/UI_Objects/Shapes/Quad.h>
+#include <Source/UI_Objects/Line.h>
 #include <unordered_map>
-#include <BoxCollider.h>
-#include <EnumData.h>
+#include <Source/Components/BoxCollider.h>
+#include <Source/Enum/EnumData.h>
 
 class GameObject;
 

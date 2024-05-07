@@ -1,13 +1,14 @@
 #pragma once
 
 #include "pch.h"
-#include <GameObject.h>
-#include "Text.h"
-#include "Triangle.h"
-#include "Line.h"
-#include "Image.h"
-#include "InputManager.h"
-#include "GameObjectManager.h"
+#include "Source/Game/GameObject.h"
+#include "Source/UI_Objects/Text.h"
+#include "Source/UI_Objects/Shapes/Triangle.h"
+#include "Source/UI_Objects/Line.h"
+#include "Source/UI_Objects/Image.h"
+#include "Source/Managers/InputManager.h"
+#include "Source/Managers/GameObjectManager.h"
+#include "Source/Components/Component.h"
 
 class Controller : public Component
 {

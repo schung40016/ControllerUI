@@ -53,13 +53,13 @@ void RigidBody::ApplyForce(float deltaTime)
 	// Reset accumulatedForce for the next time it is called.
 	accumulatedForce = { 0, 0 };
 	// Update parent object's position.
-	actVelocity.x = Interpoplate(velocity.x, actVelocity.x, deltaTime * smoothness);
-	actVelocity.y = Interpoplate(velocity.y, actVelocity.y, deltaTime * smoothness);
+	actVelocity.x = Interpolate(velocity.x, actVelocity.x, deltaTime * smoothness);
+	actVelocity.y = Interpolate(velocity.y, actVelocity.y, deltaTime * smoothness);
 
 	parentObj->MovePosition(actVelocity);
 }
 
-float RigidBody::Interpoplate(float goalPosition, float currPosition, float dt)
+float RigidBody::Interpolate(float goalPosition, float currPosition, float dt)
 {
 	float pos_diff = goalPosition - currPosition;
 
@@ -77,20 +77,7 @@ float RigidBody::Interpoplate(float goalPosition, float currPosition, float dt)
 
 void RigidBody::CheckIfGrounded()
 {
-	bool grounded = Raycast::CastRaycast(parentObj->GetPosition(), { 0, -1 }, EnumData::ColliderLayers::Ground, 27.f);
-
-	//float parentY = parentObj->GetPosition().y;
-	//float totalY = abs(prevPosition.y - parentY);
-
-	//if (totalY < 0.1)
-	//{
-	//	grounded = true;
-	//}
-	//else
-	//{
-	//	grounded = false;
-	//}
-	//prevPosition = parentObj->GetPosition();
+	grounded = Raycast::CastRaycast(parentObj->GetPosition(), { 0, -1 }, EnumData::ColliderLayers::Ground, 27.f);
 }
 
 boolean RigidBody::isGrounded()

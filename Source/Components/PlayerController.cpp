@@ -26,13 +26,10 @@ void PlayerController::Movement(float dt)
 	// Jump Movement.
 	bool jumped = inputManager->a;
 	
-	if (jumped)
+	if (jumped && rb->isGrounded())
 	{
 		rb->AddForce({ 0, -1.f * fJumpHeight });
 	}
-
-	// Suggest: movement component, figures out what forces should be applied on any object. More encapslation. 
-	// dev UI: implement velocity line on player.
 }
 
 void PlayerController::Jump()

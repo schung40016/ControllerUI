@@ -2,8 +2,8 @@
 
 #include "pch.h"
 #include "Component.h"
-#include <GameObject.h>;
-#include <Line.h>
+#include <Source/Game/GameObject.h>;
+#include <Source/UI_Objects/Line.h>
 
 class BoxCollider : public Component {
 private:

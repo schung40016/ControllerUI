@@ -7,12 +7,12 @@
 #include "pch.h"
 #include "DeviceResources.h"
 #include "StepTimer.h"
-#include "GameObject.h"
-#include "DirectXUtility.h"
-#include "GameObjectManager.h"
-#include "InputManager.h"
-#include "Controller.h"
-#include "World.h"
+#include "Source/Game/GameObject.h"
+#include "Source/Managers/DirectXUtility.h"
+#include "Source/Managers/GameObjectManager.h"
+#include "Source/Managers/InputManager.h"
+#include "Source/Game/Controller.h"
+#include "Source/Game/World.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;

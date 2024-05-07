@@ -1,9 +1,9 @@
 #pragma once
 
 #include "pch.h"
-#include "GameObject.h"
+#include "Source/Game/GameObject.h"
 #include "Component.h"
-#include "Raycast.h"
+#include "Source/Tools/Raycast.h"
 
 class RigidBody : public Component {
 private:
@@ -41,7 +41,7 @@ public:
 
 	void ApplyForce(float deltaTime);
 
-	float Interpoplate(float goalPosition, float currPosition, float dt);
+	float Interpolate(float goalPosition, float currPosition, float dt);
 
 	void CheckIfGrounded();
 

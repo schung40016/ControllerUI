@@ -1,10 +1,16 @@
 #include "pch.h"
 #include "World.h"
-#include "EnumData.h"
+#include "Source/Enum/EnumData.h"
 
 World::World()
 {
 }
+
+// For every new keyword, in a world destroyer, delete the pointer "free it up".
+// Create a player object that initializes all these components.
+// Redo Readme.txt to include build.exe steps and entire project steps.
+// Separate all files into respective folders (file explorer).
+// Try to build this on another machine. (put steps into readme.txt)
 
 void World::Initialize()
 {
@@ -38,7 +44,6 @@ void World::Initialize()
         new PlayerController(tempPlayer, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player]["playerCollider"]),
         new RigidBody(tempPlayer, 10.f)
     });
-
 
     controller = GameObject("controller", { 150.f, 100.f }, 3 * defaultSizeMult);
     GameObject& refController = resourceManager->GetGameObj("controller");    

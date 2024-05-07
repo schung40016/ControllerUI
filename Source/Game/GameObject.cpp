@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "GameObject.h"
-#include "GameObjectManager.h"
+#include "Source/Managers/GameObjectManager.h"
 
 GameObject::GameObject()
 {

@@ -170,7 +170,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Source\UI_Objects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level4</WarningLevel>
@@ -199,48 +199,52 @@
     </FXCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BoxCollider.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="Controller.h" />
     <ClInclude Include="d3dx12.h" />
-    <ClInclude Include="DirectXUtility.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameObjectManager.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="PlayerController.h" />
-    <ClInclude Include="Raycast.h" />
-    <ClInclude Include="RigidBody.h" />
-    <ClInclude Include="Shape.h" />
-    <ClInclude Include="Quad.h" />
-    <ClInclude Include="UIObject.h" />
+    <ClInclude Include="Source\Components\BoxCollider.h" />
+    <ClInclude Include="Source\Components\Component.h" />
+    <ClInclude Include="Source\Components\PlayerController.h" />
+    <ClInclude Include="Source\Components\RigidBody.h" />
+    <ClInclude Include="Source\Enum\EnumData.h" />
+    <ClInclude Include="Source\Game\Controller.h" />
+    <ClInclude Include="Source\Game\GameObject.h" />
+    <ClInclude Include="Source\Game\World.h" />
+    <ClInclude Include="Source\Managers\DirectXUtility.h" />
+    <ClInclude Include="Source\Managers\GameObjectManager.h" />
+    <ClInclude Include="Source\Managers\InputManager.h" />
+    <ClInclude Include="Source\Tools\Raycast.h" />
+    <ClInclude Include="Source\UI_Objects\Image.h" />
+    <ClInclude Include="Source\UI_Objects\Line.h" />
+    <ClInclude Include="Source\UI_Objects\Shapes\Quad.h" />
+    <ClInclude Include="Source\UI_Objects\Shapes\Shape.h" />
+    <ClInclude Include="Source\UI_Objects\Shapes\Triangle.h" />
+    <ClInclude Include="Source\UI_Objects\Text.h" />
+    <ClInclude Include="Source\UI_Objects\UIObject.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Image.h" />
-    <ClInclude Include="Line.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="DeviceResources.h" />
-    <ClInclude Include="Text.h" />
-    <ClInclude Include="Triangle.h" />
-    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BoxCollider.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Controller.cpp" />
-    <ClCompile Include="DirectXUtility.cpp" />
-    <ClCompile Include="EnumData.h" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameObjectManager.cpp" />
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="PlayerController.cpp" />
-    <ClCompile Include="Raycast.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
-    <ClCompile Include="Shape.cpp" />
-    <ClCompile Include="Quad.cpp" />
-    <ClCompile Include="UIObject.cpp" />
-    <ClCompile Include="Image.cpp" />
-    <ClCompile Include="Line.cpp" />
+    <ClCompile Include="Source\Components\BoxCollider.cpp" />
+    <ClCompile Include="Source\Components\Component.cpp" />
+    <ClCompile Include="Source\Components\PlayerController.cpp" />
+    <ClCompile Include="Source\Components\RigidBody.cpp" />
+    <ClCompile Include="Source\Game\Controller.cpp" />
+    <ClCompile Include="Source\Game\GameObject.cpp" />
+    <ClCompile Include="Source\Game\Movement.cpp" />
+    <ClCompile Include="Source\Game\World.cpp" />
+    <ClCompile Include="Source\Managers\DirectXUtility.cpp" />
+    <ClCompile Include="Source\Managers\GameObjectManager.cpp" />
+    <ClCompile Include="Source\Managers\InputManager.cpp" />
+    <ClCompile Include="Source\Tools\Raycast.cpp" />
+    <ClCompile Include="Source\UI_Objects\Image.cpp" />
+    <ClCompile Include="Source\UI_Objects\Line.cpp" />
+    <ClCompile Include="Source\UI_Objects\Shapes\Quad.cpp" />
+    <ClCompile Include="Source\UI_Objects\Shapes\Shape.cpp" />
+    <ClCompile Include="Source\UI_Objects\Shapes\Triangle.cpp" />
+    <ClCompile Include="Source\UI_Objects\Text.cpp" />
+    <ClCompile Include="Source\UI_Objects\UIObject.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="pch.cpp">
@@ -249,9 +253,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="Triangle.cpp" />
-    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

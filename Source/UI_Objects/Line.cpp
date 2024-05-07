@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Line.h"
-#include "GameObjectManager.h"
+#include "Source/Managers/GameObjectManager.h"
 
 Line::Line()
 {

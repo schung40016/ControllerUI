@@ -14,20 +14,35 @@
     <Filter Include="DirectXObjects\DirectXUtility">
       <UniqueIdentifier>{b301beb3-1ecd-46f1-ae5c-1f65230d0431}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UIObjects">
-      <UniqueIdentifier>{3751d4c2-02ef-4081-9868-585f5ba260c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UIObjects\Shapes">
-      <UniqueIdentifier>{f8bbccbc-4a8f-4cfe-aa7f-19f91352e096}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UIObjects\Components">
-      <UniqueIdentifier>{2707d525-d565-4ddc-bb50-709703184c7e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Custom Objects">
       <UniqueIdentifier>{56ec1277-06e6-4ed5-be38-42b3e35baf97}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tools">
       <UniqueIdentifier>{8aa379ca-2dd0-4724-b35f-d3fcf338e3d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{8e98c688-2ebd-4ab1-b483-0e6b0e3ffe19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI_Objects">
+      <UniqueIdentifier>{3751d4c2-02ef-4081-9868-585f5ba260c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI_Objects\Shapes">
+      <UniqueIdentifier>{f8bbccbc-4a8f-4cfe-aa7f-19f91352e096}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Components">
+      <UniqueIdentifier>{2707d525-d565-4ddc-bb50-709703184c7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Enum">
+      <UniqueIdentifier>{09143a39-36a3-486f-bd26-2324e582672d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Game">
+      <UniqueIdentifier>{911b6ffc-c78c-4b18-bd25-eb7832406241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Managers">
+      <UniqueIdentifier>{0fbdf27c-5f68-49fb-bfb0-84652374c479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools">
+      <UniqueIdentifier>{0ca7c428-1ff8-4a3f-93ed-f10967728a3e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,57 +57,62 @@
     <ClInclude Include="d3dx12.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>DirectXObjects</Filter>
+    <ClInclude Include="Source\Components\BoxCollider.h">
+      <Filter>Source\Components</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXUtility.h">
-      <Filter>DirectXObjects\DirectXUtility</Filter>
+    <ClInclude Include="Source\Components\Component.h">
+      <Filter>Source\Components</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>DirectXObjects\DirectXUtility</Filter>
+    <ClInclude Include="Source\UI_Objects\Image.h">
+      <Filter>Source\UI_Objects</Filter>
     </ClInclude>
-    <ClInclude Include="UIObject.h">
-      <Filter>UIObjects</Filter>
+    <ClInclude Include="Source\UI_Objects\Line.h">
+      <Filter>Source\UI_Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>UIObjects</Filter>
+    <ClInclude Include="Source\UI_Objects\Text.h">
+      <Filter>Source\UI_Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Line.h">
-      <Filter>UIObjects</Filter>
+    <ClInclude Include="Source\UI_Objects\Shapes\Quad.h">
+      <Filter>Source\UI_Objects\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>UIObjects</Filter>
+    <ClInclude Include="Source\UI_Objects\Shapes\Shape.h">
+      <Filter>Source\UI_Objects\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="Shape.h">
-      <Filter>UIObjects\Shapes</Filter>
+    <ClInclude Include="Source\UI_Objects\Shapes\Triangle.h">
+      <Filter>Source\UI_Objects\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="Triangle.h">
-      <Filter>UIObjects\Shapes</Filter>
+    <ClInclude Include="Source\Enum\EnumData.h">
+      <Filter>Source\Enum</Filter>
     </ClInclude>
-    <ClInclude Include="Quad.h">
-      <Filter>UIObjects\Shapes</Filter>
+    <ClInclude Include="Source\Managers\InputManager.h">
+      <Filter>Source\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBody.h">
-      <Filter>UIObjects\Components</Filter>
+    <ClInclude Include="Source\Managers\GameObjectManager.h">
+      <Filter>Source\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="BoxCollider.h">
-      <Filter>UIObjects\Components</Filter>
+    <ClInclude Include="Source\Components\RigidBody.h">
+      <Filter>Source\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>UIObjects\Components</Filter>
+    <ClInclude Include="Source\Tools\Raycast.h">
+      <Filter>Source\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="PlayerController.h">
-      <Filter>Custom Objects</Filter>
+    <ClInclude Include="Source\Game\World.h">
+      <Filter>Source\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Controller.h">
-      <Filter>Custom Objects</Filter>
+    <ClInclude Include="Source\UI_Objects\UIObject.h">
+      <Filter>Source\UI_Objects</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Custom Objects</Filter>
+    <ClInclude Include="Source\Game\GameObject.h">
+      <Filter>Source\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Raycast.h">
-      <Filter>Tools</Filter>
+    <ClInclude Include="Source\Game\Controller.h">
+      <Filter>Source\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\DirectXUtility.h">
+      <Filter>Source\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Components\PlayerController.h">
+      <Filter>Source\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -102,60 +122,62 @@
     <ClCompile Include="DeviceResources.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>DirectXObjects</Filter>
+    <ClCompile Include="Source\Components\BoxCollider.cpp">
+      <Filter>Source\Components</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXUtility.cpp">
-      <Filter>DirectXObjects\DirectXUtility</Filter>
+    <ClCompile Include="Source\Components\Component.cpp">
+      <Filter>Source\Components</Filter>
     </ClCompile>
-    <ClCompile Include="EnumData.h">
-      <Filter>DirectXObjects</Filter>
+    <ClCompile Include="Source\UI_Objects\Image.cpp">
+      <Filter>Source\UI_Objects</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>DirectXObjects\DirectXUtility</Filter>
+    <ClCompile Include="Source\UI_Objects\Line.cpp">
+      <Filter>Source\UI_Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>UIObjects</Filter>
+    <ClCompile Include="Source\UI_Objects\Text.cpp">
+      <Filter>Source\UI_Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Line.cpp">
-      <Filter>UIObjects</Filter>
+    <ClCompile Include="Source\UI_Objects\Shapes\Quad.cpp">
+      <Filter>Source\UI_Objects\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>UIObjects</Filter>
+    <ClCompile Include="Source\UI_Objects\Shapes\Shape.cpp">
+      <Filter>Source\UI_Objects\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="UIObject.cpp">
-      <Filter>UIObjects</Filter>
+    <ClCompile Include="Source\UI_Objects\Shapes\Triangle.cpp">
+      <Filter>Source\UI_Objects\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>UIObjects\Shapes</Filter>
+    <ClCompile Include="Source\Managers\GameObjectManager.cpp">
+      <Filter>Source\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Shape.cpp">
-      <Filter>UIObjects\Shapes</Filter>
+    <ClCompile Include="Source\Managers\InputManager.cpp">
+      <Filter>Source\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Quad.cpp">
-      <Filter>UIObjects\Shapes</Filter>
+    <ClCompile Include="Source\Components\RigidBody.cpp">
+      <Filter>Source\Components</Filter>
     </ClCompile>
-    <ClCompile Include="RigidBody.cpp">
-      <Filter>UIObjects\Components</Filter>
+    <ClCompile Include="Source\Tools\Raycast.cpp">
+      <Filter>Source\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="BoxCollider.cpp">
-      <Filter>UIObjects\Components</Filter>
+    <ClCompile Include="Source\Game\Movement.cpp">
+      <Filter>Source\Game</Filter>
     </ClCompile>
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="Component.cpp">
-      <Filter>UIObjects\Components</Filter>
+    <ClCompile Include="Source\Game\World.cpp">
+      <Filter>Source\Game</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerController.cpp">
-      <Filter>Custom Objects</Filter>
+    <ClCompile Include="Source\UI_Objects\UIObject.cpp">
+      <Filter>Source\UI_Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Controller.cpp">
-      <Filter>Custom Objects</Filter>
+    <ClCompile Include="Source\Game\GameObject.cpp">
+      <Filter>Source\Game</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Custom Objects</Filter>
+    <ClCompile Include="Source\Game\Controller.cpp">
+      <Filter>Source\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Raycast.cpp">
-      <Filter>Tools</Filter>
+    <ClCompile Include="Source\Managers\DirectXUtility.cpp">
+      <Filter>Source\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Components\PlayerController.cpp">
+      <Filter>Source\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

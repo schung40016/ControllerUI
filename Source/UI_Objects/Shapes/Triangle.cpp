@@ -2,7 +2,7 @@
 
 #include "pch.h"
 #include "Triangle.h"
-#include "GameObjectManager.h"
+#include "Source/Managers/GameObjectManager.h"
 
 // Constructor
 Triangle::Triangle()

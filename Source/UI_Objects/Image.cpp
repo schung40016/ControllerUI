@@ -2,7 +2,7 @@
 
 #include "pch.h"
 #include "Image.h"
-#include "GameObjectManager.h"
+#include "Source/Managers/GameObjectManager.h"
 
 Image::Image() {
 	resourceManager = GameObjectManager::GetInstance();

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "pch.h"
-#include "EnumData.h"
-#include "Component.h"
+#include "Source/Enum/EnumData.h"
+#include "Source/Components/Component.h"
 #include <iostream>
 
 class GameObjectManager;

@@ -2,7 +2,7 @@
 
 #include "pch.h"
 #include "Text.h"  
-#include "GameObjectManager.h"
+#include "Source/Managers/GameObjectManager.h"
 
 Text::Text()
 {

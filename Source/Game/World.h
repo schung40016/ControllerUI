@@ -1,12 +1,12 @@
 #pragma once
 #include "pch.h"
 #include "GameObject.h"
-#include "Quad.h"
+#include "Source/UI_Objects/Shapes/Quad.h"
 #include "Controller.h"
-#include "RigidBody.h"
-#include "BoxCollider.h"
-#include "PlayerController.h"
-#include "GameObjectManager.h"
+#include "Source/Components/RigidBody.h"
+#include "Source/Components/BoxCollider.h"
+#include "Source/Components/PlayerController.h"
+#include "Source/Managers/GameObjectManager.h"
 
 // Responsible for initializing all our game objects.
 class World
@@ -24,7 +24,7 @@ private:
     Quad playerShape;
     GameObject controller;
 
-    std::vector<std::pair<int, int>> worldColliderLayerPairs;
+    std::vector<std::pair<int, int>> worldColliderLayerPairs = {};
 
     void PrepCollisionLayers();
 public:
