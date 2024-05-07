@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.h"
+#include "Source/pch.h"
 #include "Component.h"
 #include <Source/Game/GameObject.h>;
 #include <Source/UI_Objects/Line.h>

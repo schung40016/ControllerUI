@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.h"
+#include "Source/pch.h"
 #include "GameObjectManager.h"
 
 GameObjectManager* GameObjectManager::instance = NULL;

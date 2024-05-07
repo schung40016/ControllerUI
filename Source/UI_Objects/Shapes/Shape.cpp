@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.h"
+#include "Source/pch.h"
 #include "Shape.h"
 
 void Shape::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch) const

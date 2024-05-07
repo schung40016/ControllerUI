@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pch.h"
+#include "Source/pch.h"
 
 class Component {
 public:
