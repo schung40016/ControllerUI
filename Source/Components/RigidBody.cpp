@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Source/pch.h";
+#include "pch.h";
 #include "RigidBody.h";
 
 void RigidBody::Update(float deltaTime)		// Performs all calculations.

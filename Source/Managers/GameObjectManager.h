@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Source/pch.h"
+#include "pch.h"
 #include <Source/UI_Objects/Image.h>
 #include <Source/UI_Objects/Text.h>
 #include <Source/UI_Objects/Shapes/Triangle.h>

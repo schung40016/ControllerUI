@@ -1,4 +1,4 @@
-#include "Source/pch.h"
+#include "pch.h"
 #include "Component.h"
 
 void Component::Awake()
