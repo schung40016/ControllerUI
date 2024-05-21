@@ -105,7 +105,7 @@
     <ClInclude Include="Source\Game\GameObject.h">
       <Filter>Source\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Controller.h">
+    <ClInclude Include="Source\CustomObjects\Controller.h">
       <Filter>Source\Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\DirectXUtility.h">
@@ -114,6 +114,8 @@
     <ClInclude Include="Source\Components\PlayerController.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Source\CustomObjects\Player.h" />
+    <ClInclude Include="Source\Components\ControllerUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -158,9 +160,6 @@
     <ClCompile Include="Source\Tools\Raycast.cpp">
       <Filter>Source\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Movement.cpp">
-      <Filter>Source\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\World.cpp">
       <Filter>Source\Game</Filter>
     </ClCompile>
@@ -170,7 +169,7 @@
     <ClCompile Include="Source\Game\GameObject.cpp">
       <Filter>Source\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Controller.cpp">
+    <ClCompile Include="Source\CustomObjects\Controller.cpp">
       <Filter>Source\Game</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\DirectXUtility.cpp">
@@ -179,6 +178,10 @@
     <ClCompile Include="Source\Components\PlayerController.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source\CustomObjects\Player.cpp" />
+    <ClCompile Include="Source\CustomObjects\SolidBox.cpp" />
+    <ClCompile Include="Source\CustomObjects\SolidBox.h" />
+    <ClCompile Include="Source\Components\ControllerUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

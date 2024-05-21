@@ -11,7 +11,7 @@
 #include "Source/Managers/DirectXUtility.h"
 #include "Source/Managers/GameObjectManager.h"
 #include "Source/Managers/InputManager.h"
-#include "Source/Game/Controller.h"
+#include "Source/CustomObjects/Controller.h"
 #include "Source/Game/World.h"
 
 using namespace DirectX;

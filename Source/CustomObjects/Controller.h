@@ -6,14 +6,16 @@
 #include "Source/UI_Objects/Shapes/Triangle.h"
 #include "Source/UI_Objects/Line.h"
 #include "Source/UI_Objects/Image.h"
-#include "Source/Managers/InputManager.h"
 #include "Source/Managers/GameObjectManager.h"
-#include "Source/Components/Component.h"
+#include "Source/Managers/GameObjectManager.h"
+#include "Source/Components/ControllerUI.h"
 
-class Controller : public Component
+class Controller
 {
 private:
-    InputManager* inputManager = InputManager::GetInstance();
+    GameObjectManager* resourceManager = nullptr;
+    std::string sControllerName = "";
+    float fSizeMultiplier = 975.f;
 
     boolean bConnected = false;
 
@@ -51,7 +53,7 @@ private:
     Line rightStickDir;   // right stick direction
 
 public:
-	Controller(GameObject& inp_parentObj);
+    Controller();
 
-    void Update(float deltaTime) override;
+	Controller(float inp_size, std::string inp_controllerName, DirectX::SimpleMath::Vector2 inp_position);
 };

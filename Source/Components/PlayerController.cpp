@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "PlayerController.h"
+#include "Source/Components/RigidBody.h"
+
+PlayerController::PlayerController()
+{}
 
 PlayerController::PlayerController(GameObject& inp_parentObj, BoxCollider& inp_collider)
 {

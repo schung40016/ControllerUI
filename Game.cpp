@@ -39,12 +39,12 @@ void Game::Initialize(HWND window, int width, int height)
 
     m_deviceResources->CreateDeviceResources();
 
+    m_deviceResources->CreateWindowSizeDependentResources();
+
     gameWorld.Initialize();
 
     directXUtility.AwakeGameObjects();
     CreateDeviceDependentResources();
-
-    m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
@@ -78,6 +78,7 @@ void Game::Update(DX::StepTimer const& timer)
     inputManager->UpdateButtons();
 
     directXUtility.UpdateGameObjects(elapsedTime);
+    //gameWorld.Update(elapsedTime);
 
     elapsedTime;
 
@@ -204,7 +205,6 @@ void Game::CreateDeviceDependentResources()
         throw std::runtime_error("Shader Model 6.0 is not supported!");
     }
 
-    // TODO: Initialize device dependent objects here (independent of window size).
     directXUtility.PrepareDeviceDependentResources(m_deviceResources, device, resourceManager->GetImgObjBank());
 }
 

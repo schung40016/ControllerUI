@@ -18,15 +18,15 @@ private:
 	DirectX::SimpleMath::Vector2 actVelocity = { 0, 0 };
 	DirectX::SimpleMath::Vector2 totalGoalVelocity = { 0, 0 };
 	float smoothness = 10.f;
-	
 
 	// Grounded variables.
 	boolean grounded = false;
 	float isGroundedErrorMargin = 0.1f;
 	DirectX::SimpleMath::Vector2 prevPosition = { 0, 0 };
 
-
 public:
+	RigidBody();
+
 	RigidBody(GameObject& inp_parentObj, bool inp_isKinematic = false, float inp_fMass = 1.0f, float fAcceleration = 1.0f);
 
 	void Update(float deltaTime) override;		// Calls all relevant functions for calculations.

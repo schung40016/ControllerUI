@@ -7,7 +7,6 @@
 DirectXUtility::DirectXUtility()
 {   
     resourceManager = GameObjectManager::GetInstance();
-    //PrepCollisionLayers();
 }
 
 void DirectXUtility::AwakeGameObjects()

@@ -91,6 +91,21 @@ Quad& GameObjectManager::GetQuadObj(const std::string id)
     return quadObjBank[id];
 }
 
+PlayerController& GameObjectManager::GetPlayerController(const std::string id)
+{
+    return controllerBank[id];
+}
+
+RigidBody& GameObjectManager::GetRigidBody(const std::string id)
+{
+    return rigidBodyBank[id];
+}
+
+ControllerUI& GameObjectManager:: GetControllerUI(const std::string id)
+{
+    return controllerUIBank[id];
+}
+
 // Adders
 void GameObjectManager::AddGameObj(std::string id, const GameObject& inp_gameObject)
 {
@@ -134,4 +149,19 @@ void GameObjectManager::AddColliderObj(int id, std::string objId , const BoxColl
         colliderObjBank[id] = {};
     }
     colliderObjBank[id][objId] = inp_colliderObj;
+}
+
+void GameObjectManager::AddPlayerController(std::string id, const PlayerController& inp_playerController)
+{
+    controllerBank[id] = inp_playerController;
+}
+
+void GameObjectManager::AddRigidBody(std::string id, const RigidBody& inp_rigidBody)
+{
+    rigidBodyBank[id] = inp_rigidBody;
+}
+
+void GameObjectManager::AddControllerUI(std::string id, const ControllerUI& inp_controllerUI)
+{
+    controllerUIBank[id] = inp_controllerUI;
 }

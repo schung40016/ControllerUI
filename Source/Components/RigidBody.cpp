@@ -3,6 +3,9 @@
 #include "pch.h";
 #include "RigidBody.h";
 
+RigidBody::RigidBody()
+{}
+
 void RigidBody::Update(float deltaTime)		// Performs all calculations.
 {
 	CheckIfGrounded();

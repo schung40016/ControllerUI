@@ -1,15 +1,18 @@
 #pragma once
 
 #include "pch.h"
-#include <Source/UI_Objects/Image.h>
-#include <Source/UI_Objects/Text.h>
-#include <Source/UI_Objects/Shapes/Triangle.h>
-#include <Source/UI_Objects/Shapes/Shape.h>
-#include <Source/UI_Objects/Shapes/Quad.h>
-#include <Source/UI_Objects/Line.h>
-#include <unordered_map>
-#include <Source/Components/BoxCollider.h>
-#include <Source/Enum/EnumData.h>
+#include "Source/UI_Objects/Image.h"
+#include "Source/UI_Objects/Text.h"
+#include "Source/UI_Objects/Shapes/Triangle.h"
+#include "Source/UI_Objects/Shapes/Shape.h"
+#include "Source/UI_Objects/Shapes/Quad.h"
+#include "Source/UI_Objects/Line.h"
+#include "unordered_map"
+#include "Source/Components/BoxCollider.h"
+#include "Source/Enum/EnumData.h"
+#include "Source/Components/PlayerController.h"
+#include "Source/Components/RigidBody.h"
+#include "Source/Components/ControllerUI.h"
 
 class GameObject;
 
@@ -25,8 +28,12 @@ private:
 	std::unordered_map<std::string, Triangle> triObjBank = {};
 	std::unordered_map<std::string, Line> lnObjBank = {};
 	std::unordered_map<std::string, Quad> quadObjBank = {};
-	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>> colliderObjBank = {};
 
+	// Components.
+	std::unordered_map<std::string, PlayerController> controllerBank = {};
+	std::unordered_map<std::string, RigidBody> rigidBodyBank = {};
+	std::unordered_map<std::string, ControllerUI> controllerUIBank = {};
+	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>> colliderObjBank = {};
 	std::vector<std::pair<int, int>> colliderPairs = {};
 
 	// Constructor.
@@ -68,6 +75,12 @@ public:
 
 	Quad& GetQuadObj(const std::string id);
 
+	PlayerController& GetPlayerController(const std::string id);
+
+	RigidBody& GetRigidBody(const std::string id);
+
+	ControllerUI& GetControllerUI(const std::string id);
+
 	// Adders.
 	void AddGameObj(std::string id, const GameObject& inp_gameObject);
 
@@ -84,4 +97,10 @@ public:
 	void AddColliderLayerPair(std::pair<int, int>& inp_pair);
 
 	void AddColliderObj(int id, std::string objId, const BoxCollider& inp_colliderObj);
+
+	void AddPlayerController(std::string id, const PlayerController& inp_playerController);
+
+	void AddRigidBody(std::string id, const RigidBody& inp_rigidBody);
+
+	void AddControllerUI(std::string id, const ControllerUI& inp_controllerUI);
 };
