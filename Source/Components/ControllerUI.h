@@ -12,7 +12,12 @@ private:
 	GameObjectManager* resourceManager = nullptr;
 	InputManager* inputManager = InputManager::GetInstance();
 	float fStickLineMultiplier = 10.f;
+	std::string parentObjName = "";
 
 public:
+	ControllerUI();
+
+	ControllerUI(std::string inp_parentObjName);
+
 	void Update(float deltaTime) override;
 };

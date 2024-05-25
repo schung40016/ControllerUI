@@ -103,4 +103,7 @@ public:
 	void AddRigidBody(std::string id, const RigidBody& inp_rigidBody);
 
 	void AddControllerUI(std::string id, const ControllerUI& inp_controllerUI);
+
+	// Destructor
+	~GameObjectManager();
 };

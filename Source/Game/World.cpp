@@ -7,10 +7,10 @@ World::World()
     resourceManager = GameObjectManager::GetInstance();
 }
 
-// For every new keyword, in a world destroyer, delete the pointer "free it up".
-// Create a player object that initializes all these components.
+// For every new keyword, in a world destroyer, delete the pointer "free it up". DONE.
+// Create a player object that initializes all these components. DONE.
 // Redo Readme.txt to include build.exe steps and entire project steps.
-// Separate all files into respective folders (file explorer).
+// Separate all files into respective folders (file explorer). DONE.
 // Try to build this on another machine. (put steps into readme.txt)
 
 void World::Initialize()

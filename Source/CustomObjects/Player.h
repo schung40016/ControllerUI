@@ -14,12 +14,6 @@ private:
 	std::string sPlayerName = "";
 	float fSizeMultiplier = 975.f;
 
-	//GameObject player_gameObj;
-	//Quad player_shape;
-	//BoxCollider player_collider;
-	//PlayerController player_controller;
-	//RigidBody player_rigidBody;
-
 public:
 	Player();
 

@@ -14,14 +14,14 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	sPlayerName = inp_playerName;
 	fSizeMultiplier = inp_size;
 
-	std::string sColliderName = sPlayerName + "Collider";
-	std::string sControllerName = sPlayerName + "Controller";
-	std::string sRigidBodyName = sPlayerName + "RigidBody";
+	std::string sColliderName = sPlayerName + "_Collider";
+	std::string sControllerName = sPlayerName + "_Controller";
+	std::string sRigidBodyName = sPlayerName + "_RigidBody";
 
 	// Try setting the objects from within the resourcemanager.
 	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier);
 	GameObject& tempPlayerGame = resourceManager->GetGameObj(sPlayerName);
-	Quad player_shape = Quad(sPlayerName + "Shape", DirectX::Colors::Aqua, tempPlayerGame, 1.f, 0, 0, inp_width, inp_length, true);
+	Quad player_shape = Quad(sPlayerName + "_Shape", DirectX::Colors::Aqua, tempPlayerGame, 1.f, 0, 0, inp_width, inp_length, true);
 	std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = FetchPositionPairs(inp_width, inp_length);
 
 	BoxCollider player_collider = BoxCollider(tempPlayerGame, playerCollisionBox, true);

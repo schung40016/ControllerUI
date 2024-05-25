@@ -165,3 +165,7 @@ void GameObjectManager::AddControllerUI(std::string id, const ControllerUI& inp_
 {
     controllerUIBank[id] = inp_controllerUI;
 }
+
+GameObjectManager::~GameObjectManager() {
+    delete instance;
+}

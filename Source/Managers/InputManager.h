@@ -46,8 +46,14 @@ public:
 	InputManager(const InputManager& obj) = delete;
 
 	void UpdateButtons();
+
 	void ResetButtons();
+
 	void SuspendGamepad();
+
 	void ResumeGamepad();
+
 	static InputManager* GetInstance();
+
+	~InputManager();
 };
