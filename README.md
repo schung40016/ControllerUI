@@ -23,6 +23,7 @@ Steps:
 12. A popup window will appear asking for a confirmation that the two packages should be updated, proceed.
 13. With the NuGet packages now updated, exit out of the NuGet package manager window and press 'Local Windows Debugger'. Viola!
 
+    
 None of the packages mentioned under 'Resources' appear in my NuGet Package Manager. What do?
 1. Take a step back.
 2. Breathe in and breathe out.
