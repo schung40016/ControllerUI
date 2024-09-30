@@ -25,9 +25,9 @@ Debugger::Debugger(float inp_size, std::string inp_debuggerName, std::string inp
 	tAcceleration = Text(sDebuggerName + "_acceleration", DirectX::Colors::Black, "Acceleration: ", tempDebuggerObj, 0.f, 50.f);
 	tPosition = Text(sDebuggerName + "_position", DirectX::Colors::Black, "Position: ", tempDebuggerObj, 0.f, 100.f);
 
-	tVelocityNum = Text(sDebuggerName + "_velocity_num", DirectX::Colors::Black, "0.0", tempDebuggerObj, 400.f, 0.f);
-	tAccelerationNum = Text(sDebuggerName + "_acceleration_num", DirectX::Colors::Black, "0.0", tempDebuggerObj, 400.f, 50.f);
-	tPositionNum = Text(sDebuggerName + "_position_num", DirectX::Colors::Black, "{0.0, 0.0}", tempDebuggerObj, 400.f, 100.f);
+	tVelocityNum = Text(sDebuggerName + "_velocity_num", DirectX::Colors::Black, "0.0", tempDebuggerObj, 500.f, 0.f);
+	tAccelerationNum = Text(sDebuggerName + "_acceleration_num", DirectX::Colors::Black, "0.0", tempDebuggerObj, 500.f, 50.f);
+	tPositionNum = Text(sDebuggerName + "_position_num", DirectX::Colors::Black, "{0.0, 0.0}", tempDebuggerObj, 500.f, 100.f);
 
 	DebuggerUI debuggerUI = DebuggerUI(sDebuggerName, sObjectFocusName);
 	resourceManager->AddDebuggerUI(sDebuggerUIName, debuggerUI);

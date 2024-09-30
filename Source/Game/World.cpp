@@ -21,7 +21,7 @@ void World::Initialize()
     ground = SolidBox(defaultSizeMult, "ground", { 650.f, 800.f }, 800.f, 200.f);
     player = Player(defaultSizeMult, "player", {650.f, 650.f}, 50.f, 50.f);
     controller = Controller(defaultSizeMult * 3, "controller", { 150.f, 100.f });
-    debugger = Debugger(defaultSizeMult * 3, "debugger", "player", {1100.f, 25.f});
+    debugger = Debugger(defaultSizeMult * 3, "debugger", "player", {1000.f, 25.f});
 
     PrepCollisionLayers();
 }

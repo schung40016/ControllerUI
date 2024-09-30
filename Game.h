@@ -92,4 +92,22 @@ private:
     
     // Initialize all game objects here. 
     World gameWorld;
+
+    // Camera variables -TESTING-
+
+    std::unique_ptr<DirectX::GeometricPrimitive> m_room;
+
+    DirectX::SimpleMath::Matrix m_view;
+    DirectX::SimpleMath::Matrix m_proj;
+
+    float m_pitch;
+    float m_yaw;
+    DirectX::SimpleMath::Vector3 m_cameraPos;
+
+    DirectX::SimpleMath::Color m_roomColor;
+
+    Microsoft::WRL::ComPtr<ID3D12Resource> m_roomTex;
+    std::unique_ptr<DirectX::DescriptorHeap> m_resourceDescriptors;
+    std::unique_ptr<DirectX::CommonStates> m_states;
+    std::unique_ptr<DirectX::BasicEffect> m_roomEffect;
 };

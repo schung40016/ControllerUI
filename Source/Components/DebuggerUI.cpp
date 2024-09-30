@@ -41,9 +41,9 @@ void DebuggerUI::Update(float deltaTime)
     accelerationNum.SetDisplay(bOn);
     positionNum.SetDisplay(bOn);
 
-    std::string sTempVelocity = "{ " + std::to_string(tempVelocity.x) + ", " + std::to_string(tempVelocity.y) + "}";
-    std::string sTempAccelration = "{ " + std::to_string(tempAcceleration.x) + ", " + std::to_string(tempAcceleration.y) + "}";
-    std::string sTempPosition = "{ " + std::to_string(playerPos.x) + ", " + std::to_string(playerPos.y) + "}";
+    std::string sTempVelocity = "{" + std::to_string(tempVelocity.x) + ", " + std::to_string(tempVelocity.y) + "}";
+    std::string sTempAccelration = "{" + std::to_string(tempAcceleration.x) + ", " + std::to_string(tempAcceleration.y) + "}";
+    std::string sTempPosition = "{" + std::to_string(playerPos.x) + ", " + std::to_string(playerPos.y) + "}";
     velocityNum.SetText(sTempVelocity);
     accelerationNum.SetText(sTempAccelration);
     positionNum.SetText(sTempPosition);
