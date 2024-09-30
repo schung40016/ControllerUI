@@ -94,7 +94,6 @@ private:
     World gameWorld;
 
     // Camera variables -TESTING-
-
     std::unique_ptr<DirectX::GeometricPrimitive> m_room;
 
     DirectX::SimpleMath::Matrix m_view;

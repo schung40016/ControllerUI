@@ -85,6 +85,21 @@ void Game::Update(DX::StepTimer const& timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
 
+    // -- TEST CODE FOR MOVING CAMERA --
+    DirectX::SimpleMath::Vector2 input = inputManager->leftStickPos;
+    if (inputManager->isConnected)
+    {
+        if (inputManager->leftStick)
+        {
+            m_yaw = m_pitch = 0.f;
+        }
+        else
+        {
+            m_yaw += -inputManager->leftStickPos.x * ROTATION_GAIN;
+            m_pitch += inputManager->leftStickPos.y * ROTATION_GAIN;
+        }
+    }
+
     // TODO: Add your game logic here.
     inputManager->UpdateButtons();
 
