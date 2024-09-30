@@ -97,6 +97,7 @@ void Game::Update(DX::StepTimer const& timer)
         {
             m_yaw += -inputManager->leftStickPos.x * ROTATION_GAIN;
             m_pitch += inputManager->leftStickPos.y * ROTATION_GAIN;
+            m_cameraPos.x += inputManager->leftStickPos.x;
         }
     }
 
