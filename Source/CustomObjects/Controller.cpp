@@ -12,12 +12,12 @@ Controller::Controller(float inp_size, std::string inp_controllerName, DirectX::
     sControllerName = inp_controllerName;
     fSizeMultiplier = inp_size;
 
-    GameObject parentObj = GameObject(sControllerName, { 150.f, 100.f }, fSizeMultiplier);
+    GameObject parentObj = GameObject(sControllerName, inp_position, fSizeMultiplier);
     GameObject& tempControllerObj = resourceManager->GetGameObj(sControllerName);
 
     controllerTitle = Text(sControllerName + "_controllerTitle", DirectX::Colors::Black, "ControllerUI", tempControllerObj, 0.f, -250.f);
     connectionTitle = Text(sControllerName + "_connectionTitle", DirectX::Colors::Black, "Controller Connection: ", tempControllerObj, -50.f, 250.f);
-    connectionStatus = Text(sControllerName + "_connectionStatus", DirectX::Colors::Black, "Connected", tempControllerObj, 300.f, 250.f);
+    connectionStatus = Text(sControllerName + "_connectionStatus", DirectX::Colors::Black, "Connected", tempControllerObj, 400.f, 250.f);
 
     std::string gamePadName = sControllerName + "_gamePad";
     std::string imgLeftTriggerName = sControllerName + "_imgLeftTrigger";

@@ -33,10 +33,6 @@ public:
 
 	void ApplyGravity(float deltaTime);
 
-	int GetLayerMask() const;
-
-	float GetMass();
-
 	void AddForce(DirectX::SimpleMath::Vector2 force);
 
 	void ApplyForce(float deltaTime);
@@ -45,5 +41,14 @@ public:
 
 	void CheckIfGrounded();
 
+	// Getters
 	boolean isGrounded();
+
+	int GetLayerMask() const;
+
+	float GetMass();
+
+	DirectX::SimpleMath::Vector2 GetVelocity() const;
+
+	DirectX::SimpleMath::Vector2 GetAcceleration() const;
 };

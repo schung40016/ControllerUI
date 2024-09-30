@@ -116,6 +116,8 @@
     </ClInclude>
     <ClInclude Include="Source\CustomObjects\Player.h" />
     <ClInclude Include="Source\Components\ControllerUI.h" />
+    <ClInclude Include="Source\Components\DebuggerUI.h" />
+    <ClInclude Include="Source\CustomObjects\Debugger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -182,6 +184,8 @@
     <ClCompile Include="Source\CustomObjects\SolidBox.cpp" />
     <ClCompile Include="Source\CustomObjects\SolidBox.h" />
     <ClCompile Include="Source\Components\ControllerUI.cpp" />
+    <ClCompile Include="Source\Components\DebuggerUI.cpp" />
+    <ClCompile Include="Source\CustomObjects\Debugger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -197,7 +201,7 @@
     </Manifest>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="myfile.spritefont" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

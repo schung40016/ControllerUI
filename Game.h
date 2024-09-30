@@ -25,7 +25,6 @@ using namespace DirectX;
 
 using Microsoft::WRL::ComPtr;
 
-
 // A basic game implementation that creates a D3D12 device and
 // provides a game loop.
 class Game final : public DX::IDeviceNotify

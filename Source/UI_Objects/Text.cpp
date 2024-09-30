@@ -20,6 +20,7 @@ Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text)
 Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y)
 	: text(inp_text)
 {
+	SetName(id);
 	SetColor(inp_color);
 	SetParent(inp_parentObj);
 	SetPosition({ inp_x, inp_y });
@@ -28,6 +29,11 @@ Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, Ga
 
 void Text::DrawText(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch)
 {
+	if (GetDisplay() == false)
+	{
+		return;
+	}
+
 	m_font->DrawString(m_spriteBatch.get(), GetWStringText().c_str(), GetPosition(), GetColor(), 0.f, m_origin, GetScale());
 }
 

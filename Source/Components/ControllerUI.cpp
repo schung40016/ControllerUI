@@ -18,13 +18,11 @@ ControllerUI::ControllerUI(std::string inp_parentObjName)
 void ControllerUI::Update(float deltaTime) 
 {
     // Update resource data manager triangles not here.
-    //resourceManager = GameObjectManager::GetInstance();
-
     resourceManager->GetTxtObj("connectionStatus").SetText(inputManager->isConnected ? "On" : "Off");
     std::unordered_map<std::string, Triangle>& refTriangleBank = resourceManager->GetTriObjBank();
     std::unordered_map<std::string, Line>& refLineBank = resourceManager->GetLnObjBank();
 
-    refTriangleBank[parentObjName+"_a"].SetDisplay(inputManager->a);
+    refTriangleBank[parentObjName + "_a"].SetDisplay(inputManager->a);
     refTriangleBank[parentObjName + "_b"].SetDisplay(inputManager->b);
     refTriangleBank[parentObjName + "_x"].SetDisplay(inputManager->x);
     refTriangleBank[parentObjName + "_y"].SetDisplay(inputManager->y);

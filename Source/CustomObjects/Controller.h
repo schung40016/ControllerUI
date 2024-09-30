@@ -7,7 +7,6 @@
 #include "Source/UI_Objects/Line.h"
 #include "Source/UI_Objects/Image.h"
 #include "Source/Managers/GameObjectManager.h"
-#include "Source/Managers/GameObjectManager.h"
 #include "Source/Components/ControllerUI.h"
 
 class Controller

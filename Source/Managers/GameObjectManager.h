@@ -13,6 +13,7 @@
 #include "Source/Components/PlayerController.h"
 #include "Source/Components/RigidBody.h"
 #include "Source/Components/ControllerUI.h"
+#include <Source/Components/DebuggerUI.h>
 
 class GameObject;
 
@@ -33,6 +34,7 @@ private:
 	std::unordered_map<std::string, PlayerController> controllerBank = {};
 	std::unordered_map<std::string, RigidBody> rigidBodyBank = {};
 	std::unordered_map<std::string, ControllerUI> controllerUIBank = {};
+	std::unordered_map<std::string, DebuggerUI> debuggerUIBank = {};
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>> colliderObjBank = {};
 	std::vector<std::pair<int, int>> colliderPairs = {};
 
@@ -63,6 +65,8 @@ public:
 
 	std::vector<std::pair<int, int>>& GetColliderLayerPairs();
 
+	std::unordered_map<std::string, DebuggerUI>& GetDebuggerUIObjBank();
+
 	GameObject& GetGameObj(const std::string id);
 
 	Image& GetImgObj(const std::string id);
@@ -80,6 +84,8 @@ public:
 	RigidBody& GetRigidBody(const std::string id);
 
 	ControllerUI& GetControllerUI(const std::string id);
+
+	DebuggerUI& GetDebuggerUI(const std::string id);
 
 	// Adders.
 	void AddGameObj(std::string id, const GameObject& inp_gameObject);
@@ -103,6 +109,8 @@ public:
 	void AddRigidBody(std::string id, const RigidBody& inp_rigidBody);
 
 	void AddControllerUI(std::string id, const ControllerUI& inp_controllerUI);
+
+	void AddDebuggerUI(std::string id, const DebuggerUI& inp_debuggerUI);
 
 	// Destructor
 	~GameObjectManager();

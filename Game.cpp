@@ -5,7 +5,7 @@
 #include "Game.h"
 #include <iostream>
 
-Game::Game() noexcept(false)
+Game::Game() noexcept(false) 
 {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
     // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.

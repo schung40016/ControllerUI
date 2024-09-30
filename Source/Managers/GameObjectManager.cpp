@@ -61,6 +61,11 @@ std::vector<std::pair<int, int>>& GameObjectManager::GetColliderLayerPairs()
     return colliderPairs;
 }
 
+std::unordered_map<std::string, DebuggerUI>& GameObjectManager::GetDebuggerUIObjBank()
+{
+    return debuggerUIBank;
+}
+
 GameObject& GameObjectManager::GetGameObj(const std::string id)
 {
     return gameObjBank[id];
@@ -101,9 +106,14 @@ RigidBody& GameObjectManager::GetRigidBody(const std::string id)
     return rigidBodyBank[id];
 }
 
-ControllerUI& GameObjectManager:: GetControllerUI(const std::string id)
+ControllerUI& GameObjectManager::GetControllerUI(const std::string id)
 {
     return controllerUIBank[id];
+}
+
+DebuggerUI& GameObjectManager::GetDebuggerUI(const std::string id)
+{
+    return debuggerUIBank[id];
 }
 
 // Adders
@@ -164,6 +174,11 @@ void GameObjectManager::AddRigidBody(std::string id, const RigidBody& inp_rigidB
 void GameObjectManager::AddControllerUI(std::string id, const ControllerUI& inp_controllerUI)
 {
     controllerUIBank[id] = inp_controllerUI;
+}
+
+void GameObjectManager::AddDebuggerUI(std::string id, const DebuggerUI& inp_debuggerUI)
+{
+    debuggerUIBank[id] = inp_debuggerUI;
 }
 
 GameObjectManager::~GameObjectManager() {

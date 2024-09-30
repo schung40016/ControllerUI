@@ -87,3 +87,13 @@ boolean RigidBody::isGrounded()
 {
 	return grounded;
 }
+
+DirectX::SimpleMath::Vector2 RigidBody::GetVelocity() const
+{
+	return velocity;
+}
+
+DirectX::SimpleMath::Vector2 RigidBody::GetAcceleration() const
+{
+	return accumulatedForce;
+}

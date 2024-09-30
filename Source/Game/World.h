@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Source/UI_Objects/Shapes/Quad.h"
 #include "Source/CustomObjects/Controller.h"
+#include "Source/CustomObjects/Debugger.h"
 #include "Source/Components/RigidBody.h"
 #include "Source/Components/BoxCollider.h"
 #include "Source/Components/PlayerController.h"
@@ -22,6 +23,7 @@ private:
     SolidBox ground;
     Player player;
     Controller controller;
+    Debugger debugger;
 
     std::vector<std::pair<int, int>> worldColliderLayerPairs = {};
 
