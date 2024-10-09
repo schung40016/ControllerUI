@@ -49,3 +49,12 @@ void DebuggerUI::Update(float deltaTime)
     positionNum.SetText(sTempPosition);
 
 }
+
+/*
+* 10/5/2024
+- Improve jump (make less floaty)
+- Add more props to the map.
+- Update velocity and acceleration to be lines in the debug mode.
+- Make camera component.
+- Update debug component
+*/

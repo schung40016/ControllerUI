@@ -5,7 +5,8 @@
 PlayerController::PlayerController()
 {}
 
-PlayerController::PlayerController(GameObject& inp_parentObj, BoxCollider& inp_collider)
+PlayerController::PlayerController(GameObject& inp_parentObj, BoxCollider& inp_collider, float inp_speed, float inp_jumpHeight)
+	: fSpeed(inp_speed), fJumpHeight(inp_jumpHeight)
 {
 	parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
 	collider = inp_collider;

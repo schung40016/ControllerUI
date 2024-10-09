@@ -25,8 +25,8 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = FetchPositionPairs(inp_width, inp_length);
 
 	BoxCollider player_collider = BoxCollider(tempPlayerGame, playerCollisionBox, true);
-	PlayerController player_controller = PlayerController(tempPlayerGame, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName]);
-	RigidBody player_rigidBody = RigidBody(tempPlayerGame, 10.f);
+	PlayerController player_controller = PlayerController(tempPlayerGame, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName], 50.f, 2000.f);
+	RigidBody player_rigidBody = RigidBody(tempPlayerGame, 10.f, 10.f);
 
 	// Add to the game object manager.
 	resourceManager->AddColliderObj(EnumData::ColliderLayers::Player, sColliderName, player_collider);

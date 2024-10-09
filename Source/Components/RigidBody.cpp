@@ -27,7 +27,7 @@ void RigidBody::ApplyGravity(float deltaTime)
 		DirectX::SimpleMath::Vector2 calcPos = parentObj->GetPosition() + velocity * deltaTime;
 
 		parentObj->SetPosition(calcPos);
-		velocity = velocity + gravityVelocity * deltaTime;
+		velocity = velocity + gravityVelocity * deltaTime * fMass;
 	}
 }
 

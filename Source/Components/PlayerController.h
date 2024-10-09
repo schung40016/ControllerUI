@@ -15,13 +15,13 @@ private:
 	std::shared_ptr<GameObject> parentObj = nullptr; // Need it for applying movement.
 	RigidBody* rb = nullptr; // need it for the jump force.
 	BoxCollider collider;	// Detect when the player hits an object. 
-	float fSpeed = 2.f;
-	float fJumpHeight = 15.f;
+	float fSpeed = 50.f;
+	float fJumpHeight = 2000.f;
 
 public:
 	PlayerController();
 
-	PlayerController(GameObject& inp_parentObj, BoxCollider& inp_collider);
+	PlayerController(GameObject& inp_parentObj, BoxCollider& inp_collider, float inp_speed = 50.f, float inp_jumpHeight = 2000.0f);
 
 	void Awake() override;
 
