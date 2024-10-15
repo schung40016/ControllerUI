@@ -201,6 +201,7 @@
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="Source\Components\BoxCollider.h" />
+    <ClInclude Include="Source\Components\Camera.h" />
     <ClInclude Include="Source\Components\Component.h" />
     <ClInclude Include="Source\Components\ControllerUI.h" />
     <ClInclude Include="Source\Components\PlayerController.h" />
@@ -231,6 +232,7 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Source\Components\BoxCollider.cpp" />
+    <ClCompile Include="Source\Components\Camera.cpp" />
     <ClCompile Include="Source\Components\Component.cpp" />
     <ClCompile Include="Source\Components\ControllerUI.cpp" />
     <ClCompile Include="Source\Components\PlayerController.cpp" />

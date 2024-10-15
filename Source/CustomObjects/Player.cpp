@@ -17,6 +17,7 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	std::string sColliderName = sPlayerName + "_Collider";
 	std::string sControllerName = sPlayerName + "_Controller";
 	std::string sRigidBodyName = sPlayerName + "_RigidBody";
+	std::string sCameraName = sPlayerName + "_Camera";
 
 	// Try setting the objects from within the resourcemanager.
 	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier);
@@ -27,16 +28,19 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	BoxCollider player_collider = BoxCollider(tempPlayerGame, playerCollisionBox, true);
 	PlayerController player_controller = PlayerController(tempPlayerGame, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName], 50.f, 2000.f);
 	RigidBody player_rigidBody = RigidBody(tempPlayerGame, 10.f, 10.f);
+	Camera player_camera = Camera(tempPlayerGame, true);
 
 	// Add to the game object manager.
 	resourceManager->AddColliderObj(EnumData::ColliderLayers::Player, sColliderName, player_collider);
 	resourceManager->AddPlayerController(sControllerName, player_controller);
 	resourceManager->AddRigidBody(sRigidBodyName, player_rigidBody);
+	resourceManager->AddCamera(sCameraName, player_camera);
 
 	tempPlayerGame.SetComponents({
 		&resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName],
 		&resourceManager->GetPlayerController(sControllerName),
 		&resourceManager->GetRigidBody(sRigidBodyName),
+		&resourceManager->GetCamera(sCameraName),
 	});
 }
 

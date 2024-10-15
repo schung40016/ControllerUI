@@ -55,7 +55,7 @@ void DirectXUtility::CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_d
 }
 
 void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects,
-    std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Quad>& quadObjects)
+    std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Quad>& quadObjects, std::unordered_map<std::string, Camera>& camObjects)
 {
     PIXBeginEvent(commandList, PIX_COLOR_DEFAULT, L"Render");
 
@@ -63,6 +63,9 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     commandList->SetDescriptorHeaps(static_cast<UINT>(std::size(heaps)), heaps);
 
     // --- Controller ---
+    // Render Camera Objects
+    RenderCameraComponents(commandList, camObjects);
+
     // Render Text and Image objects
     RenderSpriteBatchObjects(commandList, txtObjects, imgObjects);
 
@@ -148,7 +151,7 @@ void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, s
     m_batch->End();
 }
 
-void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12Device* device, std::unordered_map<std::string, Image>& imgObjects)
+void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12Device* device, std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Camera>& camObjects)
 {
     m_graphicsMemory = std::make_unique<GraphicsMemory>(device);
 
@@ -170,6 +173,13 @@ void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::D
         current.second.PrepareImageResources(device, resourceUpload, m_resourceDescriptors);
     }
     //-----------------------------
+
+    // ----- PREPARE CAMERA -----
+    for (auto& current : camObjects)
+    {
+        PrepareCameraObjects(current.second, device, resourceUpload, m_resourceDescriptors, m_deviceResources);
+    }
+    // --------------------------
 
     // Draw Resources
     RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
@@ -212,13 +222,26 @@ void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::D
     // --------------------------
 
     uploadResourcesFinished.wait();
+
+    m_deviceResources->WaitForGpu();
 }
 
-void DirectXUtility::PrepareWindowDependentResources(RECT size, const D3D12_VIEWPORT& viewport)
+void DirectXUtility::PrepareWindowDependentResources(RECT size, const D3D12_VIEWPORT& viewport, std::unordered_map<std::string, Camera>& camObjects)
 {
     m_spriteBatch->SetViewport(viewport);
 
-    Matrix proj = Matrix::CreateScale(2.f / float(size.right), -2.f / float(size.bottom), 1.f) * Matrix::CreateTranslation(-1.f, 1.f, 0.f);
+    Matrix proj;
+
+        
+    // proj = Matrix::CreateScale(2.f / float(size.right), -2.f / float(size.bottom), 1.f) * Matrix::CreateTranslation(-1.f, 1.f, 0.f);
+
+    for (auto& current : camObjects)
+    {
+        if (current.second.GetFocus())
+        {
+            proj = current.second.PrepareProjection(size);
+        }
+    }
 
     m_effect->SetProjection(proj);
     m_lineEffect->SetProjection(proj);
@@ -235,7 +258,7 @@ void DirectXUtility::CheckInputs(const std::unordered_map<std::string, Triangle>
     }
 }
 
-void DirectXUtility::ResetAssets(std::unordered_map<std::string, Image>& imgObjects)
+void DirectXUtility::ResetAssets(std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Camera>& camObjects)
 {
     m_graphicsMemory.reset();
     m_spriteBatch.reset();
@@ -244,6 +267,11 @@ void DirectXUtility::ResetAssets(std::unordered_map<std::string, Image>& imgObje
     for (auto& current : imgObjects)
     {
         current.second.ResetTexture();
+    }
+
+    for (auto& current : camObjects)
+    {
+        current.second.ResetResources();
     }
 
     m_resourceDescriptors.reset();
@@ -282,4 +310,45 @@ void DirectXUtility::UpdateCollisions()
             }
         }
     }
+}
+
+void DirectXUtility::RenderCameraComponents(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Camera>& camObjects)
+{
+    for (auto& current : camObjects)
+    {
+        current.second.Render(commandList);
+    }
+}
+
+void DirectXUtility::PrepareCameraObjects(Camera& camObject, ID3D12Device* device, ResourceUploadBatch& resourceUpload, 
+    std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors, const std::unique_ptr<DX::DeviceResources>& m_deviceResources)
+{
+    camObject.PrepareResources(device);
+
+    RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
+        m_deviceResources->GetDepthBufferFormat());
+
+    {
+        EffectPipelineStateDescription sd(
+            &GeometricPrimitive::VertexType::InputLayout,
+            CommonStates::Opaque,
+            CommonStates::DepthDefault,
+            CommonStates::CullCounterClockwise,
+            rtState);
+
+        camObject.GetPtrRoomEffect() = std::make_shared<BasicEffect>(device,
+            EffectFlags::Lighting | EffectFlags::Texture, sd);
+        camObject.GetPtrRoomEffect()->EnableDefaultLighting();
+    }
+
+    DX::ThrowIfFailed(CreateDDSTextureFromFile(device, resourceUpload,
+        L"roomtexture.dds",
+        camObject.GetPtrRoomTex().ReleaseAndGetAddressOf()));
+
+    // Creates a shading error on all text objects.
+    //CreateShaderResourceView(device, camObject.GetPtrRoomTex().Get(),
+    //    m_resourceDescriptors->GetFirstCpuHandle());
+
+    camObject.GetPtrRoomEffect()->SetTexture(m_resourceDescriptors->GetFirstGpuHandle(),
+        camObject.GetPtrStates()->LinearClamp());
 }

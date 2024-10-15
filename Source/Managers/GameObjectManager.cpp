@@ -66,6 +66,11 @@ std::unordered_map<std::string, DebuggerUI>& GameObjectManager::GetDebuggerUIObj
     return debuggerUIBank;
 }
 
+std::unordered_map<std::string, Camera>& GameObjectManager::GetCameraObjBank()
+{
+    return cameraBank;
+}
+
 GameObject& GameObjectManager::GetGameObj(const std::string id)
 {
     return gameObjBank[id];
@@ -114,6 +119,11 @@ ControllerUI& GameObjectManager::GetControllerUI(const std::string id)
 DebuggerUI& GameObjectManager::GetDebuggerUI(const std::string id)
 {
     return debuggerUIBank[id];
+}
+
+Camera& GameObjectManager::GetCamera(const std::string id)
+{
+    return cameraBank[id];
 }
 
 // Adders
@@ -179,6 +189,11 @@ void GameObjectManager::AddControllerUI(std::string id, const ControllerUI& inp_
 void GameObjectManager::AddDebuggerUI(std::string id, const DebuggerUI& inp_debuggerUI)
 {
     debuggerUIBank[id] = inp_debuggerUI;
+}
+
+void GameObjectManager::AddCamera(std::string id, const Camera& inp_camera)
+{
+    cameraBank[id] = inp_camera;
 }
 
 GameObjectManager::~GameObjectManager() {

@@ -5,18 +5,7 @@
 #include "Game.h"
 #include <iostream>
 
-namespace
-{
-    const XMVECTORF32 START_POSITION = { 0.f, -1.5f, 0.f, 0.f };
-    const XMVECTORF32 ROOM_BOUNDS = { 8.f, 6.f, 12.f, 0.f };
-    constexpr float ROTATION_GAIN = 0.1f;
-}
-
-Game::Game() noexcept(false) :
-    m_pitch(0),
-    m_yaw(0),
-    m_cameraPos(START_POSITION),
-    m_roomColor(Colors::White)
+Game::Game() noexcept(false) 
 {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
     // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
@@ -85,47 +74,8 @@ void Game::Update(DX::StepTimer const& timer)
 
     float elapsedTime = float(timer.GetElapsedSeconds());
 
-    // -- TEST CODE FOR MOVING CAMERA --
-    DirectX::SimpleMath::Vector2 input = inputManager->leftStickPos;
-    if (inputManager->isConnected)
-    {
-        if (inputManager->leftStick)
-        {
-            m_yaw = m_pitch = 0.f;
-        }
-        else
-        {
-            m_yaw += -inputManager->leftStickPos.x * ROTATION_GAIN;
-            m_pitch += inputManager->leftStickPos.y * ROTATION_GAIN;
-            m_cameraPos.x += inputManager->leftStickPos.x;
-        }
-    }
-
     // TODO: Add your game logic here.
     inputManager->UpdateButtons();
-
-    // Camera relevent logic.
-    constexpr float limit = XM_PIDIV2 - 0.01f;
-    m_pitch = std::max(-limit, m_pitch);
-    m_pitch = std::min(+limit, m_pitch);
-
-    if (m_yaw > XM_PI)
-    {
-        m_yaw -= XM_2PI;
-    }
-    else if (m_yaw < -XM_PI)
-    {
-        m_yaw += XM_2PI;
-    }
-
-    float y = sinf(m_pitch);
-    float r = cosf(m_pitch);
-    float z = r * cosf(m_yaw);
-    float x = r * sinf(m_yaw);
-
-    XMVECTOR lookAt = m_cameraPos + Vector3(x, y, z);
-
-    m_view = XMMatrixLookAtRH(m_cameraPos, lookAt, Vector3::Up);
 
     directXUtility.UpdateGameObjects(elapsedTime);
 
@@ -150,18 +100,7 @@ void Game::Render()
     directXUtility.CleanScreen(m_deviceResources);
 
     auto commandList = m_deviceResources->GetCommandList();
-    directXUtility.RenderAllGameObjects(m_deviceResources, commandList, resourceManager->GetTxtObjBank(), resourceManager->GetImgObjBank(), resourceManager->GetTriObjBank(), resourceManager->GetLnObjBank(), resourceManager->GetQuadObjBank());
-
-    ID3D12DescriptorHeap* heaps[] = {
-        m_resourceDescriptors->Heap(), m_states->Heap()
-    };
-    commandList->SetDescriptorHeaps(static_cast<UINT>(std::size(heaps)),
-        heaps);
-
-    m_roomEffect->SetMatrices(Matrix::Identity, m_view, m_proj);
-    m_roomEffect->SetDiffuseColor(m_roomColor);
-    m_roomEffect->Apply(commandList);
-    m_room->Draw(commandList);
+    directXUtility.RenderAllGameObjects(m_deviceResources, commandList, resourceManager->GetTxtObjBank(), resourceManager->GetImgObjBank(), resourceManager->GetTriObjBank(), resourceManager->GetLnObjBank(), resourceManager->GetQuadObjBank(), resourceManager->GetCameraObjBank());
 }
 
 // Helper method to clear the back buffers.
@@ -265,51 +204,7 @@ void Game::CreateDeviceDependentResources()
         throw std::runtime_error("Shader Model 6.0 is not supported!");
     }
 
-    directXUtility.PrepareDeviceDependentResources(m_deviceResources, device, resourceManager->GetImgObjBank());
-
-    m_resourceDescriptors = std::make_unique<DescriptorHeap>(device, 1);
-
-    m_states = std::make_unique<CommonStates>(device);
-
-    m_room = GeometricPrimitive::CreateBox(
-        XMFLOAT3(ROOM_BOUNDS[0], ROOM_BOUNDS[1], ROOM_BOUNDS[2]),
-        false, true);
-
-    RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
-        m_deviceResources->GetDepthBufferFormat());
-
-    {
-        EffectPipelineStateDescription pd(
-            &GeometricPrimitive::VertexType::InputLayout,
-            CommonStates::Opaque,
-            CommonStates::DepthDefault,
-            CommonStates::CullCounterClockwise,
-            rtState);
-
-        m_roomEffect = std::make_unique<BasicEffect>(device,
-            EffectFlags::Lighting | EffectFlags::Texture, pd);
-        m_roomEffect->EnableDefaultLighting();
-    }
-
-    ResourceUploadBatch resourceUpload(device);
-
-    resourceUpload.Begin();
-
-    DX::ThrowIfFailed(CreateDDSTextureFromFile(device, resourceUpload,
-        L"roomtexture.dds",
-        m_roomTex.ReleaseAndGetAddressOf()));
-
-    CreateShaderResourceView(device, m_roomTex.Get(),
-        m_resourceDescriptors->GetFirstCpuHandle());
-
-    m_roomEffect->SetTexture(m_resourceDescriptors->GetFirstGpuHandle(),
-        m_states->LinearClamp());
-
-    auto uploadResourcesFinished = resourceUpload.End(
-        m_deviceResources->GetCommandQueue());
-    uploadResourcesFinished.wait();
-
-    m_deviceResources->WaitForGpu();
+    directXUtility.PrepareDeviceDependentResources(m_deviceResources, device, resourceManager->GetImgObjBank(), resourceManager->GetCameraObjBank());
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -323,10 +218,6 @@ void Game::CreateWindowSizeDependentResources()
     float horizontal = float(size.right);
     float vertical = float(size.bottom);
 
-    m_proj = Matrix::CreatePerspectiveFieldOfView(
-        XMConvertToRadians(70.f),
-        float(size.right) / float(size.bottom), 0.01f, 100.f);
-
     std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
 
     for (auto &curr : gameObjs)
@@ -335,18 +226,13 @@ void Game::CreateWindowSizeDependentResources()
         curr.second.CalcScale(std::min(horizontal, vertical));
     }
 
-    directXUtility.PrepareWindowDependentResources(size, viewport);
+    directXUtility.PrepareWindowDependentResources(size, viewport, resourceManager->GetCameraObjBank());
 }
 
 void Game::OnDeviceLost()
 {
     // Resets Assets
-    directXUtility.ResetAssets(resourceManager->GetImgObjBank());
-    m_room.reset();
-    m_roomTex.Reset();
-    m_resourceDescriptors.reset();
-    m_states.reset();
-    m_roomEffect.reset();
+    directXUtility.ResetAssets(resourceManager->GetImgObjBank(), resourceManager->GetCameraObjBank());
 }
 
 void Game::OnDeviceRestored()

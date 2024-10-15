@@ -4,7 +4,8 @@
 #include "Image.h"
 #include "Source/Managers/GameObjectManager.h"
 
-Image::Image() {
+Image::Image() 
+{
 	resourceManager = GameObjectManager::GetInstance();
 }
 

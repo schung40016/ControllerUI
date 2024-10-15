@@ -118,6 +118,7 @@
     <ClInclude Include="Source\Components\ControllerUI.h" />
     <ClInclude Include="Source\Components\DebuggerUI.h" />
     <ClInclude Include="Source\CustomObjects\Debugger.h" />
+    <ClInclude Include="Source\Components\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="Source\Components\ControllerUI.cpp" />
     <ClCompile Include="Source\Components\DebuggerUI.cpp" />
     <ClCompile Include="Source\CustomObjects\Debugger.cpp" />
+    <ClCompile Include="Source\Components\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
