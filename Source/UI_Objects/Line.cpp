@@ -39,8 +39,8 @@ void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPo
     float calcPt2X = (pos.x - point1.x) + point2.x;
     float calcPt2Y = (pos.y - point1.y) + point2.y;
 
-    DirectX::DX12::VertexPositionColor vec1(Vector3(pos.x, pos.y, 1.f), shapeColor);
-    DirectX::DX12::VertexPositionColor vec2(Vector3(calcPt2X, calcPt2Y, 1.f), shapeColor);
+    DirectX::DX12::VertexPositionColor vec1(Vector3(pos.x, pos.y, 0.f), shapeColor);
+    DirectX::DX12::VertexPositionColor vec2(Vector3(calcPt2X, calcPt2Y, 0.f), shapeColor);
     m_batch->DrawLine(vec1, vec2);
 }
 
