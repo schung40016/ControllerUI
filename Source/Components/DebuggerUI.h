@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "Source/Game/GameObject.h"
 #include "Source/UI_Objects/Text.h"
+#include "Source/UI_Objects/Line.h"
 #include "Source/Managers/InputManager.h"
 
 class RigidBody;

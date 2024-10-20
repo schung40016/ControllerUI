@@ -18,6 +18,8 @@ private:
     Text tAccelerationNum;
     Text tPositionNum;
 
+    Line lnVelocity;
+
 public:
     Debugger();
 

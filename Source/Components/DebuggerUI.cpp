@@ -25,6 +25,8 @@ void DebuggerUI::Awake()
 void DebuggerUI::Update(float deltaTime)
 {
     std::unordered_map<std::string, Text> &refTextBank = resourceManager->GetTxtObjBank();
+    Line& lnVelocity = resourceManager->GetLnObj(sParentObjName + "_VelocityLine");
+
     GameObject &refPlayerObj = resourceManager->GetGameObj(sObjectFocusName);
     const DirectX::SimpleMath::Vector2 playerPos = refPlayerObj.GetPosition();
     Text &velocityNum = refTextBank[sParentObjName + "_velocity_num"];
@@ -48,13 +50,14 @@ void DebuggerUI::Update(float deltaTime)
     accelerationNum.SetText(sTempAccelration);
     positionNum.SetText(sTempPosition);
 
+    lnVelocity.SetPoint2(tempVelocity.x * 10.f, tempVelocity.y * 10.f);
 }
 
 /*
 * 10/5/2024
-- Improve jump (make less floaty)
+- Improve jump (done)
 - Add more props to the map.
-- Update velocity and acceleration to be lines in the debug mode.
-- Make camera component.
+- Update velocity and acceleration to be lines in the debug mode. (done)
+- Make camera component. (done)
 - Update debug component
 */

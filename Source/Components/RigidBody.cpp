@@ -51,6 +51,9 @@ void RigidBody::ApplyForce(float deltaTime)
 {
 	// Apply resistance to the velocity overtime.
 	velocity *= (1.0f - fDamping * deltaTime);
+	// Update acceleration.
+	totalGoalVelocity = (velocity - actVelocity) / deltaTime;
+
 	// Apply added force.
 	velocity += (accumulatedForce / fMass) * deltaTime;
 	// Reset accumulatedForce for the next time it is called.
@@ -95,5 +98,5 @@ DirectX::SimpleMath::Vector2 RigidBody::GetVelocity() const
 
 DirectX::SimpleMath::Vector2 RigidBody::GetAcceleration() const
 {
-	return accumulatedForce;
+	return totalGoalVelocity;
 }

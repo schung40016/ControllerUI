@@ -233,15 +233,15 @@ void DirectXUtility::PrepareWindowDependentResources(RECT size, const D3D12_VIEW
     Matrix proj;
 
         
-    // proj = Matrix::CreateScale(2.f / float(size.right), -2.f / float(size.bottom), 1.f) * Matrix::CreateTranslation(-1.f, 1.f, 0.f);
+    proj = Matrix::CreateScale(2.f / float(size.right), -2.f / float(size.bottom), 1.f) * Matrix::CreateTranslation(-1.f, 1.f, 0.f);
 
-    for (auto& current : camObjects)
-    {
-        if (current.second.GetFocus())
-        {
-            proj = current.second.PrepareProjection(size);
-        }
-    }
+    //for (auto& current : camObjects)
+    //{
+    //    if (current.second.GetFocus())
+    //    {
+    //        proj = current.second.PrepareProjection(size);
+    //    }
+    //}
 
     m_effect->SetProjection(proj);
     m_lineEffect->SetProjection(proj);
