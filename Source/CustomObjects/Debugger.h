@@ -14,11 +14,20 @@ private:
     Text tVelocity;
     Text tAcceleration;
     Text tPosition;
+    Text tDisplacement;
     Text tVelocityNum;
     Text tAccelerationNum;
     Text tPositionNum;
+    Text tDisplacementNum;
 
     Line lnVelocity;
+
+    // Frame by frame debugger.
+    Text tFrameDesc1;
+    Text tFrameDesc2;
+    Text tFrameDesc3;
+    Text tFrameDesc4;
+    Text tFrameDesc5;
 
 public:
     Debugger();

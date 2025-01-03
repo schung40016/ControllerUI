@@ -20,7 +20,7 @@ private:
 	float smoothness = 60.f;
 
 	// Grounded variables.
-	boolean grounded = false;
+	boolean grounded, rightGrounded, leftGrounded, topGrounded = false;
 	float isGroundedErrorMargin = 0.1f;
 	DirectX::SimpleMath::Vector2 prevPosition = { 0, 0 };
 
@@ -32,6 +32,8 @@ public:
 	void Update(float deltaTime) override;		// Calls all relevant functions for calculations.
 
 	void ApplyGravity(float deltaTime);
+
+	void StopVelocity();
 
 	void AddForce(DirectX::SimpleMath::Vector2 force);
 

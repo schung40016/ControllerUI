@@ -29,6 +29,21 @@ void RigidBody::ApplyGravity(float deltaTime)
 		parentObj->SetPosition(calcPos);
 		velocity = velocity + gravityVelocity * deltaTime * fMass;
 	}
+
+	StopVelocity();
+}
+
+void RigidBody::StopVelocity()
+{
+	if ((grounded && actVelocity.y > 0) || (topGrounded && actVelocity.y < 0))
+	{
+		actVelocity.y = 0;
+	}
+
+	if ((rightGrounded && actVelocity.x > 0) || (leftGrounded && actVelocity.x < 0))
+	{
+		actVelocity.x = 0;
+	}
 }
 
 int RigidBody::GetLayerMask() const
@@ -83,7 +98,20 @@ float RigidBody::Interpolate(float goalPosition, float currPosition, float dt)
 
 void RigidBody::CheckIfGrounded()
 {
-	grounded = Raycast::CastRaycast(parentObj->GetPosition(), { 0, -1 }, EnumData::ColliderLayers::Ground, 27.f);
+	float parentWidthHalved = parentObj->GetSize().x / 2.f;
+	float rayCastLength = parentWidthHalved + 2.f;
+
+	DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
+	DirectX::SimpleMath::Vector2 rightEdge = { parentPos.x + parentWidthHalved, parentPos.y};
+	DirectX::SimpleMath::Vector2 leftEdge = { parentPos.x - parentWidthHalved, parentPos.y };
+	bool groundedRightCheck = Raycast::CastRaycast(rightEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastLength);
+	bool groundedLeftCheck = Raycast::CastRaycast(leftEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastLength);
+
+	leftGrounded = Raycast::CastRaycast(parentPos, { 1, 0 }, EnumData::ColliderLayers::Ground, rayCastLength);
+	rightGrounded = Raycast::CastRaycast(parentPos, { -1, 0 }, EnumData::ColliderLayers::Ground, rayCastLength);
+	topGrounded = Raycast::CastRaycast(parentPos, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastLength);
+
+	grounded = groundedRightCheck || groundedLeftCheck;
 }
 
 boolean RigidBody::isGrounded()

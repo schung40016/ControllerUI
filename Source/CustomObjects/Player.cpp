@@ -20,7 +20,7 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	std::string sCameraName = sPlayerName + "_Camera";
 
 	// Try setting the objects from within the resourcemanager.
-	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier);
+	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier, {inp_width, inp_length });
 	GameObject& tempPlayerGame = resourceManager->GetGameObj(sPlayerName);
 	Quad player_shape = Quad(sPlayerName + "_Shape", DirectX::Colors::Aqua, tempPlayerGame, 1.f, 0, 0, inp_width, inp_length, true);
 	std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = FetchPositionPairs(inp_width, inp_length);

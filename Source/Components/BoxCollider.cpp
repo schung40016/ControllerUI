@@ -167,6 +167,12 @@ bool BoxCollider::IsColliding_DIAG_STATIC(BoxCollider& other)
 			{
 				DirectX::SimpleMath::Vector2 parentPos = this->GetParent()->GetPosition();
 
+				displacementDisplay = displacement;
+
+				if (displacement.x < -.5 || displacement.x > .5) {
+					displacement.x = 0;
+				}
+
 				parentPos.x += displacement.x * (shape == 0 ? -1 : +1);
 				parentPos.y += displacement.y * (shape == 0 ? -1 : +1);
 
@@ -200,4 +206,9 @@ void BoxCollider::SetWorldPositions()
 	{
 		worldVertices[i] = {localVertices[i].x + parentPosition.x, localVertices[i].y + parentPosition.y};
 	}
+}
+
+DirectX::SimpleMath::Vector2 BoxCollider::GetDisplacement()
+{
+	return displacementDisplay;
 }

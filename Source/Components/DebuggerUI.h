@@ -6,6 +6,9 @@
 #include "Source/UI_Objects/Text.h"
 #include "Source/UI_Objects/Line.h"
 #include "Source/Managers/InputManager.h"
+#include "BoxCollider.h"
+#include "queue"
+#include "sstream"
 
 class RigidBody;
 
@@ -17,9 +20,22 @@ private:
 
 	boolean bOn = true;
 	RigidBody *rb = nullptr; 
+	BoxCollider *bc = nullptr;
 
 	std::string sParentObjName = "";
 	std::string sObjectFocusName = "";
+
+	// Frame by frame debugger.
+	int frameCaptureRate = 30;
+	int frameCount = 1;
+
+	std::queue<std::string> qFrameDesc;
+
+	void updateFrameByFrameDebugger(std::unordered_map<std::string, Text>& refTextBank, std::string displacement, std::string acceleration);
+
+	float roundToDecimal(float input, float upTo = 3);
+
+	std::string removeTrailingZeroes(float value);
 
 public: 
 	DebuggerUI();

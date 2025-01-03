@@ -17,6 +17,17 @@ GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position
 	resourceManager->AddGameObj(id, *this);
 }
 
+
+GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size, DirectX::SimpleMath::Vector2 inp_sizeDimensions) 
+{
+	name = id;
+	resourceManager = GameObjectManager::GetInstance();
+	gObj_size = inp_sizeDimensions;
+	gObj_position = inp_position;
+	gObj_originalSize = inp_size;
+	resourceManager->AddGameObj(id, *this);
+}
+
 void GameObject::Awake()
 {
 	for (auto& comp : components)
@@ -78,6 +89,11 @@ const int GameObject::GetLayerMask() const
 	return layerMask;
 }
 
+const DirectX::SimpleMath::Vector2 GameObject::GetSize() const
+{
+	return gObj_size;
+}
+
 void GameObject::CalcScale(float inp_size)
 {
 	gObj_scale = inp_size / gObj_originalSize;
@@ -116,6 +132,11 @@ void GameObject::SetOriginalSize(const float inp_ogSize)
 void GameObject::SetComponents(const std::vector<Component*>& inp_components)
 {
 	components = inp_components;
+}
+
+void GameObject::SetSize(const DirectX::SimpleMath::Vector2 inp_size)
+{
+	gObj_size = inp_size;
 }
 
 void GameObject::MovePosition(const DirectX::SimpleMath::Vector2 inp_position)

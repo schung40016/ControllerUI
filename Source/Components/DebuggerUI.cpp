@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "DebuggerUI.h"
+#include "cmath"
 #include "Source/Managers/GameObjectManager.h"
 
 DebuggerUI::DebuggerUI()
@@ -20,6 +21,30 @@ void DebuggerUI::Awake()
 {
     GameObject& refPlayerObj = resourceManager->GetGameObj(sObjectFocusName);
     rb = refPlayerObj.GetComponent<RigidBody>();
+    bc = refPlayerObj.GetComponent<BoxCollider>();
+
+    for (int i = 0; i < 5; i++)
+    {
+        qFrameDesc.push("--");
+    }
+
+    std::unordered_map<std::string, Text>& refTextBank = resourceManager->GetTxtObjBank();
+
+    refTextBank[sParentObjName + "_velocity_num"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_acceleration_num"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_position_num"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_displacement_num"].SetDisplay(bOn);
+
+    refTextBank[sParentObjName + "_velocity"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_acceleration"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_position"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_displacement"].SetDisplay(bOn);
+
+    refTextBank[sParentObjName + "_frame_desc_1"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_frame_desc_2"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_frame_desc_3"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_frame_desc_4"].SetDisplay(bOn);
+    refTextBank[sParentObjName + "_frame_desc_5"].SetDisplay(bOn);
 }
 
 void DebuggerUI::Update(float deltaTime)
@@ -32,32 +57,81 @@ void DebuggerUI::Update(float deltaTime)
     Text &velocityNum = refTextBank[sParentObjName + "_velocity_num"];
     Text &accelerationNum = refTextBank[sParentObjName + "_acceleration_num"];
     Text &positionNum = refTextBank[sParentObjName + "_position_num"];
-    DirectX::SimpleMath::Vector2 tempVelocity = rb->GetVelocity();
-    DirectX::SimpleMath::Vector2 tempAcceleration = rb->GetAcceleration();
+    Text &displacementNum = refTextBank[sParentObjName + "_displacement_num"];
+    DirectX::SimpleMath::Vector2 tempVelocity = { roundToDecimal(rb->GetVelocity().x), roundToDecimal(rb->GetVelocity().y) };
+    DirectX::SimpleMath::Vector2 tempAcceleration = { roundToDecimal(rb->GetAcceleration().x), roundToDecimal(rb->GetAcceleration().y) };
+    DirectX::SimpleMath::Vector2 tempDisplacement = { roundToDecimal(bc->GetDisplacement().x), roundToDecimal(bc->GetDisplacement().y) };
 
-    refTextBank[sParentObjName + "_velocity"].SetDisplay(bOn);
-    refTextBank[sParentObjName + "_acceleration"].SetDisplay(bOn);
-    refTextBank[sParentObjName + "_position"].SetDisplay(bOn);
+    std::string sTempVelocity = "{" + removeTrailingZeroes(tempVelocity.x) + ", " + removeTrailingZeroes(tempVelocity.y) + "}";
+    std::string sTempAccelration = "{" + removeTrailingZeroes(tempAcceleration.x) + ", " + removeTrailingZeroes(tempAcceleration.y) + "}";
+    std::string sTempPosition = "{" + removeTrailingZeroes(playerPos.x) + ", " + removeTrailingZeroes(playerPos.y) + "}";
+    std::string sTempDisplacement = "{" + removeTrailingZeroes(tempDisplacement.x) + ", " + removeTrailingZeroes(tempDisplacement.y) + "}";
 
-    velocityNum.SetDisplay(bOn);
-    accelerationNum.SetDisplay(bOn);
-    positionNum.SetDisplay(bOn);
+    if (frameCount % frameCaptureRate == 0)
+    {
+        updateFrameByFrameDebugger(refTextBank, sTempDisplacement, sTempAccelration);
+    }
 
-    std::string sTempVelocity = "{" + std::to_string(tempVelocity.x) + ", " + std::to_string(tempVelocity.y) + "}";
-    std::string sTempAccelration = "{" + std::to_string(tempAcceleration.x) + ", " + std::to_string(tempAcceleration.y) + "}";
-    std::string sTempPosition = "{" + std::to_string(playerPos.x) + ", " + std::to_string(playerPos.y) + "}";
     velocityNum.SetText(sTempVelocity);
     accelerationNum.SetText(sTempAccelration);
     positionNum.SetText(sTempPosition);
+    displacementNum.SetText(sTempDisplacement);
 
     lnVelocity.SetPoint2(tempVelocity.x * 10.f, tempVelocity.y * 10.f);
+
+    frameCount++;
 }
 
-/*
-* 10/5/2024
-- Improve jump (done)
-- Add more props to the map.
-- Update velocity and acceleration to be lines in the debug mode. (done)
-- Make camera component. (done)
-- Update debug component
-*/
+void DebuggerUI::updateFrameByFrameDebugger(std::unordered_map<std::string, Text>& refTextBank, std::string displacement, std::string acceleration)
+{
+    // Frame by frame text boxes.
+    Text& frameDesc1 = refTextBank[sParentObjName + "_frame_desc_1"];
+    Text& frameDesc2 = refTextBank[sParentObjName + "_frame_desc_2"];
+    Text& frameDesc3 = refTextBank[sParentObjName + "_frame_desc_3"];
+    Text& frameDesc4 = refTextBank[sParentObjName + "_frame_desc_4"];
+    Text& frameDesc5 = refTextBank[sParentObjName + "_frame_desc_5"];
+
+    frameDesc1.SetDisplay(bOn);
+    frameDesc2.SetDisplay(bOn);
+    frameDesc3.SetDisplay(bOn);
+    frameDesc4.SetDisplay(bOn);
+    frameDesc5.SetDisplay(bOn);
+
+    // Pop a frame description.
+    qFrameDesc.pop();
+
+    // Create frame desc.
+    std::string currentFrameDesc = "Frame #" + std::to_string(frameCount) + ": Dis - " + displacement + ", Acc - " + acceleration;
+
+    // Add frame desc to q.
+    qFrameDesc.push(currentFrameDesc);
+
+    // Update frameDesc textboxes based on queue contents.
+
+    std::queue<std::string> tempQueue = qFrameDesc;
+    std::vector<std::string> tempVector;
+
+    while (!tempQueue.empty())
+    {
+        tempVector.emplace_back(tempQueue.front());
+        tempQueue.pop();
+    }
+
+    frameDesc1.SetText(tempVector[0]);
+    frameDesc2.SetText(tempVector[1]);
+    frameDesc3.SetText(tempVector[2]);
+    frameDesc4.SetText(tempVector[3]);
+    frameDesc5.SetText(tempVector[4]);
+}
+
+float DebuggerUI::roundToDecimal(float input, float upTo)
+{
+    float multiplyBy = std::pow(10, upTo);
+    return std::round(input * multiplyBy) / multiplyBy;
+}
+
+std::string DebuggerUI::removeTrailingZeroes(float value) {
+    std::ostringstream stream;
+    stream << std::defaultfloat << value;
+    return stream.str();
+}

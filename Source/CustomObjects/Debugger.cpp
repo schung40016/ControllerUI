@@ -25,10 +25,18 @@ Debugger::Debugger(float inp_size, std::string inp_debuggerName, std::string inp
 	tVelocity = Text(sDebuggerName + "_velocity", DirectX::Colors::Black, "Velocity: ", tempDebuggerObj, 0.f, 0.f);
 	tAcceleration = Text(sDebuggerName + "_acceleration", DirectX::Colors::Black, "Acceleration: ", tempDebuggerObj, 0.f, 50.f);
 	tPosition = Text(sDebuggerName + "_position", DirectX::Colors::Black, "Position: ", tempDebuggerObj, 0.f, 100.f);
+	tDisplacement = Text(sDebuggerName + "_displacement", DirectX::Colors::Black, "Displacement: ", tempDebuggerObj, 0.f, 150.f);
 
 	tVelocityNum = Text(sDebuggerName + "_velocity_num", DirectX::Colors::Black, "0.0", tempDebuggerObj, 500.f, 0.f);
 	tAccelerationNum = Text(sDebuggerName + "_acceleration_num", DirectX::Colors::Black, "0.0", tempDebuggerObj, 500.f, 50.f);
 	tPositionNum = Text(sDebuggerName + "_position_num", DirectX::Colors::Black, "{0.0, 0.0}", tempDebuggerObj, 500.f, 100.f);
+	tDisplacementNum = Text(sDebuggerName + "_displacement_num", DirectX::Colors::Black, "{0.0, 0.0}", tempDebuggerObj, 500.f, 150.f);
+
+	tFrameDesc1 = Text(sDebuggerName + "_frame_desc_1", DirectX::Colors::Black, "Frame #: ", tempDebuggerObj, 300.f, 200.f);
+	tFrameDesc2 = Text(sDebuggerName + "_frame_desc_2", DirectX::Colors::Black, "Frame #: ", tempDebuggerObj, 300.f, 250.f);
+	tFrameDesc3 = Text(sDebuggerName + "_frame_desc_3", DirectX::Colors::Black, "Frame #: ", tempDebuggerObj, 300.f, 300.f);
+	tFrameDesc4 = Text(sDebuggerName + "_frame_desc_4", DirectX::Colors::Black, "Frame #: ", tempDebuggerObj, 300.f, 350.f);
+	tFrameDesc5 = Text(sDebuggerName + "_frame_desc_5", DirectX::Colors::Black, "Frame #: ", tempDebuggerObj, 300.f, 400.f);
 
 	lnVelocity = Line(sDebuggerName + "_VelocityLine", DirectX::Colors::Red, refPlayerObj, { 0.f, 0.f }, 1.f);
 

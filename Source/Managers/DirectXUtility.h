@@ -29,6 +29,8 @@ private:
 
     GameObjectManager* resourceManager;
 
+    int frameCount = 0;
+
 public: 
     DirectXUtility();
 

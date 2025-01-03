@@ -18,7 +18,7 @@ SolidBox::SolidBox(float inp_size, std::string inp_boxName, DirectX::SimpleMath:
 
 	GameObject box = GameObject(sSolidBoxName, inp_position, fSizeMultiplier);
 	GameObject& tempSolidBox = resourceManager->GetGameObj(sSolidBoxName);
-	Quad groundShape = Quad(sSolidBoxName + "_Shape", DirectX::Colors::DarkGray, resourceManager->GetGameObj(sSolidBoxName), 1.f, 0, 0, 800.f, 200.f, true);
+	Quad groundShape = Quad(sSolidBoxName + "_Shape", DirectX::Colors::DarkGray, resourceManager->GetGameObj(sSolidBoxName), 1.f, 0, 0, inp_width, inp_length, true);
 	std::vector<DirectX::SimpleMath::Vector2> solidBoxCollisionBox = FetchPositionPairs(inp_width, inp_length);
 
 	BoxCollider boxCollider = BoxCollider(tempSolidBox, solidBoxCollisionBox, false);

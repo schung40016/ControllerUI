@@ -7,21 +7,19 @@ World::World()
     resourceManager = GameObjectManager::GetInstance();
 }
 
-// For every new keyword, in a world destroyer, delete the pointer "free it up". DONE.
-// Create a player object that initializes all these components. DONE.
-// Redo Readme.txt to include build.exe steps and entire project steps.
-// Separate all files into respective folders (file explorer). DONE.
-// Try to build this on another machine. (put steps into readme.txt)
-
 void World::Initialize()
 {
     resourceManager = GameObjectManager::GetInstance();
 
     // Make custom objects.
-    ground = SolidBox(defaultSizeMult, "ground", { 650.f, 800.f }, 800.f, 200.f);
+    ground = SolidBox(defaultSizeMult, "ground", { 650.f, 800.f }, 800.f, 50.f);
+    platform = SolidBox(defaultSizeMult, "platform", { 400.f, 650.f }, 200.f, 50.f);
+    platform1 = SolidBox(defaultSizeMult, "platform2", { 800.f, 650.f }, 200.f, 50.f);
+    wall = SolidBox(defaultSizeMult, "wall", { 200.f, 625.f }, 100.f, 400.f);
+    wall2 = SolidBox(defaultSizeMult, "wall2", { 1100.f, 625.f }, 100.f, 400.f);
     player = Player(defaultSizeMult, "player", {650.f, 650.f}, 50.f, 50.f);
     controller = Controller(defaultSizeMult * 3, "controller", { 150.f, 100.f });
-    debugger = Debugger(defaultSizeMult * 3, "debugger", "player", {1000.f, 25.f});
+    debugger = Debugger(defaultSizeMult * 3, "debugger", "player", {900.f, 25.f});
 
     PrepCollisionLayers();
 }

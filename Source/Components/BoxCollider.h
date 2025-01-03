@@ -12,6 +12,7 @@ private:
 	bool isMovable = false;
 	std::vector<DirectX::SimpleMath::Vector2> localVertices = {};	// FOr storing local point positions.
 	std::vector<DirectX::SimpleMath::Vector2> worldVertices = {};	// FOr storing world point positions.
+	DirectX::SimpleMath::Vector2 displacementDisplay = {};
 	std::vector<Line> vertexLines = {};
 	GameObjectManager* resourceManager;
 
@@ -39,4 +40,6 @@ public:
 	bool CanCollide();
 
 	void SetWorldPositions();
+
+	DirectX::SimpleMath::Vector2 GetDisplacement();
 };

@@ -21,15 +21,17 @@ void DirectXUtility::AwakeGameObjects()
 
 void DirectXUtility::UpdateGameObjects(float elapsedTime)
 {
+    frameCount++;
+
     std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
+
+    // Check for any collisions between objects from the same layer..
+    UpdateCollisions();
 
     for (auto& curr : gameObjs)
     {
         curr.second.Update(elapsedTime);
     }
-
-    // Check for any collisions between objects from the same layer..
-    UpdateCollisions();
 }
 
 void DirectXUtility::CleanScreen(const std::unique_ptr<DX::DeviceResources>& m_deviceResources)

@@ -21,6 +21,10 @@ private:
 
     // Create custom objects:
     SolidBox ground;
+    SolidBox platform;
+    SolidBox platform1;
+    SolidBox wall;
+    SolidBox wall2;
     Player player;
     Controller controller;
     Debugger debugger;
