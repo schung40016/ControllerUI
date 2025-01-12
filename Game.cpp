@@ -34,9 +34,6 @@ void Game::Initialize(HWND window, int width, int height)
 
     directXUtility = DirectXUtility();
 
-    float horizontal = float(size.right);
-    float vertical = float(size.bottom);
-
     m_deviceResources->CreateDeviceResources();
 
     m_deviceResources->CreateWindowSizeDependentResources();

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 #include "Image.h"
 #include "Source/Managers/GameObjectManager.h"
@@ -24,9 +22,16 @@ void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, st
 {
 	DirectX::SimpleMath::Vector2 parentObj = GetPosition();
 
-
-	m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
-		GetPosition(), nullptr, Colors::White, 0.f, m_origin, GetScale());
+	if (flip)
+	{
+		m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
+			GetPosition(), nullptr, Colors::White, 0.f, m_origin, GetScale(), SpriteEffects_FlipHorizontally);
+	} 
+	else 
+	{
+		m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
+			GetPosition(), nullptr, Colors::White, 0.f, m_origin, GetScale());
+	}
 }
 
 void Image::PrepareImageResources(ID3D12Device* device, DirectX::ResourceUploadBatch& resourceUpload, 
@@ -53,6 +58,11 @@ void Image::SetImageOrigin()
 
 	m_origin.x = float(imageSize.x / 2);
 	m_origin.y = float(imageSize.y / 2);
+}
+
+void Image::flipImage(bool input)
+{
+	flip = input;
 }
 
 DirectX::SimpleMath::Vector2 Image::GetOrigin()

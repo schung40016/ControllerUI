@@ -2,10 +2,10 @@
 
 #include "pch.h"
 #include "Source/Enum/EnumData.h"
-#include "Source/Components/Component.h"
-#include <iostream>
 
 class GameObjectManager;
+
+class Component;
 
 class GameObject
 {

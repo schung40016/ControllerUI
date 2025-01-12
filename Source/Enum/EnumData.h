@@ -9,6 +9,7 @@ public:
         Controller,
         LeftTrigger,
         RightTrigger,
+        PlayerImage,
         Count
     };
 

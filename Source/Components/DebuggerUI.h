@@ -2,25 +2,19 @@
 
 #include "pch.h"
 #include "Component.h"
-#include "Source/Game/GameObject.h"
-#include "Source/UI_Objects/Text.h"
-#include "Source/UI_Objects/Line.h"
-#include "Source/Managers/InputManager.h"
-#include "BoxCollider.h"
 #include "queue"
-#include "sstream"
 
 class RigidBody;
 
 class DebuggerUI : public Component
 {
 private:
-	GameObjectManager *resourceManager = nullptr;
-	InputManager *inputManager = InputManager::GetInstance();
+	class GameObjectManager *resourceManager = nullptr;
+	class InputManager* inputManager = nullptr;
 
 	boolean bOn = true;
-	RigidBody *rb = nullptr; 
-	BoxCollider *bc = nullptr;
+	class RigidBody *rb = nullptr; 
+	class BoxCollider *bc = nullptr;
 
 	std::string sParentObjName = "";
 	std::string sObjectFocusName = "";
@@ -31,7 +25,7 @@ private:
 
 	std::queue<std::string> qFrameDesc;
 
-	void updateFrameByFrameDebugger(std::unordered_map<std::string, Text>& refTextBank, std::string displacement, std::string acceleration);
+	void updateFrameByFrameDebugger(std::unordered_map<std::string, class Text>& refTextBank, std::string displacement, std::string acceleration);
 
 	float roundToDecimal(float input, float upTo = 3);
 

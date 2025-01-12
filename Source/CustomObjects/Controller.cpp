@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "Controller.h"
+#include "Source/Game/GameObject.h"
+#include "Source/UI_Objects/Image.h"
+#include "Source/Managers/GameObjectManager.h"
+#include "Source/Components/ControllerUI.h"
 
 Controller::Controller()
 {
@@ -24,19 +28,19 @@ Controller::Controller(float inp_size, std::string inp_controllerName, DirectX::
     std::string imgRightTriggerName = sControllerName + "_imgRightTrigger";
 
     // Create a higher tier object to act as the parent for all these objects.
-    gamePad = Image(gamePadName, DirectX::Colors::White, ".\\Images\\gamepad.png", EnumData::Descriptors::Controller, tempControllerObj, 0.f, 0.f, 1.f);   // xbox controller
-    imgLeftTrigger = Image(imgLeftTriggerName, DirectX::Colors::White, ".\\Images\\LeftTrigger.png", EnumData::Descriptors::LeftTrigger, tempControllerObj, -290.f, -140.f, 1.f);    // left trigger.
-    imgRightTrigger = Image(imgRightTriggerName, DirectX::Colors::White, ".\\Images\\RightTrigger.png", EnumData::Descriptors::RightTrigger, tempControllerObj, 290.f, -140.f, 1.f);  // right trigger.
+    Image gamePad = Image(gamePadName, DirectX::Colors::White, ".\\Images\\gamepad.png", EnumData::Descriptors::Controller, tempControllerObj, 0.f, 0.f, 1.f);   // xbox controller
+    Image imgLeftTrigger = Image(imgLeftTriggerName, DirectX::Colors::White, ".\\Images\\LeftTrigger.png", EnumData::Descriptors::LeftTrigger, tempControllerObj, -290.f, -140.f, 1.f);    // left trigger.
+    Image imgRightTrigger = Image(imgRightTriggerName, DirectX::Colors::White, ".\\Images\\RightTrigger.png", EnumData::Descriptors::RightTrigger, tempControllerObj, 290.f, -140.f, 1.f);  // right trigger.
 
     Image& temp_gamePad = resourceManager->GetImgObj(gamePadName);
     Image& temp_imgLeftTrigger = resourceManager->GetImgObj(imgLeftTriggerName);
     Image& temp_imgRightTrigger = resourceManager->GetImgObj(imgRightTriggerName);
 
 
-    a = Triangle(sControllerName + "_a", DirectX::Colors::HotPink, temp_gamePad, 1.f, 159.f, -38.f, 40.f, 40.f); // a
-    b = Triangle(sControllerName + "_b", DirectX::Colors::HotPink, temp_gamePad, 1.f, 199.f, -80.f, 40.f, 40.f); // b
-    x = Triangle(sControllerName + "_x", DirectX::Colors::HotPink, temp_gamePad, 1.f, 119.f, -80.f, 40.f, 40.f); // x
-    y = Triangle(sControllerName + "_y", DirectX::Colors::HotPink, temp_gamePad, 1.f, 159.f, -120.f, 40.f, 40.f);    // y
+    Triangle a = Triangle(sControllerName + "_a", DirectX::Colors::HotPink, temp_gamePad, 1.f, 159.f, -38.f, 40.f, 40.f); // a
+    Triangle b = Triangle(sControllerName + "_b", DirectX::Colors::HotPink, temp_gamePad, 1.f, 199.f, -80.f, 40.f, 40.f); // b
+    Triangle x = Triangle(sControllerName + "_x", DirectX::Colors::HotPink, temp_gamePad, 1.f, 119.f, -80.f, 40.f, 40.f); // x
+    Triangle y = Triangle(sControllerName + "_y", DirectX::Colors::HotPink, temp_gamePad, 1.f, 159.f, -120.f, 40.f, 40.f);    // y
 
     Triangle start = Triangle(sControllerName + "_start", DirectX::Colors::HotPink, temp_gamePad, 1.f, 51.f, -80.f, 40.f, 40.f);  // start
     Triangle view = Triangle(sControllerName + "_view", DirectX::Colors::HotPink, temp_gamePad, 1.f, -39.f, -80.f, 40.f, 40.f);  // view

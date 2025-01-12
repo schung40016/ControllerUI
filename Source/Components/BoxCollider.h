@@ -2,8 +2,8 @@
 
 #include "pch.h"
 #include "Component.h"
-#include <Source/Game/GameObject.h>;
-#include <Source/UI_Objects/Line.h>
+
+class GameObject;
 
 class BoxCollider : public Component {
 private:
@@ -13,8 +13,8 @@ private:
 	std::vector<DirectX::SimpleMath::Vector2> localVertices = {};	// FOr storing local point positions.
 	std::vector<DirectX::SimpleMath::Vector2> worldVertices = {};	// FOr storing world point positions.
 	DirectX::SimpleMath::Vector2 displacementDisplay = {};
-	std::vector<Line> vertexLines = {};
-	GameObjectManager* resourceManager;
+	std::vector<class Line> vertexLines = {};
+	class GameObjectManager* resourceManager = nullptr;
 
 public:
 	void Update(float deltaTime) override;
@@ -29,13 +29,13 @@ public:
 
 	DirectX::SimpleMath::Vector2 GetEdgeNormal(const DirectX::SimpleMath::Vector2& v1, const DirectX::SimpleMath::Vector2& v2) const;
 
-	bool IsColliding_SAT(BoxCollider& other);
+	bool IsColliding_SAT(class BoxCollider& other);
 
 	// Good for dealing with shapes that have concave corners.
-	bool IsColliding_DIAG(BoxCollider& other);
+	bool IsColliding_DIAG(class BoxCollider& other);
 
 	// An alternative to the original function that also fixes the collision problem.
-	bool IsColliding_DIAG_STATIC(BoxCollider& other);
+	bool IsColliding_DIAG_STATIC(class BoxCollider& other);
 
 	bool CanCollide();
 

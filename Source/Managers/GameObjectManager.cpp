@@ -2,6 +2,17 @@
 
 #include "pch.h"
 #include "GameObjectManager.h"
+#include "Source/UI_Objects/Image.h"
+#include "Source/UI_Objects/Text.h"
+#include "Source/UI_Objects/Shapes/Triangle.h"
+#include "Source/UI_Objects/Shapes/Shape.h"
+#include "Source/UI_Objects/Shapes/Quad.h"
+#include "Source/Enum/EnumData.h"
+#include "Source/Components/PlayerController.h"
+#include "Source/Components/RigidBody.h"
+#include "Source/Components/ControllerUI.h"
+#include <Source/Components/DebuggerUI.h>
+#include <Source/Components/Camera.h>
 
 GameObjectManager* GameObjectManager::instance = NULL;
 

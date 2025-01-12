@@ -1,5 +1,3 @@
-#pragma once
-
 #include "pch.h"
 #include "Quad.h"
 #include "Source/Managers/GameObjectManager.h"

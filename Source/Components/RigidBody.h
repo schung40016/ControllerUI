@@ -1,9 +1,9 @@
 #pragma once
 
 #include "pch.h"
-#include "Source/Game/GameObject.h"
 #include "Component.h"
-#include "Source/Tools/Raycast.h"
+
+class GameObject;
 
 class RigidBody : public Component {
 private:
@@ -20,7 +20,7 @@ private:
 	float smoothness = 60.f;
 
 	// Grounded variables.
-	boolean grounded, rightGrounded, leftGrounded, topGrounded = false;
+	boolean grounded, rightGrounded, leftGrounded, topGroundedLeft, topGroundedRight = false;
 	float isGroundedErrorMargin = 0.1f;
 	DirectX::SimpleMath::Vector2 prevPosition = { 0, 0 };
 

@@ -1,7 +1,7 @@
-#pragma once
-
 #include "pch.h"
 #include "Debugger.h"
+#include "Source/Managers/GameObjectManager.h"
+#include "Source/Components/DebuggerUI.h"
 
 Debugger::Debugger()
 {
@@ -44,5 +44,5 @@ Debugger::Debugger(float inp_size, std::string inp_debuggerName, std::string inp
 	resourceManager->AddDebuggerUI(sDebuggerUIName, debuggerUI);
 	tempDebuggerObj.SetComponents({
 		&resourceManager->GetDebuggerUI(sDebuggerUIName)
-		});
+	});
 }

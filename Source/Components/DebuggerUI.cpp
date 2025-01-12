@@ -1,9 +1,14 @@
-#pragma once
-
 #include "pch.h"
 #include "DebuggerUI.h"
 #include "cmath"
 #include "Source/Managers/GameObjectManager.h"
+#include "Source/Game/GameObject.h"
+#include "Source/UI_Objects/Text.h"
+#include "Source/UI_Objects/Line.h"
+#include "Source/Managers/InputManager.h"
+#include "RigidBody.h"
+#include "BoxCollider.h"
+#include "sstream"
 
 DebuggerUI::DebuggerUI()
 {
@@ -19,6 +24,7 @@ DebuggerUI::DebuggerUI(std::string inp_parentObjName, std::string inp_objectFocu
 
 void DebuggerUI::Awake()
 {
+    inputManager = InputManager::GetInstance();
     GameObject& refPlayerObj = resourceManager->GetGameObj(sObjectFocusName);
     rb = refPlayerObj.GetComponent<RigidBody>();
     bc = refPlayerObj.GetComponent<BoxCollider>();

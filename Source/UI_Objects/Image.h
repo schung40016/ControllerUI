@@ -12,6 +12,7 @@ private:
 	std::string imgLocation = "";
 	EnumData::Descriptors currEnum;
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_texture = {};	// used for origin.
+	bool flip = false;
 
 public:
 	Image();
@@ -27,6 +28,8 @@ public:
 
 	// Getters & Setters
 	void SetImageOrigin();
+
+	void flipImage(bool input);
 
 	DirectX::SimpleMath::Vector2 GetOrigin();
 

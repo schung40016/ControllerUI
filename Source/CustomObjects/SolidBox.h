@@ -1,17 +1,13 @@
 #pragma once
 
 #include "pch.h"
-#include "Source/Game/GameObject.h"
-#include "Source/Managers/GameObjectManager.h"
-#include "Source/UI_Objects/Shapes/Quad.h"
-#include "Source/Components/BoxCollider.h"
 
 class SolidBox
 {
 private:
-	GameObjectManager* resourceManager = nullptr;
+	class GameObjectManager* resourceManager = nullptr;
 	std::string sSolidBoxName = "";
-	int fSizeMultiplier = 975.f;
+	float fSizeMultiplier = 975.f;
 
 public:
 	SolidBox();

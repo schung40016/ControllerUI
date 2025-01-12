@@ -1,7 +1,7 @@
-#pragma once
-
 #include "pch.h";
 #include "RigidBody.h";
+#include "Source/Game/GameObject.h"
+#include "Source/Tools/Raycast.h"
 
 RigidBody::RigidBody()
 {}
@@ -35,7 +35,7 @@ void RigidBody::ApplyGravity(float deltaTime)
 
 void RigidBody::StopVelocity()
 {
-	if ((grounded && actVelocity.y > 0) || (topGrounded && actVelocity.y < 0))
+	if ((grounded && actVelocity.y > 0) || ((topGroundedLeft || topGroundedRight)&& actVelocity.y < 0))
 	{
 		actVelocity.y = 0;
 	}
@@ -62,7 +62,8 @@ void RigidBody::AddForce(DirectX::SimpleMath::Vector2 inp_force)
 	accumulatedForce += inp_force;
 }
 
-void RigidBody::ApplyForce(float deltaTime)
+// Redo
+void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in regards to the y axis.
 {
 	// Apply resistance to the velocity overtime.
 	velocity *= (1.0f - fDamping * deltaTime);
@@ -70,7 +71,7 @@ void RigidBody::ApplyForce(float deltaTime)
 	totalGoalVelocity = (velocity - actVelocity) / deltaTime;
 
 	// Apply added force.
-	velocity += (accumulatedForce / fMass) * deltaTime;
+	velocity += (accumulatedForce / fMass) * deltaTime;			// why mass? take out.
 	// Reset accumulatedForce for the next time it is called.
 	accumulatedForce = { 0, 0 };
 	// Update parent object's position.
@@ -80,6 +81,7 @@ void RigidBody::ApplyForce(float deltaTime)
 	parentObj->MovePosition(actVelocity);
 }
 
+// We feed it velocity, why name the inputs position???
 float RigidBody::Interpolate(float goalPosition, float currPosition, float dt)
 {
 	float pos_diff = goalPosition - currPosition;
@@ -93,23 +95,26 @@ float RigidBody::Interpolate(float goalPosition, float currPosition, float dt)
 	{
 		return currPosition - dt;
 	}
-	return goalPosition;
+	return goalPosition;	// Calculate the decay on each force.
 }
 
 void RigidBody::CheckIfGrounded()
 {
 	float parentWidthHalved = parentObj->GetSize().x / 2.f;
-	float rayCastLength = parentWidthHalved + 2.f;
+	float parentLengthHalved = parentObj->GetSize().y / 2.f;
+	float rayCastVerticalLength = parentLengthHalved + 2.f;
+	float rayCastHorizontalLength = parentWidthHalved + 2.f;
 
 	DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
 	DirectX::SimpleMath::Vector2 rightEdge = { parentPos.x + parentWidthHalved, parentPos.y};
 	DirectX::SimpleMath::Vector2 leftEdge = { parentPos.x - parentWidthHalved, parentPos.y };
-	bool groundedRightCheck = Raycast::CastRaycast(rightEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastLength);
-	bool groundedLeftCheck = Raycast::CastRaycast(leftEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastLength);
+	bool groundedRightCheck = Raycast::CastRaycast(rightEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
+	bool groundedLeftCheck = Raycast::CastRaycast(leftEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
 
-	leftGrounded = Raycast::CastRaycast(parentPos, { 1, 0 }, EnumData::ColliderLayers::Ground, rayCastLength);
-	rightGrounded = Raycast::CastRaycast(parentPos, { -1, 0 }, EnumData::ColliderLayers::Ground, rayCastLength);
-	topGrounded = Raycast::CastRaycast(parentPos, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastLength);
+	leftGrounded = Raycast::CastRaycast(parentPos, { 1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
+	rightGrounded = Raycast::CastRaycast(parentPos, { -1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
+	topGroundedLeft = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
+	topGroundedRight = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
 
 	grounded = groundedRightCheck || groundedLeftCheck;
 }

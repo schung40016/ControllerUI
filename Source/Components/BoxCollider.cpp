@@ -1,8 +1,8 @@
-#pragma once
-
 #include "pch.h";
-#include "Source/Managers/GameObjectManager.h";
 #include "BoxCollider.h";
+#include "Source/Managers/GameObjectManager.h";
+#include "Source/Game/GameObject.h"
+#include "Source/UI_Objects/Line.h"
 
 BoxCollider::BoxCollider()
 {

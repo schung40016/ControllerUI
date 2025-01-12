@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "GameObject.h"
 #include "Source/Managers/GameObjectManager.h"
+#include "Source/Components/Component.h"
+#include "iostream"
 
 GameObject::GameObject()
 {
@@ -54,7 +56,7 @@ const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 	if (gObj_parentObj)
 	{
 		float scale = GetScale();
-		DirectX:SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPosition();
+		DirectX::SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPosition();
 		float calcX = gObj_position.x * scale + parent_pos.x;
 		float calcY = gObj_position.y * scale + parent_pos.y;
 		DirectX::SimpleMath::Vector2 temp = { calcX, calcY };
@@ -73,7 +75,7 @@ const float GameObject::GetScale() const
 {
 	if (gObj_parentObj)
 	{
-		return gObj_parentObj->GetScale();
+		return gObj_scale * gObj_parentObj->GetScale();
 	}
 
 	return gObj_scale;

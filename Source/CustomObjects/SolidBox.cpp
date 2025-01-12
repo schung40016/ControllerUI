@@ -1,7 +1,9 @@
-#pragma once
-
 #include "pch.h"
 #include "SolidBox.h"
+#include "Source/Game/GameObject.h"
+#include "Source/Managers/GameObjectManager.h"
+#include "Source/UI_Objects/Shapes/Quad.h"
+#include "Source/Components/BoxCollider.h"
 
 SolidBox::SolidBox()
 {

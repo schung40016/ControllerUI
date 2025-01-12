@@ -1,17 +1,21 @@
-#pragma once
-
 #include "pch.h"
 #include "ControllerUI.h"
 #include "Source/Managers/GameObjectManager.h"
+#include "Source/Managers/InputManager.h"
+#include "Source/UI_Objects/Shapes/Triangle.h"
+#include "Source/UI_Objects/Line.h"
+#include "Source/UI_Objects/Text.h"
 
 ControllerUI::ControllerUI()
 {
     resourceManager = GameObjectManager::GetInstance();
+    inputManager = InputManager::GetInstance();
 }
 
 ControllerUI::ControllerUI(std::string inp_parentObjName)
 {
     parentObjName = inp_parentObjName;
+    inputManager = InputManager::GetInstance();
     resourceManager = GameObjectManager::GetInstance();
 }
 

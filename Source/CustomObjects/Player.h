@@ -1,16 +1,11 @@
 #pragma once
 
 #include "pch.h"
-#include "Source/Game/GameObject.h"
-#include "Source/UI_Objects/Shapes/Quad.h"
-#include "Source/Components/BoxCollider.h"
-#include "Source/Components/PlayerController.h"
-#include "Source/Components/RigidBody.h"
 
 class Player 
 {
 private: 
-	GameObjectManager* resourceManager = nullptr;
+	class GameObjectManager* resourceManager = nullptr;
 	std::string sPlayerName = "";
 	float fSizeMultiplier = 975.f;
 

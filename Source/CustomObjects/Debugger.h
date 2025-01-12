@@ -1,12 +1,13 @@
 #pragma once
 
 #include "pch.h"
-#include "Source/Managers/GameObjectManager.h"
+#include "Source/UI_Objects/Text.h"
+#include "Source/UI_Objects/Line.h"
 
 class Debugger
 {
 private:
-    GameObjectManager* resourceManager = nullptr;
+    class GameObjectManager* resourceManager = nullptr;
     std::string sDebuggerName = "";
     std::string sObjectFocusName = "";
     float fSizeMultiplier = 975.f;
@@ -20,7 +21,7 @@ private:
     Text tPositionNum;
     Text tDisplacementNum;
 
-    Line lnVelocity;
+    class Line lnVelocity;
 
     // Frame by frame debugger.
     Text tFrameDesc1;

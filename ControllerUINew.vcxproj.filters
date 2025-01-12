@@ -199,6 +199,9 @@
     <Image Include="roomtexture.dds">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="Images\Mario.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest">

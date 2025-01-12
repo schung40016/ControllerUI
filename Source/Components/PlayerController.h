@@ -2,21 +2,21 @@
 
 #include "pch.h"
 #include "Component.h"
-#include "Source/Game/GameObject.h"
-#include "Source/Managers/InputManager.h"
-#include "Source/Components/BoxCollider.h"
+#include "BoxCollider.h"
 
 class RigidBody;
+class GameObject;
 
 // Make it be a part of game object.
 class PlayerController : public Component {
 private:
-	InputManager* inputManager = InputManager::GetInstance();
-	std::shared_ptr<GameObject> parentObj = nullptr; // Need it for applying movement.
+	class InputManager* inputManager = nullptr;
+	std::shared_ptr<class GameObject> parentObj = nullptr; // Need it for applying movement.
+	class Image* playerSprite = nullptr;
 	RigidBody* rb = nullptr; // need it for the jump force.
 	BoxCollider collider;	// Detect when the player hits an object. 
 	float fSpeed = 50.f;
-	float fJumpHeight = 2000.f;
+	float fJumpHeight = 10000.f;
 
 public:
 	PlayerController();
@@ -31,3 +31,6 @@ public:
 
 	void Jump();
 };
+
+// link error, something to do with imports.
+// Forward declaration in header files and import in cpp.

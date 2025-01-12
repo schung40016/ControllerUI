@@ -1,7 +1,13 @@
-#pragma once
-
 #include "pch.h"
 #include "Player.h"
+#include "Source/Game/GameObject.h"
+#include "Source/UI_Objects/Shapes/Quad.h"
+#include "Source/UI_Objects/Image.h"
+#include "Source/Components/BoxCollider.h"
+#include "Source/Components/PlayerController.h"
+#include "Source/Components/RigidBody.h"
+#include "Source/Components/Camera.h"
+#include "Source/Managers/GameObjectManager.h"
 
 Player::Player()
 {
@@ -20,9 +26,10 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	std::string sCameraName = sPlayerName + "_Camera";
 
 	// Try setting the objects from within the resourcemanager.
-	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier, {inp_width, inp_length });
+	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier, { inp_width, inp_length });
 	GameObject& tempPlayerGame = resourceManager->GetGameObj(sPlayerName);
-	Quad player_shape = Quad(sPlayerName + "_Shape", DirectX::Colors::Aqua, tempPlayerGame, 1.f, 0, 0, inp_width, inp_length, true);
+	tempPlayerGame.SetScale(.1f);
+	Image playerSprite = Image(sPlayerName + "_image", DirectX::Colors::White, ".\\Images\\Mario.png", EnumData::Descriptors::PlayerImage, tempPlayerGame, .25f, .25f, .20f);
 	std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = FetchPositionPairs(inp_width, inp_length);
 
 	BoxCollider player_collider = BoxCollider(tempPlayerGame, playerCollisionBox, true);

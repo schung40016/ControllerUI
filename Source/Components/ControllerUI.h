@@ -1,16 +1,13 @@
 #pragma once
 
 #include "pch.h"
-#include "Source/Components/Component.h"
-#include "Source/Managers/InputManager.h"
-#include "Source/UI_Objects/Shapes/Triangle.h"
-#include "Source/UI_Objects/Line.h"
+#include "Component.h"
 
 class ControllerUI : public Component
 {
 private:
-	GameObjectManager* resourceManager = nullptr;
-	InputManager* inputManager = InputManager::GetInstance();
+	class GameObjectManager* resourceManager = nullptr;
+	class InputManager* inputManager = nullptr;
 	float fStickLineMultiplier = 10.f;
 	std::string parentObjName = "";
 

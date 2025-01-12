@@ -1,7 +1,8 @@
-#pragma once
-
 #include "pch.h"
 #include "Camera.h"
+#include "Source/Game/GameObject.h"
+#include "DeviceResources.h"
+
 
 Camera::Camera()
 {

@@ -270,6 +270,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico" />
+    <Image Include="Images\Mario.png" />
     <Image Include="roomtexture.dds" />
   </ItemGroup>
   <ItemGroup>

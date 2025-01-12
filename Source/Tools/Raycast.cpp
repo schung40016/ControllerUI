@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Raycast.h"
+#include "Source/Managers/GameObjectManager.h"
 
 bool Raycast::CastRaycast(DirectX::SimpleMath::Vector2 origin, DirectX::SimpleMath::Vector2 direction, int layer, float length)
 {

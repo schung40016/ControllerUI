@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shape.h"
+#include "Shape.h"
 
 class Quad : public Shape
 {
