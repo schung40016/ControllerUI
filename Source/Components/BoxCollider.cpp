@@ -100,7 +100,7 @@ bool BoxCollider::IsColliding_DIAG(BoxCollider& other)
 		// Check diagonals of polygon.
 		for (int p = 0; p < poly1->worldVertices.size(); p++)
 		{
-			DirectX::SimpleMath::Vector2 line_r1s = poly1->GetParent()->GetPosition();
+			DirectX::SimpleMath::Vector2 line_r1s = poly1->GetParent()->GetPositionActual();
 			DirectX::SimpleMath::Vector2 line_r1e = poly1->worldVertices[p];
 
 			// against the other polygon's edges.
@@ -140,7 +140,7 @@ bool BoxCollider::IsColliding_DIAG_STATIC(BoxCollider& other)
 		// Check diagonals of polygon.
 		for (int p = 0; p < poly1->worldVertices.size(); p++)
 		{
-			DirectX::SimpleMath::Vector2 line_r1s = poly1->GetParent()->GetPosition();
+			DirectX::SimpleMath::Vector2 line_r1s = poly1->GetParent()->GetPositionActual();
 			DirectX::SimpleMath::Vector2 line_r1e = poly1->worldVertices[p];
 
 			DirectX::SimpleMath::Vector2 displacement = { 0, 0 };
@@ -200,7 +200,7 @@ std::vector<DirectX::SimpleMath::Vector2> BoxCollider::GetWorldPositions()
 
 void BoxCollider::SetWorldPositions()
 {
-	DirectX::SimpleMath::Vector2 parentPosition = parentObj->GetPosition();
+	DirectX::SimpleMath::Vector2 parentPosition = parentObj->GetPositionActual();
 
 	for (int i = 0; i < worldVertices.size(); i++)
 	{

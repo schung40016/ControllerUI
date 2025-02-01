@@ -15,6 +15,7 @@ GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position
 	name = id;
 	resourceManager = GameObjectManager::GetInstance();
 	gObj_position = inp_position;
+	CalculatePositionActual(gObj_position);
 	gObj_originalSize = inp_size;
 	resourceManager->AddGameObj(id, *this);
 }
@@ -26,6 +27,7 @@ GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position
 	resourceManager = GameObjectManager::GetInstance();
 	gObj_size = inp_sizeDimensions;
 	gObj_position = inp_position;
+	CalculatePositionActual(gObj_position);
 	gObj_originalSize = inp_size;
 	resourceManager->AddGameObj(id, *this);
 }
@@ -64,6 +66,24 @@ const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 	}
 
 	return gObj_position;
+}
+
+const DirectX::SimpleMath::Vector2 GameObject::GetPositionActual() const 
+
+{
+	//if (gObj_parentObj)
+	//{
+	//	float scale = GetScale();
+	//	DirectX::SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPositionActual();
+	//	float calcX = gObj_positionActual.x * scale + parent_pos.x;
+	//	float calcY = gObj_positionActual.y * scale + parent_pos.y;
+	//	DirectX::SimpleMath::Vector2 temp = { calcX, calcY };
+	//	return temp;
+	//}
+	DirectX::SimpleMath::Vector2 temp = GetPosition();
+	temp = DirectX::SimpleMath::Vector2(temp.x, 975.f - temp.y);
+
+	return temp;
 }
 
 const std::shared_ptr<GameObject> GameObject::GetParentObj() const
@@ -109,6 +129,7 @@ void GameObject::SetName(std::string inp_name)
 void GameObject::SetPosition(const DirectX::SimpleMath::Vector2 inp_position)
 {
 	gObj_position = inp_position;
+	gObj_positionActual = { inp_position.x, 975.f - inp_position.y };
 }
 
 void GameObject::SetScale(const float inp_size)
@@ -143,5 +164,11 @@ void GameObject::SetSize(const DirectX::SimpleMath::Vector2 inp_size)
 
 void GameObject::MovePosition(const DirectX::SimpleMath::Vector2 inp_position)
 {
-	gObj_position += inp_position;
+	gObj_position = gObj_position + inp_position;
+	CalculatePositionActual(gObj_position);
+}
+
+void GameObject::CalculatePositionActual(DirectX::SimpleMath::Vector2 inp_position)
+{
+	gObj_positionActual = { inp_position.x, 975.f - inp_position.y };
 }

@@ -50,7 +50,7 @@ void PlayerController::Movement(float dt)
 	
 	if (jumped && rb->isGrounded())
 	{
-		rb->AddForce({ 0, -1.0f * fJumpHeight });			// Fix this.
+		rb->AddForce({ 0, fJumpHeight });			// Fix this.
 	}
 }
 

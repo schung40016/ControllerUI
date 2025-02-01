@@ -15,7 +15,7 @@ Camera::Camera(GameObject& inp_parentObj, bool inp_focus) :
     bFocus(inp_focus)
 {
    parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
-   DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
+   DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPositionActual();
    FetchConvertParentPosition();
 }
 
@@ -40,7 +40,7 @@ void Camera::Update(float deltaTime)
 
 void Camera::FetchConvertParentPosition() 
 {
-    DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
+    DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPositionActual();
     v3CameraPos = { parentPos.x, parentPos.y, 0 };
 }
 

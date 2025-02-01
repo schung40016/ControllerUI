@@ -34,7 +34,7 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 
 	BoxCollider player_collider = BoxCollider(tempPlayerGame, playerCollisionBox, true);
 	PlayerController player_controller = PlayerController(tempPlayerGame, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName], 50.f, 2000.f);
-	RigidBody player_rigidBody = RigidBody(tempPlayerGame, 10.f, 10.f, 2.f);
+	RigidBody player_rigidBody = RigidBody(tempPlayerGame, 10.f, 10.f, -9.81f);
 	Camera player_camera = Camera(tempPlayerGame, true);
 
 	// Add to the game object manager.

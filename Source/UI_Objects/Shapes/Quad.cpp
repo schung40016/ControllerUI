@@ -21,15 +21,14 @@ Quad::Quad(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentO
 	resourceManager->AddQuadObj(id, *this);
 }
 
-// Draw Triangle.
-void Quad::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch) const
+void Quad::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch) const 
 {
 	if (GetDisplay() == false)
 	{
 		return;
 	}
 
-	DirectX::SimpleMath::Vector2 newPos = GetPosition();
+	DirectX::SimpleMath::Vector2 newPos = GetPositionActual();
 	float currScale = GetScale();
 
 	float calcLen = GetLength() / 2.0f;

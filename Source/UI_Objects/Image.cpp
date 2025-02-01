@@ -20,17 +20,15 @@ Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLoc
 
 void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors)
 {
-	DirectX::SimpleMath::Vector2 parentObj = GetPosition();
-
 	if (flip)
 	{
 		m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
-			GetPosition(), nullptr, Colors::White, 0.f, m_origin, GetScale(), SpriteEffects_FlipHorizontally);
+			GetPositionActual(), nullptr, Colors::White, 0.f, m_origin, GetScale(), SpriteEffects_FlipHorizontally);
 	} 
 	else 
 	{
 		m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
-			GetPosition(), nullptr, Colors::White, 0.f, m_origin, GetScale());
+			GetPositionActual(), nullptr, Colors::White, 0.f, m_origin, GetScale());
 	}
 }
 

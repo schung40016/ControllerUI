@@ -12,6 +12,7 @@ class GameObject
 private: 
 	std::string name = "";
 	DirectX::SimpleMath::Vector2 gObj_position = { 0, 0 };
+	DirectX::SimpleMath::Vector2 gObj_positionActual = { 0, 0 };
 	DirectX::SimpleMath::Vector2 gObj_size = { 0, 0 };
 	float gObj_scale = 1.f;
 	std::shared_ptr<GameObject> gObj_parentObj = nullptr;
@@ -38,7 +39,9 @@ public:
 
 	const std::string GetName() const;
 
-	const DirectX::SimpleMath::Vector2 GetPosition() const;
+	const DirectX::SimpleMath::Vector2 GetPosition() const;	
+	
+	const DirectX::SimpleMath::Vector2 GetPositionActual() const;
 
 	const std::shared_ptr<GameObject> GetParentObj() const;
 
@@ -69,6 +72,8 @@ public:
 	void SetSize(const DirectX::SimpleMath::Vector2 inp_size);
 
 	void MovePosition(const DirectX::SimpleMath::Vector2 inp_position);
+
+	void CalculatePositionActual(DirectX::SimpleMath::Vector2 inp_position);
 
 	template <typename T> 
 	inline T* GetComponent()

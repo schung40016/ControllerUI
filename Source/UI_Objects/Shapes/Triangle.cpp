@@ -29,7 +29,7 @@ void Triangle::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<VertexPosition
 		return;
 	}
 
-	DirectX::SimpleMath::Vector2 newPos = GetPosition();
+	DirectX::SimpleMath::Vector2 newPos = GetPositionActual();
 	float currScale = GetScale();
 
 	float calcLen = GetLength() / 2.0f;

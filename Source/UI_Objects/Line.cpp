@@ -30,14 +30,14 @@ Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_par
     resourceManager->AddLnObj(id, *this);
 }
 
-void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch) const
+void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch) const 
 {
-    Vector2 pos = GetPosition();
+    Vector2 pos = GetPositionActual();
     //float calcX = point2.x * lineSizeMultiplier * currScale + pos.x;
     //float calcY = point2.y * lineSizeMultiplier * currScale * 1 + pos.y;
 
     float calcPt2X = (pos.x - point1.x) + point2.x;
-    float calcPt2Y = (pos.y - point1.y) + point2.y;
+    float calcPt2Y = (pos.y + point1.y) - point2.y;
 
     DirectX::DX12::VertexPositionColor vec1(Vector3(pos.x, pos.y, 0.f), shapeColor);
     DirectX::DX12::VertexPositionColor vec2(Vector3(calcPt2X, calcPt2Y, 0.f), shapeColor);

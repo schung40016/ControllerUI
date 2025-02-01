@@ -59,7 +59,7 @@ void DebuggerUI::Update(float deltaTime)
     Line& lnVelocity = resourceManager->GetLnObj(sParentObjName + "_VelocityLine");
 
     GameObject &refPlayerObj = resourceManager->GetGameObj(sObjectFocusName);
-    const DirectX::SimpleMath::Vector2 playerPos = refPlayerObj.GetPosition();
+    const DirectX::SimpleMath::Vector2 playerPos = refPlayerObj.GetPositionActual();
     Text &velocityNum = refTextBank[sParentObjName + "_velocity_num"];
     Text &accelerationNum = refTextBank[sParentObjName + "_acceleration_num"];
     Text &positionNum = refTextBank[sParentObjName + "_position_num"];

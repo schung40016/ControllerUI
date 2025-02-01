@@ -167,19 +167,15 @@ void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::D
         m_resourceDescriptors->GetCpuHandle(EnumData::Descriptors::MyFont),
         m_resourceDescriptors->GetGpuHandle(EnumData::Descriptors::MyFont));
 
-    // ----- PREPARE SPRITE -----
     for (auto& current : imgObjects)
     {
         current.second.PrepareImageResources(device, resourceUpload, m_resourceDescriptors);
     }
-    //-----------------------------
 
-    // ----- PREPARE CAMERA -----
     for (auto& current : camObjects)
     {
         PrepareCameraObjects(current.second, device, resourceUpload, m_resourceDescriptors, m_deviceResources);
     }
-    // --------------------------
 
     // Draw Resources
     RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
@@ -284,21 +280,6 @@ void DirectXUtility::UpdateCollisions()
 {
     std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
     std::vector<std::pair<int, int>>& colliderPairs = resourceManager->GetColliderLayerPairs();
-
-    // Check for any collisions between objects from the same layer..
-    //for (auto& curr_layer : colliderLayers)
-    //{
-    //    for (auto& curr_child : curr_layer.second)
-    //    {
-    //        for (auto& curr_child2 : curr_layer.second)
-    //        {
-    //            if (curr_child.first != curr_child2.first)
-    //            {
-    //                curr_child.second.IsColliding_DIAG_STATIC(curr_child2.second);
-    //            }
-    //        }
-    //    }
-    //}
 
     for (int i = 0; i < colliderPairs.size(); i++)
     {

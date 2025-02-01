@@ -6,36 +6,36 @@
 RigidBody::RigidBody()
 {}
 
-void RigidBody::Update(float deltaTime)		// Performs all calculations.
-{
-	CheckIfGrounded();
-	ApplyGravity(deltaTime);
-	ApplyForce(deltaTime);
-}
-
 RigidBody::RigidBody(GameObject& inp_parentObj, bool inp_isKinematic, float inp_fMass, 
 	float inp_fAcceleration) : bIsKinematic(bIsKinematic), fMass(inp_fMass), fAcceleration(inp_fAcceleration)
 {
 	parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
 }
 
+void RigidBody::Update(float deltaTime)		// Performs all calculations.
+{
+	CheckIfGrounded();
+	ApplyGravity(deltaTime);
+	StopVelocity();
+	ApplyForce(deltaTime);
+}
+
 void RigidBody::ApplyGravity(float deltaTime)
 {
-	// Apply gravity here.
+	// Use add force to apply gravity, not a standalone.
 	if (bIsKinematic && !grounded)
 	{
-		DirectX::SimpleMath::Vector2 calcPos = parentObj->GetPosition() + velocity * deltaTime;
+		DirectX::SimpleMath::Vector2 calcVelocity = velocity * deltaTime;
 
-		parentObj->SetPosition(calcPos);
-		velocity = velocity + gravityVelocity * deltaTime * fMass;
+		AddForce(gravityVelocity);
+		//parentObj->SetPosition(calcPos);	// converted between actual and truth
+		velocity = velocity + gravityVelocity * deltaTime;
 	}
-
-	StopVelocity();
 }
 
 void RigidBody::StopVelocity()
 {
-	if ((grounded && actVelocity.y > 0) || ((topGroundedLeft || topGroundedRight)&& actVelocity.y < 0))
+	if ((grounded && actVelocity.y > 0) || ((topGroundedLeft || topGroundedRight) && actVelocity.y < 0))
 	{
 		actVelocity.y = 0;
 	}
@@ -71,12 +71,14 @@ void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in r
 	totalGoalVelocity = (velocity - actVelocity) / deltaTime;
 
 	// Apply added force.
-	velocity += (accumulatedForce / fMass) * deltaTime;			// why mass? take out.
+	velocity += (accumulatedForce) * deltaTime;			
 	// Reset accumulatedForce for the next time it is called.
 	accumulatedForce = { 0, 0 };
 	// Update parent object's position.
 	actVelocity.x = Interpolate(velocity.x, actVelocity.x, deltaTime * smoothness);
 	actVelocity.y = Interpolate(velocity.y, actVelocity.y, deltaTime * smoothness);
+
+	// Prevent parent object from moving to final location if collision is detected.
 
 	parentObj->MovePosition(actVelocity);
 }
@@ -105,7 +107,7 @@ void RigidBody::CheckIfGrounded()
 	float rayCastVerticalLength = parentLengthHalved + 2.f;
 	float rayCastHorizontalLength = parentWidthHalved + 2.f;
 
-	DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
+	DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPositionActual();
 	DirectX::SimpleMath::Vector2 rightEdge = { parentPos.x + parentWidthHalved, parentPos.y};
 	DirectX::SimpleMath::Vector2 leftEdge = { parentPos.x - parentWidthHalved, parentPos.y };
 	bool groundedRightCheck = Raycast::CastRaycast(rightEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);

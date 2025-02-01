@@ -34,6 +34,7 @@ SolidBox::SolidBox(float inp_size, std::string inp_boxName, DirectX::SimpleMath:
 
 std::vector<DirectX::SimpleMath::Vector2> SolidBox::FetchPositionPairs(const float inp_width, const float inp_length)
 {
+	// {-0.5f, 0.5f}, {0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}
 	std::vector<DirectX::SimpleMath::Vector2> quadrants = { {-0.5f, 0.5f}, {0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f} };
 	std::vector<DirectX::SimpleMath::Vector2> results = {};
 
