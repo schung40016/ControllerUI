@@ -2,6 +2,8 @@
 #include "RigidBody.h";
 #include "Source/Game/GameObject.h"
 #include "Source/Tools/Raycast.h"
+#include "BoxCollider.h"
+#include "vector"
 
 RigidBody::RigidBody()
 {}
@@ -25,8 +27,6 @@ void RigidBody::ApplyGravity(float deltaTime)
 	// Use add force to apply gravity, not a standalone.
 	if (bIsKinematic && !grounded)
 	{
-		DirectX::SimpleMath::Vector2 calcVelocity = velocity * deltaTime;
-
 		AddForce(gravityVelocity);
 		//parentObj->SetPosition(calcPos);	// converted between actual and truth
 		velocity = velocity + gravityVelocity * deltaTime;
@@ -35,9 +35,10 @@ void RigidBody::ApplyGravity(float deltaTime)
 
 void RigidBody::StopVelocity()
 {
-	if ((grounded && actVelocity.y > 0) || ((topGroundedLeft || topGroundedRight) && actVelocity.y < 0))
+	if ((grounded && actVelocity.y > 0) || (grounded && actVelocity.y < 0))
 	{
-		actVelocity.y = 0;
+		AddForce({actVelocity.x, ( - 1 * actVelocity.y)});
+		velocity.y = 0;
 	}
 
 	if ((rightGrounded && actVelocity.x > 0) || (leftGrounded && actVelocity.x < 0))
@@ -71,7 +72,7 @@ void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in r
 	totalGoalVelocity = (velocity - actVelocity) / deltaTime;
 
 	// Apply added force.
-	velocity += (accumulatedForce) * deltaTime;			
+	velocity += (accumulatedForce)*deltaTime;
 	// Reset accumulatedForce for the next time it is called.
 	accumulatedForce = { 0, 0 };
 	// Update parent object's position.
@@ -79,8 +80,20 @@ void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in r
 	actVelocity.y = Interpolate(velocity.y, actVelocity.y, deltaTime * smoothness);
 
 	// Prevent parent object from moving to final location if collision is detected.
+	BoxCollider* boxCollider = parentObj->GetComponent<BoxCollider>();
+	DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
 
 	parentObj->MovePosition(actVelocity);
+
+	if (boxCollider)
+	{
+		std::vector<BoxCollider> result = boxCollider->CollidesWithLayer(1);
+
+		if (result.size() > 0)
+		{
+			parentObj->SetPosition(parentPos);
+		}
+	}
 }
 
 // We feed it velocity, why name the inputs position???

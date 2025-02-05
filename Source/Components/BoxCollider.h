@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "Component.h"
+#include "Source/UI_Objects/Line.h"
 
 class GameObject;
 
@@ -13,7 +14,7 @@ private:
 	std::vector<DirectX::SimpleMath::Vector2> localVertices = {};	// FOr storing local point positions.
 	std::vector<DirectX::SimpleMath::Vector2> worldVertices = {};	// FOr storing world point positions.
 	DirectX::SimpleMath::Vector2 displacementDisplay = {};
-	std::vector<class Line> vertexLines = {};
+	std::vector<Line> vertexLines = {};
 	class GameObjectManager* resourceManager = nullptr;
 
 public:
@@ -37,7 +38,11 @@ public:
 	// An alternative to the original function that also fixes the collision problem.
 	bool IsColliding_DIAG_STATIC(class BoxCollider& other);
 
+	bool IsColliding_DIAG_STATIC_BOOL(BoxCollider& other);
+
 	bool CanCollide();
+
+	std::vector<BoxCollider> CollidesWithLayer(int layer);
 
 	void SetWorldPositions();
 
