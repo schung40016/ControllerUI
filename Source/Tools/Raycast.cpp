@@ -8,7 +8,7 @@ bool Raycast::CastRaycast(DirectX::SimpleMath::Vector2 origin, DirectX::SimpleMa
 	std::unordered_map<std::string, BoxCollider> currColliderObjectLayer = resourceManager->GetColliderObjBank()[layer];
 
 	DirectX::SimpleMath::Vector2 line_r2s = origin;
-	DirectX::SimpleMath::Vector2 line_r2e = (-1 * length * direction) + origin;
+	DirectX::SimpleMath::Vector2 line_r2e = (length * direction) + origin;
 
 	for (auto& curr_collider : currColliderObjectLayer)
 	{

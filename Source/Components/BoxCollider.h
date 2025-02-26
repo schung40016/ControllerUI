@@ -38,11 +38,11 @@ public:
 	// An alternative to the original function that also fixes the collision problem.
 	bool IsColliding_DIAG_STATIC(class BoxCollider& other);
 
-	bool IsColliding_DIAG_STATIC_BOOL(BoxCollider& other);
+	bool IsColliding_SAT_STATIC(BoxCollider& other);
 
 	bool CanCollide();
 
-	std::vector<BoxCollider> CollidesWithLayer(int layer);
+	bool CollidesWithLayer(int layer);
 
 	void SetWorldPositions();
 

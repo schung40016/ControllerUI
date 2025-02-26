@@ -24,7 +24,7 @@ void DirectXUtility::UpdateGameObjects(float elapsedTime)
     std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
 
     // Check for any collisions between objects from the same layer..
-    UpdateCollisions();
+    //UpdateCollisions();
 
     for (auto& curr : gameObjs)
     {
