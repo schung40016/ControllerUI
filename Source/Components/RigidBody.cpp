@@ -38,10 +38,12 @@ void RigidBody::StopVelocity()
 	if ((grounded && actVelocity.y > 0) || (grounded && actVelocity.y < 0))
 	{
 		actVelocity.y = 0;
+		velocity.y = 0;
 	}
 
 	if ((rightGrounded && actVelocity.x > 0) || (leftGrounded && actVelocity.x < 0))
 	{
+		actVelocity.x = 0;
 		velocity.x = 0;
 	}
 }
@@ -90,7 +92,8 @@ void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in r
 
 		if (result)
 		{
-			parentObj->SetPosition(parentPos + boxCollider->GetDisplacement());
+			parentObj->SetPosition(parentPos + boxCollider->GetTotalDisplacement());
+			boxCollider->ResetTotalDisplacement();
 		}
 	}
 }
@@ -124,8 +127,8 @@ void RigidBody::CheckIfGrounded()
 	bool groundedRightCheck = Raycast::CastRaycast(rightEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
 	bool groundedLeftCheck = Raycast::CastRaycast(leftEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
 
-	leftGrounded = Raycast::CastRaycast(parentPos, { 1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
-	rightGrounded = Raycast::CastRaycast(parentPos, { -1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
+	leftGrounded = Raycast::CastRaycast(parentPos, { -1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
+	rightGrounded = Raycast::CastRaycast(parentPos, { 1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
 	topGroundedLeft = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
 	topGroundedRight = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
 

@@ -112,7 +112,7 @@ bool BoxCollider::IsColliding_DIAG(BoxCollider& other)
 				float t1 = ((line_r2s.y - line_r2e.y) * (line_r1s.x - line_r2s.x) + (line_r2e.x - line_r2s.x) * (line_r1s.y - line_r2s.y)) / h;
 				float t2 = ((line_r1s.y - line_r1e.y) * (line_r1s.x - line_r2s.x) + (line_r1e.x - line_r1s.x) * (line_r1s.y - line_r2s.y)) / h;
 
-				if (t1 >= 0.0f && t1 < 1.0f && t2 >= 0.0f && t2 < 1.0f)
+				if (t1 >= 0.0f && t1 < 0.95f && t2 >= 0.0f && t2 < 0.95f)
 				{
 					return true;
 				}
@@ -161,10 +161,11 @@ bool BoxCollider::IsColliding_DIAG_STATIC(BoxCollider& other)
 				}
 			}
 			
-			if (isMovable && (displacement.x > .4 || displacement.y > .4))
+			if (isMovable) //displacement.x > .1 || displacement.y > .1))
 			{
 				displacementDisplay.x = displacement.x * (shape == 0 ? -1 : 1);
 				displacementDisplay.y = displacement.y * (shape == 0 ? -1 : 1);
+				totalDisplacement += displacementDisplay;
 			}
 		}
 	}
@@ -279,4 +280,14 @@ void BoxCollider::SetWorldPositions()
 DirectX::SimpleMath::Vector2 BoxCollider::GetDisplacement()
 {
 	return displacementDisplay;
+}
+
+DirectX::SimpleMath::Vector2 BoxCollider::GetTotalDisplacement()
+{
+	return totalDisplacement;
+}
+
+void BoxCollider::ResetTotalDisplacement()
+{
+	totalDisplacement = { 0, 0 };
 }

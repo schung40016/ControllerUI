@@ -20,7 +20,7 @@ private:
 	float smoothness = 1000.f;
 
 	// Grounded variables.
-	boolean grounded, rightGrounded, leftGrounded, topGroundedLeft, topGroundedRight = false;
+	bool grounded, rightGrounded, leftGrounded, topGroundedLeft, topGroundedRight = false;
 	float isGroundedErrorMargin = 0.1f;
 	DirectX::SimpleMath::Vector2 prevPosition = { 0, 0 };
 
