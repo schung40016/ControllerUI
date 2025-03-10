@@ -23,12 +23,12 @@ void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, st
 	if (flip)
 	{
 		m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
-			GetPositionActual(), nullptr, Colors::White, 0.f, m_origin, GetScale(), SpriteEffects_FlipHorizontally);
+			GetRenderPosition(), nullptr, Colors::White, 0.f, m_origin, GetScale(), SpriteEffects_FlipHorizontally);
 	} 
 	else 
 	{
 		m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
-			GetPositionActual(), nullptr, Colors::White, 0.f, m_origin, GetScale());
+			GetRenderPosition(), nullptr, Colors::White, 0.f, m_origin, GetScale());
 	}
 }
 

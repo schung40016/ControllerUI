@@ -51,3 +51,8 @@ void World::PrepCollisionLayers()
         resourceManager->AddColliderLayerPair(worldColliderLayerPairs[i]);
     }
 }
+
+// TUne physics engine to feel smoother.
+// Add animation manager. (feed spritesheet, and animate based on conditions)
+// movement flags - set flag based on character's movement (state).
+// Add map manager. 

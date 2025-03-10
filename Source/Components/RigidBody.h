@@ -12,15 +12,16 @@ private:
 	float fMass = 1.0f;
 	float fAcceleration = -9.81f;							// Copy Earths gravity.
 	float fDamping = 2.5f;
+	float fSmoothness = 1000.f;
+	float fGroundCheckerOffset = 2.f;
 	DirectX::SimpleMath::Vector2 velocity = {0.f, 0.f};		// vector pointing to right.
 	DirectX::SimpleMath::Vector2 gravityAcceleration = { 0.f, fAcceleration };
 	DirectX::SimpleMath::Vector2 accumulatedForce = { 0, 0 };
 	DirectX::SimpleMath::Vector2 actVelocity = { 0, 0 };
 	DirectX::SimpleMath::Vector2 totalGoalVelocity = { 0, 0 };
-	float smoothness = 1000.f;
 
 	// Grounded variables.
-	bool grounded, rightGrounded, leftGrounded, topGroundedLeft, topGroundedRight = false;
+	bool grounded, rightGrounded, leftGrounded, topGrounded = false;
 	float isGroundedErrorMargin = 0.1f;
 	DirectX::SimpleMath::Vector2 prevPosition = { 0, 0 };
 

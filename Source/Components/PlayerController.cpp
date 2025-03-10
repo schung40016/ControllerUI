@@ -34,6 +34,9 @@ void PlayerController::Movement(float dt)
 	// Horizontal Movement.
 	DirectX::SimpleMath::Vector2 input = inputManager->leftStickPos;
 
+	// Jump Movement.
+	bool jumped = inputManager->a;
+
 	if (input.x > 0)
 	{
 		playerSprite->flipImage(false);
@@ -44,9 +47,6 @@ void PlayerController::Movement(float dt)
 	}
 
 	rb->AddForce({ fSpeed * input.x, 0 });
-
-	// Jump Movement.
-	bool jumped = inputManager->a;
 	
 	if (jumped && rb->isGrounded())
 	{

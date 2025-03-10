@@ -32,7 +32,7 @@ Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_par
 
 void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch) const 
 {
-    Vector2 pos = GetPositionActual();
+    Vector2 pos = GetRenderPosition();
     //float calcX = point2.x * lineSizeMultiplier * currScale + pos.x;
     //float calcY = point2.y * lineSizeMultiplier * currScale * 1 + pos.y;
 

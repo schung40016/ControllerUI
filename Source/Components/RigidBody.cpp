@@ -35,7 +35,7 @@ void RigidBody::ApplyGravity(float deltaTime)
 
 void RigidBody::StopVelocity()
 {
-	if ((grounded && actVelocity.y > 0) || (grounded && actVelocity.y < 0))
+	if ((grounded && actVelocity.y < 0))
 	{
 		actVelocity.y = 0;
 		velocity.y = 0;
@@ -45,6 +45,13 @@ void RigidBody::StopVelocity()
 	{
 		actVelocity.x = 0;
 		velocity.x = 0;
+	}
+
+	if (topGrounded && actVelocity.y > 0)
+	{
+		actVelocity.y = 0;
+		velocity.y = 0;
+		actVelocity.x = 0;
 	}
 }
 
@@ -77,8 +84,8 @@ void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in r
 	// Reset accumulatedForce for the next time it is called.
 	accumulatedForce = { 0, 0 };
 	// Update parent object's position.
-	actVelocity.x = Interpolate(velocity.x, actVelocity.x, deltaTime * smoothness);
-	actVelocity.y = Interpolate(velocity.y, actVelocity.y, deltaTime * smoothness);
+	actVelocity.x = Interpolate(velocity.x, actVelocity.x, deltaTime * fSmoothness);
+	actVelocity.y = Interpolate(velocity.y, actVelocity.y, deltaTime * fSmoothness);
 
 	// Prevent parent object from moving to final location if collision is detected.
 	BoxCollider* boxCollider = parentObj->GetComponent<BoxCollider>();
@@ -118,8 +125,8 @@ void RigidBody::CheckIfGrounded()
 {
 	float parentWidthHalved = parentObj->GetSize().x / 2.f;
 	float parentLengthHalved = parentObj->GetSize().y / 2.f;
-	float rayCastVerticalLength = parentLengthHalved + 2.f;
-	float rayCastHorizontalLength = parentWidthHalved + 2.f;
+	float rayCastVerticalLength = parentLengthHalved + fGroundCheckerOffset;
+	float rayCastHorizontalLength = parentWidthHalved + fGroundCheckerOffset;
 
 	DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
 	DirectX::SimpleMath::Vector2 rightEdge = { parentPos.x + parentWidthHalved, parentPos.y};
@@ -129,9 +136,10 @@ void RigidBody::CheckIfGrounded()
 
 	leftGrounded = Raycast::CastRaycast(parentPos, { -1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
 	rightGrounded = Raycast::CastRaycast(parentPos, { 1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
-	topGroundedLeft = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
-	topGroundedRight = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
+	bool topGroundedLeftCheck = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
+	bool topGroundedRightCheck = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
 
+	topGrounded = topGroundedLeftCheck || topGroundedRightCheck;
 	grounded = groundedRightCheck || groundedLeftCheck;
 }
 

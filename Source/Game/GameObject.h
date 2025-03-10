@@ -41,7 +41,7 @@ public:
 
 	const DirectX::SimpleMath::Vector2 GetPosition() const;	
 	
-	const DirectX::SimpleMath::Vector2 GetPositionActual() const;
+	const DirectX::SimpleMath::Vector2 GetRenderPosition() const;
 
 	const std::shared_ptr<GameObject> GetParentObj() const;
 

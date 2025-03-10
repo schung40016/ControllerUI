@@ -32,7 +32,7 @@ void Text::DrawText(const std::unique_ptr<DirectX::SpriteFont>& m_font, const st
 		return;
 	}
 
-	m_font->DrawString(m_spriteBatch.get(), GetWStringText().c_str(), GetPositionActual(), GetColor(), 0.f, m_origin, GetScale());
+	m_font->DrawString(m_spriteBatch.get(), GetWStringText().c_str(), GetRenderPosition(), GetColor(), 0.f, m_origin, GetScale());
 }
 
 // Getters & Setters

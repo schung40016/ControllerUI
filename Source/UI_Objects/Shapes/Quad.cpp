@@ -28,7 +28,7 @@ void Quad::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPos
 		return;
 	}
 
-	DirectX::SimpleMath::Vector2 newPos = GetPositionActual();
+	DirectX::SimpleMath::Vector2 newPos = GetRenderPosition();
 	float currScale = GetScale();
 
 	float calcLen = GetLength() / 2.0f;

@@ -16,7 +16,7 @@ private:
 	RigidBody* rb = nullptr; // need it for the jump force.
 	BoxCollider collider;	// Detect when the player hits an object. 
 	float fSpeed = 50.f;
-	float fJumpHeight = 10000.f;
+	float fJumpHeight = 100.f;
 
 public:
 	PlayerController();

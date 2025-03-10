@@ -68,7 +68,7 @@ const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 	return gObj_position;
 }
 
-const DirectX::SimpleMath::Vector2 GameObject::GetPositionActual() const 
+const DirectX::SimpleMath::Vector2 GameObject::GetRenderPosition() const			// Get render position. rename. 
 
 {
 	//if (gObj_parentObj)
