@@ -11,8 +11,10 @@
 #include "Source/Components/PlayerController.h"
 #include "Source/Components/RigidBody.h"
 #include "Source/Components/ControllerUI.h"
-#include <Source/Components/DebuggerUI.h>
-#include <Source/Components/Camera.h>
+#include "Source/Components/DebuggerUI.h"
+#include "Source/Components/Camera.h"
+#include "Source/Managers/SpriteManager.h"
+#include "Source/Components/AnimationController.h"
 
 GameObjectManager* GameObjectManager::instance = NULL;
 
@@ -82,6 +84,16 @@ std::unordered_map<std::string, Camera>& GameObjectManager::GetCameraObjBank()
     return cameraBank;
 }
 
+std::unordered_map<std::string, SpriteManager>& GameObjectManager::GetSpriteManagerBank()
+{
+    return spriteManagerBank;
+}
+
+std::unordered_map<std::string, AnimationController>& GameObjectManager::GetAnimationControllerBank()
+{
+    return animationControllerBank;
+}
+
 GameObject& GameObjectManager::GetGameObj(const std::string id)
 {
     return gameObjBank[id];
@@ -135,6 +147,16 @@ DebuggerUI& GameObjectManager::GetDebuggerUI(const std::string id)
 Camera& GameObjectManager::GetCamera(const std::string id)
 {
     return cameraBank[id];
+}
+
+SpriteManager& GameObjectManager::GetSpriteManager(const std::string id)
+{
+    return spriteManagerBank[id];
+}
+
+AnimationController& GameObjectManager::GetAnimationController(const std::string id)
+{
+    return animationControllerBank[id];
 }
 
 // Adders
@@ -205,6 +227,16 @@ void GameObjectManager::AddDebuggerUI(std::string id, const DebuggerUI& inp_debu
 void GameObjectManager::AddCamera(std::string id, const Camera& inp_camera)
 {
     cameraBank[id] = inp_camera;
+}
+
+void GameObjectManager::AddSpriteManager(std::string id, const SpriteManager& inp_spriteManager)
+{
+    spriteManagerBank[id] = inp_spriteManager;
+}
+
+void GameObjectManager::AddAnimationController(std::string id, const AnimationController& inp_animationController)
+{
+    animationControllerBank[id] = inp_animationController;
 }
 
 GameObjectManager::~GameObjectManager() {

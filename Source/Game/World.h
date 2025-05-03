@@ -4,6 +4,7 @@
 #include "Source/CustomObjects/SolidBox.h"
 #include "Source/CustomObjects/Player.h"
 #include "Source/CustomObjects/Debugger.h"
+#include "Source/Managers/SpriteManager.h"
 
 // Responsible for initializing all our game objects.
 class World
@@ -22,6 +23,7 @@ private:
     Player player;
     Controller controller;
     Debugger debugger;
+    SpriteManager playerSpriteManager;
 
     std::vector<std::pair<int, int>> worldColliderLayerPairs = {};
 
@@ -30,4 +32,6 @@ public:
 	World();
 
 	void Initialize();
+
+    void PrepareSprites();
 };

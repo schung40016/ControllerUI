@@ -7,14 +7,14 @@
 class RigidBody;
 class GameObject;
 
-// Make it be a part of game object.
 class PlayerController : public Component {
 private:
 	class InputManager* inputManager = nullptr;
-	std::shared_ptr<class GameObject> parentObj = nullptr; // Need it for applying movement.
+	std::shared_ptr<class GameObject> parentObj = nullptr;
 	class Image* playerSprite = nullptr;
-	RigidBody* rb = nullptr; // need it for the jump force.
-	BoxCollider collider;	// Detect when the player hits an object. 
+	RigidBody* rb = nullptr;								// Applies physics on gameobject.
+	class AnimationController* ac = nullptr;						// Animates gameobject given state.
+	BoxCollider collider;									// Collision detection. 
 	float fSpeed = 50.f;
 	float fJumpHeight = 100.f;
 
@@ -30,7 +30,6 @@ public:
 	void Movement(float dt);
 
 	void Jump();
-};
 
-// link error, something to do with imports.
-// Forward declaration in header files and import in cpp.
+	void UpdateState();
+};

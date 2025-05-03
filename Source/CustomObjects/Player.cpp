@@ -8,6 +8,7 @@
 #include "Source/Components/RigidBody.h"
 #include "Source/Components/Camera.h"
 #include "Source/Managers/GameObjectManager.h"
+#include "Source/Components/AnimationController.h"
 
 Player::Player()
 {
@@ -24,30 +25,34 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	std::string sControllerName = sPlayerName + "_Controller";
 	std::string sRigidBodyName = sPlayerName + "_RigidBody";
 	std::string sCameraName = sPlayerName + "_Camera";
+	std::string sAnimationControllerName = sPlayerName + "_AnimationController";
 
 	// Try setting the objects from within the resourcemanager.
 	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier, { inp_width, inp_length });
 	GameObject& tempPlayerGame = resourceManager->GetGameObj(sPlayerName);
 	tempPlayerGame.SetScale(.1f);
-	Image playerSprite = Image(sPlayerName + "_image", DirectX::Colors::White, ".\\Images\\Mario.png", EnumData::Descriptors::PlayerImage, tempPlayerGame, .25f, .25f, .20f);
+	Image playerSprite = Image(sPlayerName + "_Image", DirectX::Colors::White, ".\\Images\\PlayerSpriteSheet.png", EnumData::Descriptors::PlayerImage, tempPlayerGame, .25f, .25f, .35f);
 	std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = FetchPositionPairs(inp_width, inp_length);
 
 	BoxCollider player_collider = BoxCollider(tempPlayerGame, playerCollisionBox, true);
 	PlayerController player_controller = PlayerController(tempPlayerGame, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName], 25.f, 400.f);
 	RigidBody player_rigidBody = RigidBody(tempPlayerGame, 10.f, 10.f, -9.81f);
 	Camera player_camera = Camera(tempPlayerGame, true);
+	AnimationController player_animationController = AnimationController(tempPlayerGame, playerSprite);
 
 	// Add to the game object manager.
 	resourceManager->AddColliderObj(EnumData::ColliderLayers::Player, sColliderName, player_collider);
 	resourceManager->AddPlayerController(sControllerName, player_controller);
 	resourceManager->AddRigidBody(sRigidBodyName, player_rigidBody);
 	resourceManager->AddCamera(sCameraName, player_camera);
+	resourceManager->AddAnimationController(sAnimationControllerName, player_animationController);
 
 	tempPlayerGame.SetComponents({
 		&resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName],
 		&resourceManager->GetPlayerController(sControllerName),
 		&resourceManager->GetRigidBody(sRigidBodyName),
 		&resourceManager->GetCamera(sCameraName),
+		&resourceManager->GetAnimationController(sAnimationControllerName)
 	});
 }
 
@@ -62,4 +67,9 @@ std::vector<DirectX::SimpleMath::Vector2> Player::FetchPositionPairs(const float
 	}
 
 	return results;
+}
+
+std::string Player::GetPlayerName()
+{
+	return sPlayerName;
 }

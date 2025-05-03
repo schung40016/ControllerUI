@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerController.h"
 #include "Source/Components/RigidBody.h"
+#include "Source/Components/AnimationController.h"
 #include "Source/Game/GameObject.h"
 #include "Source/Managers/InputManager.h"
 #include "Source/UI_Objects/Image.h"
@@ -19,23 +20,21 @@ PlayerController::PlayerController(GameObject& inp_parentObj, BoxCollider& inp_c
 void PlayerController::Awake()
 {
 	inputManager = InputManager::GetInstance();
-	GameObjectManager* resourceManager = GameObjectManager::GetInstance();
-	playerSprite = &resourceManager->GetImgObj(parentObj->GetName() + "_image");
+	playerSprite = &GameObjectManager::GetInstance()->GetImgObj(parentObj->GetName() + "_Image");
 	rb = parentObj->GetComponent<RigidBody>();
+	ac = parentObj->GetComponent<AnimationController>();
 }
 
 void PlayerController::Update(float deltaTime)
 {
 	Movement(deltaTime);
+	UpdateState();
 }
 
 void PlayerController::Movement(float dt)
 {
 	// Horizontal Movement.
 	DirectX::SimpleMath::Vector2 input = inputManager->leftStickPos;
-
-	// Jump Movement.
-	bool jumped = inputManager->a;
 
 	if (input.x > 0)
 	{
@@ -46,14 +45,37 @@ void PlayerController::Movement(float dt)
 		playerSprite->flipImage(true);
 	}
 
+	// Jump Movement.
+	bool jumped = inputManager->a;
+
 	rb->AddForce({ fSpeed * input.x, 0 });
 	
 	if (jumped && rb->isGrounded())
 	{
-		rb->AddForce({ 0, fJumpHeight });			// Fix this.
+		Jump();
 	}
 }
 
 void PlayerController::Jump()
 {
+	rb->AddForce({ 0, fJumpHeight });
+}
+
+void PlayerController::UpdateState()
+{
+	DirectX::SimpleMath::Vector2 currVelocity = rb->GetVelocity();
+	bool isGrounded = rb->isGrounded();
+
+	if (!isGrounded)
+	{
+		ac->SetAnimation("Jump");
+	}
+	else if (abs(currVelocity.x) > 1.f)
+	{
+		ac->SetAnimation("Run");
+	}
+	else
+	{
+		ac->SetAnimation("Idle");
+	}
 }

@@ -17,6 +17,8 @@ class ControllerUI;
 class DebuggerUI;
 class Camera;
 class BoxCollider;
+class SpriteManager;
+class AnimationController;
 
 class GameObjectManager {
 
@@ -30,6 +32,7 @@ private:
 	std::unordered_map<std::string, Triangle> triObjBank = {};
 	std::unordered_map<std::string, Line> lnObjBank = {};
 	std::unordered_map<std::string, Quad> quadObjBank = {};
+	std::unordered_map<std::string, SpriteManager> spriteManagerBank = {};
 
 	// Components.
 	std::unordered_map<std::string, PlayerController> controllerBank = {};
@@ -39,6 +42,7 @@ private:
 	std::unordered_map<std::string, Camera> cameraBank = {};
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>> colliderObjBank = {};
 	std::vector<std::pair<int, int>> colliderPairs = {};
+	std::unordered_map<std::string, AnimationController> animationControllerBank = {};
 
 	// Constructor.
 	GameObjectManager();
@@ -71,6 +75,10 @@ public:
 
 	std::unordered_map<std::string, Camera>& GetCameraObjBank();
 
+	std::unordered_map<std::string, SpriteManager>& GetSpriteManagerBank();
+
+	std::unordered_map<std::string, AnimationController>& GetAnimationControllerBank();
+
 	GameObject& GetGameObj(const std::string id);
 
 	Image& GetImgObj(const std::string id);
@@ -92,6 +100,10 @@ public:
 	DebuggerUI& GetDebuggerUI(const std::string id);
 
 	Camera& GetCamera(const std::string id);
+
+	SpriteManager& GetSpriteManager(const std::string id);
+
+	AnimationController& GetAnimationController(const std::string id);
 
 	// Adders.
 	void AddGameObj(std::string id, const GameObject& inp_gameObject);
@@ -119,6 +131,10 @@ public:
 	void AddDebuggerUI(std::string id, const DebuggerUI& inp_debuggerUI);
 
 	void AddCamera(std::string id, const Camera& inp_camera);
+
+	void AddSpriteManager(std::string id, const SpriteManager& inp_spriteManager);
+
+	void AddAnimationController(std::string id, const AnimationController& inp_animationController);
 
 	// Destructor
 	~GameObjectManager();

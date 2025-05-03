@@ -200,6 +200,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="Source\Components\AnimationController.h" />
     <ClInclude Include="Source\Components\BoxCollider.h" />
     <ClInclude Include="Source\Components\Camera.h" />
     <ClInclude Include="Source\Components\Component.h" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Source\Managers\DirectXUtility.h" />
     <ClInclude Include="Source\Managers\GameObjectManager.h" />
     <ClInclude Include="Source\Managers\InputManager.h" />
+    <ClInclude Include="Source\Managers\SpriteManager.h" />
     <ClInclude Include="Source\Tools\Raycast.h" />
     <ClInclude Include="Source\UI_Objects\Image.h" />
     <ClInclude Include="Source\UI_Objects\Line.h" />
@@ -231,6 +233,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Source\Components\AnimationController.cpp" />
     <ClCompile Include="Source\Components\BoxCollider.cpp" />
     <ClCompile Include="Source\Components\Camera.cpp" />
     <ClCompile Include="Source\Components\Component.cpp" />
@@ -243,11 +246,13 @@
     <ClCompile Include="Source\CustomObjects\Controller.cpp" />
     <ClCompile Include="Source\CustomObjects\Player.cpp" />
     <ClCompile Include="Source\CustomObjects\SolidBox.h" />
+    <ClCompile Include="Source\CustomObjects\Sprite.cpp" />
     <ClCompile Include="Source\Game\GameObject.cpp" />
     <ClCompile Include="Source\Game\World.cpp" />
     <ClCompile Include="Source\Managers\DirectXUtility.cpp" />
     <ClCompile Include="Source\Managers\GameObjectManager.cpp" />
     <ClCompile Include="Source\Managers\InputManager.cpp" />
+    <ClCompile Include="Source\Managers\SpriteManager.cpp" />
     <ClCompile Include="Source\Tools\Raycast.cpp" />
     <ClCompile Include="Source\UI_Objects\Image.cpp" />
     <ClCompile Include="Source\UI_Objects\Line.cpp" />

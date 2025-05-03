@@ -119,6 +119,8 @@
     <ClInclude Include="Source\Components\DebuggerUI.h" />
     <ClInclude Include="Source\CustomObjects\Debugger.h" />
     <ClInclude Include="Source\Components\Camera.h" />
+    <ClInclude Include="Source\Components\AnimationController.h" />
+    <ClInclude Include="Source\Managers\SpriteManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -188,6 +190,9 @@
     <ClCompile Include="Source\Components\DebuggerUI.cpp" />
     <ClCompile Include="Source\CustomObjects\Debugger.cpp" />
     <ClCompile Include="Source\Components\Camera.cpp" />
+    <ClCompile Include="Source\CustomObjects\Sprite.cpp" />
+    <ClCompile Include="Source\Managers\SpriteManager.cpp" />
+    <ClCompile Include="Source\Components\AnimationController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

@@ -9,15 +9,21 @@ class Image : public UIObject
 {
 private:
 	DirectX::SimpleMath::Vector2 m_origin = {0, 0};
+	RECT renderingEdges = {};
 	std::string imgLocation = "";
 	EnumData::Descriptors currEnum;
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_texture = {};	// used for origin.
-	bool flip = false;
+	bool bFlip = false;
+
 
 public:
 	Image();
 
+	// Renders entire image.
 	Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale);
+	
+	// Renders partial sprite.
+	Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, DirectX::SimpleMath::Vector2 inp_originPos, RECT inp_renderingRect);
 
 	void RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors);
 
@@ -39,5 +45,5 @@ public:
 
 	std::wstring GetWStringImgLocation();
 
-	EnumData::Descriptors GetImgEnum();
+	void SetSpriteRender(DirectX::SimpleMath::Vector2 origin, RECT sprite_rect);
 };
