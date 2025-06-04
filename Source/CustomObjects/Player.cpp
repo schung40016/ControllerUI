@@ -27,6 +27,8 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	std::string sCameraName = sPlayerName + "_Camera";
 	std::string sAnimationControllerName = sPlayerName + "_AnimationController";
 
+	std::unordered_map<std::string, int> states = { {"Jump", 1}, {"Run", 2}, {"Idle", 3}};
+
 	// Try setting the objects from within the resourcemanager.
 	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier, { inp_width, inp_length });
 	GameObject& tempPlayerGame = resourceManager->GetGameObj(sPlayerName);
@@ -38,7 +40,7 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	PlayerController player_controller = PlayerController(tempPlayerGame, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName], 25.f, 400.f);
 	RigidBody player_rigidBody = RigidBody(tempPlayerGame, 10.f, 10.f, -9.81f);
 	Camera player_camera = Camera(tempPlayerGame, true);
-	AnimationController player_animationController = AnimationController(tempPlayerGame, playerSprite);
+	AnimationController player_animationController = AnimationController(tempPlayerGame, playerSprite, states);
 
 	// Add to the game object manager.
 	resourceManager->AddColliderObj(EnumData::ColliderLayers::Player, sColliderName, player_collider);

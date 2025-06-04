@@ -28,7 +28,6 @@ void PlayerController::Awake()
 void PlayerController::Update(float deltaTime)
 {
 	Movement(deltaTime);
-	UpdateState();
 }
 
 void PlayerController::Movement(float dt)
@@ -49,33 +48,25 @@ void PlayerController::Movement(float dt)
 	bool jumped = inputManager->a;
 
 	rb->AddForce({ fSpeed * input.x, 0 });
-	
+	if (abs(rb->GetVelocity().x) > 1.f)
+	{
+		ac->AddAnimation("Run");
+	}
+
 	if (jumped && rb->isGrounded())
 	{
 		Jump();
 	}
+
+	if (!rb->isGrounded())
+	{
+		ac->AddAnimation("Jump");
+	}
+
+	ac->AddAnimation("Idle");
 }
 
 void PlayerController::Jump()
 {
 	rb->AddForce({ 0, fJumpHeight });
-}
-
-void PlayerController::UpdateState()
-{
-	DirectX::SimpleMath::Vector2 currVelocity = rb->GetVelocity();
-	bool isGrounded = rb->isGrounded();
-
-	if (!isGrounded)
-	{
-		ac->SetAnimation("Jump");
-	}
-	else if (abs(currVelocity.x) > 1.f)
-	{
-		ac->SetAnimation("Run");
-	}
-	else
-	{
-		ac->SetAnimation("Idle");
-	}
 }

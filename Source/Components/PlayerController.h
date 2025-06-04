@@ -30,6 +30,4 @@ public:
 	void Movement(float dt);
 
 	void Jump();
-
-	void UpdateState();
 };
