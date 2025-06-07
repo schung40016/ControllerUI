@@ -1,0 +1,57 @@
+{
+  "blocks": [
+    {
+      "name": "ground",
+      "position": [ 650.0, 175.0 ],
+      "width": 800.0,
+      "length": 50.0,
+      "defaultSize": 975.0
+    },
+    {
+      "name": "platform",
+      "position": [ 400.0, 325.0 ],
+      "width": 200.0,
+      "length": 50.0,
+      "defaultSize": 975.0
+    },
+    {
+      "name": "platform2",
+      "position": [ 800.0, 325.0 ],
+      "width": 200.0,
+      "length": 50.0,
+      "defaultSize": 975.0
+    },
+    {
+      "name": "wall",
+      "position": [ 200.0, 350.0 ],
+      "width": 100.0,
+      "length": 400.0,
+      "defaultSize": 975.0
+    },
+    {
+      "name": "wall2",
+      "position": [ 1100.0, 350.0 ],
+      "width": 100.0,
+      "length": 400.0,
+      "defaultSize": 975.0
+    }
+  ],
+  "player": {
+    "name": "player",
+    "position": [ 650.0, 325.0 ],
+    "width": 50.0,
+    "length": 60.0,
+    "defaultSize": 975.0
+  },
+  "controller": {
+    "name": "controller",
+    "position": [ 150.0, 875.0 ],
+    "defaultSize": 2925.0
+  },
+  "debug": {
+    "name": "debugger",
+    "playerObj": "player",
+    "position": [ 900.0, 800.0 ],
+    "defaultSize": 2925.0
+  }
+}

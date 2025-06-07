@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "World.h"
-#include "Source/Enum/EnumData.h"
+#include "fstream"
 #include "GameObject.h"
+#include "ExternalLibraries/json.hpp"
+#include "Source/Enum/EnumData.h"
 #include "Source/UI_Objects/Shapes/Quad.h"
 #include "Source/Components/RigidBody.h"
 #include "Source/Components/BoxCollider.h"
@@ -19,15 +21,7 @@ void World::Initialize()
     resourceManager = GameObjectManager::GetInstance();
     std::string playerObjectName = "player";
 
-    // Make custom objects.
-    ground = SolidBox(defaultSizeMult, "ground", { 650.f, 175.f }, 800.f, 50.f);
-    platform = SolidBox(defaultSizeMult, "platform", { 400.f, 325.f }, 200.f, 50.f);
-    platform1 = SolidBox(defaultSizeMult, "platform2", { 800.f, 325.f }, 200.f, 50.f);
-    wall = SolidBox(defaultSizeMult, "wall", { 200.f, 350.f }, 100.f, 400.f);
-    wall2 = SolidBox(defaultSizeMult, "wall2", { 1100.f, 350.f }, 100.f, 400.f);
-    player = Player(defaultSizeMult, playerObjectName, {650.f, 325.f }, 50.f, 60.f);
-    controller = Controller(defaultSizeMult * 3, "controller", { 150.f, 875.f });
-    debugger = Debugger(defaultSizeMult * 3, "debugger", "player", {900.f, 800.f});
+    PrepareObjects();
 
     PrepareSprites();
 
@@ -101,9 +95,36 @@ void World::PrepareSprites()
     playerSpriteManager = SpriteManager(player.GetPlayerName(), playerSprites);
 }
 
-// TUne physics engine to feel smoother.
-// Add map manager. 
+void World::PrepareObjects()
+{
+    const std::string jsonPath = "JSON/World.json";
 
+    // Fetch JSON file.
+    std::ifstream file(jsonPath);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Failed to open file: " + jsonPath);
+    }
+
+    // Scan the file.
+    nlohmann::json scanner;
+    file >> scanner;
+
+    // Populate objects.
+    for (const auto& block : scanner["blocks"])
+    {
+        SolidBox b(block["defaultSize"], block["name"], { block["position"][0].get<float>(), block["position"][1].get<float>() }, block["width"], block["length"]);
+
+        blocks.push_back(b);
+    }
+
+    const auto& playScan = scanner["player"];
+    const auto& conScan = scanner["controller"];
+    const auto& debugScan = scanner["debug"];
+    player = Player(playScan["defaultSize"], playScan["name"], { playScan["position"][0].get<float>(), playScan["position"][1].get<float>() }, playScan["width"], playScan["length"]);
+    controller = Controller(conScan["defaultSize"], conScan["name"], { conScan["position"][0].get<float>(), conScan["position"][1].get<float>() });
+    debugger = Debugger(debugScan["defaultSize"], debugScan["name"], debugScan["playerObj"], { debugScan["position"][0].get<float>(), debugScan["position"][1].get<float>() });
+}
 
 /*
 SPRITE INFORMATION

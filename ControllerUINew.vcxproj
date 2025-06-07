@@ -200,6 +200,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="ExternalLibraries\json.hpp" />
     <ClInclude Include="Source\Components\AnimationController.h" />
     <ClInclude Include="Source\Components\BoxCollider.h" />
     <ClInclude Include="Source\Components\Camera.h" />
@@ -282,6 +283,7 @@
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="JSON\World.json" />
     <None Include="myfile.spritefont" />
     <None Include="packages.config" />
   </ItemGroup>

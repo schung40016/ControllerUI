@@ -15,6 +15,7 @@ private:
     class GameObjectManager* resourceManager;
 
     // Create custom objects:
+    std::vector<SolidBox> blocks = {};
     SolidBox ground;
     SolidBox platform;
     SolidBox platform1;
@@ -28,6 +29,8 @@ private:
     std::vector<std::pair<int, int>> worldColliderLayerPairs = {};
 
     void PrepCollisionLayers();
+
+    void PrepareObjects();
 public:
 	World();
 
