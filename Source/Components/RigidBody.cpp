@@ -27,9 +27,8 @@ void RigidBody::ApplyGravity(float deltaTime)
 	// Use add force to apply gravity, not a standalone.
 	if (bIsKinematic && !grounded)
 	{
-		DirectX::SimpleMath::Vector2 calcVelocity = velocity * deltaTime;
+		DirectX::SimpleMath::Vector2 calcVelocity = gravityAcceleration * fMass;
 		AddForce(calcVelocity);
-		velocity += gravityAcceleration * deltaTime;
 	}
 }
 
@@ -76,11 +75,10 @@ void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in r
 {
 	// Apply resistance to the velocity overtime.
 	velocity *= (1.0f - fDamping * deltaTime);
-	// Update acceleration.
-	totalGoalVelocity = (velocity - actVelocity) / deltaTime;
-
-	// Apply added force.
-	velocity += (accumulatedForce) * deltaTime;
+	// Acceleration = force / mass
+	DirectX::SimpleMath::Vector2 acceleration = accumulatedForce / fMass;
+	// Update velocity based on acceleration.
+	velocity += acceleration * deltaTime;
 	// Reset accumulatedForce for the next time it is called.
 	accumulatedForce = { 0, 0 };
 	// Update parent object's position.

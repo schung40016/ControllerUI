@@ -15,7 +15,7 @@ private:
 	float fSmoothness = 1000.f;
 	float fGroundCheckerOffset = 2.f;
 	DirectX::SimpleMath::Vector2 velocity = {0.f, 0.f};		// vector pointing to right.
-	DirectX::SimpleMath::Vector2 gravityAcceleration = { 0.f, fAcceleration };
+	DirectX::SimpleMath::Vector2 gravityAcceleration = { 0.f, fAcceleration * 2};
 	DirectX::SimpleMath::Vector2 accumulatedForce = { 0, 0 };
 	DirectX::SimpleMath::Vector2 actVelocity = { 0, 0 };
 	DirectX::SimpleMath::Vector2 totalGoalVelocity = { 0, 0 };
