@@ -28,9 +28,16 @@ private:
 
     std::vector<std::pair<int, int>> worldColliderLayerPairs = {};
 
+    // JSON directories:
+    const std::string jsonWorldPath = "JSON/World.json";
+    const std::string jsonSpritePath = "JSON/Sprites.json";
+
     void PrepCollisionLayers();
 
     void PrepareObjects();
+
+    std::ifstream GetJsonScanner(const std::string& path);
+
 public:
 	World();
 

@@ -283,6 +283,7 @@
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="JSON\Sprites.json" />
     <None Include="JSON\World.json" />
     <None Include="myfile.spritefont" />
     <None Include="packages.config" />

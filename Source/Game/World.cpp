@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "World.h"
 #include "fstream"
+#include "iostream"
 #include "GameObject.h"
-#include "ExternalLibraries/json.hpp"
 #include "Source/Enum/EnumData.h"
 #include "Source/UI_Objects/Shapes/Quad.h"
 #include "Source/Components/RigidBody.h"
@@ -10,6 +10,7 @@
 #include "Source/Components/PlayerController.h"
 #include "Source/Managers/GameObjectManager.h"
 #include "Source/CustomObjects/Sprite.cpp"
+#include "ExternalLibraries/json.hpp"
 
 World::World()
 {
@@ -37,10 +38,6 @@ void World::PrepCollisionLayers()
 
     for (int i = 0; i < colliderLayerMapping.size(); i++) // 0, 1
     {
-        //for (int j = 0; j < colliderLayerMapping[i].size(); j++) // 
-        //{
-        //    worldColliderLayerPairs.emplace_back(std::make_pair(colliderLayerMapping[i][j], j));
-        //}
         worldColliderLayerPairs.emplace_back(std::make_pair(colliderLayerMapping[i][0], colliderLayerMapping[i][1]));
     }
 
@@ -52,63 +49,44 @@ void World::PrepCollisionLayers()
 
 void World::PrepareSprites()
 {
-    // Create sprites.
-    std::string idleSpriteName = "Idle";
-    RECT rectIdle = { 100, 400, 250, 600 };
-    Sprite spriteIdle;
-    spriteIdle.sName = idleSpriteName + "_1";
-    spriteIdle.origin = { 76.f, 110.f };
-    spriteIdle.sourceRect = rectIdle;
-
-    std::string jumpSpriteName = "Jump";
-    RECT rectJump = { 170, 725, 360, 1200 };
-    Sprite spriteJump;
-    spriteJump.sName = jumpSpriteName + "_1";
-    spriteJump.origin = { 100.f, 115.f };
-    spriteJump.sourceRect = rectJump;
-
-    std::string runSpriteName = "Run";
-    RECT rectRun = { 375, 400, 550, 600 };
-    Sprite spriteRun;
-    spriteRun.sName = runSpriteName + "_1";
-    spriteRun.origin = { 90.f, 110.f };
-    spriteRun.sourceRect = rectRun;
-
-    RECT rectRun2 = { 555, 400, 695, 600 };
-    Sprite spriteRun2;
-    spriteRun2.sName = runSpriteName + "_2";
-    spriteRun2.origin = { 70.f, 110.f };
-    spriteRun2.sourceRect = rectRun2;
-
-    RECT rectRun3 = { 700, 400, 850, 600 };
-    Sprite spriteRun3;
-    spriteRun3.sName = runSpriteName + "_3";
-    spriteRun3.origin = { 75.f, 110.f };
-    spriteRun3.sourceRect = rectRun3;
-
     // Add sprites to list.
     std::unordered_map<std::string, std::vector<Sprite>> playerSprites = {};
-    playerSprites[idleSpriteName] = { spriteIdle };
-    playerSprites[jumpSpriteName] = { spriteJump };
-    playerSprites[runSpriteName] = { spriteRun, spriteRun2, spriteRun3 };
 
+    // Scan the file.
+    nlohmann::json scanner;
+    GetJsonScanner(jsonSpritePath) >> scanner;
+
+    for (const auto& spriteSet : scanner["playerSprites"])
+    {
+        // Create temp sprite vector.
+        std::vector<Sprite> tempSpriteSet = {};
+
+        // Loop through every sprite in the set, create and add RECT and Sprite objects.
+        for (const auto& sprite : spriteSet)
+        {
+            Sprite tempSprite;
+
+            RECT tempRect = { sprite["rect"][0], sprite["rect"][1], sprite["rect"][2], sprite["rect"][3] };
+            std::cout << sprite.dump(2) << std::endl;
+
+            tempSprite.sName = sprite["name"].get<std::string>() + "_" + std::to_string(sprite["spriteCount"].get<int>());
+            tempSprite.origin = { sprite["origin"][0].get<float>(), sprite["origin"][1].get<float>() };
+            tempSprite.sourceRect = tempRect;
+
+            tempSpriteSet.emplace_back(tempSprite);
+        }
+
+        // Add vector items into unordered_map using the first item's name as the key.
+        playerSprites[spriteSet[0]["name"]] = tempSpriteSet;
+    }
     playerSpriteManager = SpriteManager(player.GetPlayerName(), playerSprites);
 }
 
 void World::PrepareObjects()
 {
-    const std::string jsonPath = "JSON/World.json";
-
-    // Fetch JSON file.
-    std::ifstream file(jsonPath);
-    if (!file.is_open())
-    {
-        throw std::runtime_error("Failed to open file: " + jsonPath);
-    }
-
     // Scan the file.
     nlohmann::json scanner;
-    file >> scanner;
+    GetJsonScanner(jsonWorldPath) >> scanner;
 
     // Populate objects.
     for (const auto& block : scanner["blocks"])
@@ -124,6 +102,18 @@ void World::PrepareObjects()
     player = Player(playScan["defaultSize"], playScan["name"], { playScan["position"][0].get<float>(), playScan["position"][1].get<float>() }, playScan["width"], playScan["length"]);
     controller = Controller(conScan["defaultSize"], conScan["name"], { conScan["position"][0].get<float>(), conScan["position"][1].get<float>() });
     debugger = Debugger(debugScan["defaultSize"], debugScan["name"], debugScan["playerObj"], { debugScan["position"][0].get<float>(), debugScan["position"][1].get<float>() });
+}
+
+std::ifstream World::GetJsonScanner(const std::string& path)
+{
+    // Fetch JSON file.
+    std::ifstream file(path);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("Failed to open file: " + path);
+    }
+
+    return file;
 }
 
 /*

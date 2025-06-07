@@ -218,5 +218,6 @@
     <None Include="myfile.spritefont" />
     <None Include="packages.config" />
     <None Include="JSON\World.json" />
+    <None Include="JSON\Sprites.json" />
   </ItemGroup>
 </Project>
