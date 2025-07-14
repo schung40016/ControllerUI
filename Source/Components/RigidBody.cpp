@@ -22,7 +22,7 @@ void RigidBody::Update(float deltaTime)		// Performs all calculations.
 	ApplyForce(deltaTime);
 }
 
-void RigidBody::ApplyGravity(float deltaTime)
+void RigidBody::ApplyGravity(float deltaTime)			// unsigned int, change deltaTime. (os get time call).
 {
 	// Use add force to apply gravity, not a standalone.
 	if (bIsKinematic && !grounded)

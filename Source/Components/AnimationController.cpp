@@ -82,13 +82,7 @@ void AnimationController::UpdateAnimation()
 	spritesToAnimate = {};
 }
 
-// Controller should pass the state itself. ANimationController should have a movement update function. Elevator state machine project (for reference).
-// Two ways to stow map data: slow-JSON, fast-binary blob (do not try right now).
-// Get JSON parser library to read map data. 
-
-
 /*
-Fix animation controller.
-Fix gravity floaty.
+TO-DO
 Create map manager.
 */

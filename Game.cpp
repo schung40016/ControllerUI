@@ -64,7 +64,7 @@ void Game::Tick()
     Render();
 }
 
-// Updates the world.
+// Updates the world.           // Later: create own time mechanic using OS function.
 void Game::Update(DX::StepTimer const& timer)
 {
     PIXBeginEvent(PIX_COLOR_DEFAULT, L"Update");

@@ -161,7 +161,7 @@ bool BoxCollider::IsColliding_DIAG_STATIC(BoxCollider& other)
 				}
 			}
 			
-			if (isMovable) //displacement.x > .1 || displacement.y > .1))
+			if (isMovable)
 			{
 				displacementDisplay.x = displacement.x * (shape == 0 ? -1 : 1);
 				displacementDisplay.y = displacement.y * (shape == 0 ? -1 : 1);
