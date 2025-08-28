@@ -9,7 +9,7 @@ Triangle::Triangle()
 }
 
 // Create a instance of an equallateral triangle at a specified position.
-Triangle::Triangle(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid)
+Triangle::Triangle(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid, bool inp_isStatic)
 {
 	SetName(id);
 	SetColor(colorInput);
@@ -18,11 +18,12 @@ Triangle::Triangle(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp
 	SetPosition({ inp_x, inp_y });
 	SetLength(inp_len);
 	SetWidth(inp_wid);
+	SetIsStatic(inp_isStatic);
 	resourceManager->AddTriObj(id, *this);
 }
 
 // Draw Triangle.
-void Triangle::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& inp_batch) const
+void Triangle::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& inp_batch, const DirectX::SimpleMath::Vector2& camOffset) const
 {
 	if (GetDisplay() == false)
 	{
@@ -30,6 +31,12 @@ void Triangle::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<VertexPosition
 	}
 
 	DirectX::SimpleMath::Vector2 newPos = GetRenderPosition();
+
+	if (!GetIsStatic())
+	{
+		newPos += camOffset;
+	}
+
 	float currScale = GetScale();
 
 	float calcLen = GetLength() / 2.0f;

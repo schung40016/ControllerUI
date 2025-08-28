@@ -7,7 +7,7 @@ Image::Image()
 	resourceManager = GameObjectManager::GetInstance();
 }
 
-Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale)
+Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, bool inp_isStatic = false)
 	: imgLocation(inp_imgLocation), currEnum(inp_enum)
 {
 	SetName(id);
@@ -15,6 +15,7 @@ Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLoc
 	SetParent(inp_parentObj);
 	SetPosition({ inp_x, inp_y });
 	SetScale(inp_scale);
+	SetIsStatic(inp_isStatic);
 	resourceManager->AddImgObj(id, *this);
 }
 
@@ -30,28 +31,33 @@ Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLoc
 }
 
 
-void Image::RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors)
+void Image::Render(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors, const Vector2& camOffset)
 {
+	Vector2 renderPosition = GetRenderPosition();
+
+	if (!GetIsStatic())
+	{
+		renderPosition += camOffset;
+	}
+
 	if (bFlip)
 	{
 		m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
-			GetRenderPosition(), &renderingEdges, Colors::White, 0.f, m_origin, GetScale(), SpriteEffects_FlipHorizontally);
+			renderPosition, &renderingEdges, GetColor(), 0.f, m_origin, GetScale(), SpriteEffects_FlipHorizontally);
 	} 
 	else 
 	{
-		auto hi = GetRenderPosition();
 		m_spriteBatch->Draw(m_resourceDescriptors->GetGpuHandle(currEnum), GetTextureSize(m_texture.Get()),
-			GetRenderPosition(), &renderingEdges, Colors::White, 0.f, m_origin, GetScale());
+			renderPosition, &renderingEdges, GetColor(), 0.f, m_origin, GetScale());
 	}
 }
 
-void Image::PrepareImageResources(ID3D12Device* device, DirectX::ResourceUploadBatch& resourceUpload, 
+void Image::PrepareResources(ID3D12Device* device, DirectX::ResourceUploadBatch& resourceUpload, 
 	std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors)
 {
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, resourceUpload, GetWStringImgLocation().c_str(),
-			m_texture.ReleaseAndGetAddressOf()));
-	// Encapsulation != giving reference. 
+			m_texture.ReleaseAndGetAddressOf())); 
 
 	CreateShaderResourceView(device, m_texture.Get(),
 		m_resourceDescriptors->GetCpuHandle(currEnum));

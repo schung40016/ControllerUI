@@ -70,13 +70,27 @@ void Camera::PrepareResources(ID3D12Device* device)
 
 void Camera::Render(ID3D12GraphicsCommandList* commandList)
 {
+    // Check if mProj is initialized (all zeros means not set)
+    if (mProj == DirectX::SimpleMath::Matrix::Identity ||
+        (mProj.m[0][0] == 0 && mProj.m[1][1] == 0)) {
+        OutputDebugStringA("mProj matrix not initialized!\n");
+        // Set a default projection for testing
+        mProj = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(
+            DirectX::XMConvertToRadians(70.0f), 16.0f / 9.0f, 0.1f, 100.0f);
+    }
+
     ptrRoomEffect->SetMatrices(DirectX::SimpleMath::Matrix::Identity, mView, mProj);
     ptrRoomEffect->SetDiffuseColor(colRoomColor);
-    //ptrRoomEffect->Apply(commandList);     // Create read access violation error.
+    ptrRoomEffect->Apply(commandList);
     ptrRoom->Draw(commandList);
 }
 
 // Getters & Setters.
+std::shared_ptr<GameObject> Camera::GetParent() const
+{
+    return parentObj;
+}
+
 std::shared_ptr<DirectX::CommonStates>& Camera::GetPtrStates()
 {
     return ptrStates;

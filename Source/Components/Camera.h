@@ -46,6 +46,8 @@ public:
     void Render(ID3D12GraphicsCommandList* commandList);
 
     // Getters & Setters.
+    std::shared_ptr<GameObject> GetParent() const;
+
     std::shared_ptr<DirectX::CommonStates>& GetPtrStates();
 
     Microsoft::WRL::ComPtr<ID3D12Resource>& GetPtrRoomTex();

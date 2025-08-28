@@ -8,7 +8,7 @@ Quad::Quad()
 	resourceManager = GameObjectManager::GetInstance();
 }
 
-Quad::Quad(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid, bool inp_display)
+Quad::Quad(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid, bool inp_display, bool inp_isStatic)
 {
 	SetName(id);
 	SetColor(colorInput);
@@ -18,10 +18,11 @@ Quad::Quad(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentO
 	SetLength(inp_len);
 	SetWidth(inp_wid);
 	SetDisplay(inp_display);
+	SetIsStatic(inp_isStatic);
 	resourceManager->AddQuadObj(id, *this);
 }
 
-void Quad::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch) const 
+void Quad::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch, const DirectX::SimpleMath::Vector2& camOffset) const
 {
 	if (GetDisplay() == false)
 	{
@@ -29,6 +30,12 @@ void Quad::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPos
 	}
 
 	DirectX::SimpleMath::Vector2 newPos = GetRenderPosition();
+
+	if (!GetIsStatic())
+	{
+		newPos += camOffset;
+	}
+
 	float currScale = GetScale();
 
 	float calcLen = GetLength() / 2.0f;

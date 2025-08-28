@@ -10,7 +10,7 @@ private:
 	float width = 1.f;
 
 public:
-	virtual void Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch) const;
+	virtual void Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch, const DirectX::SimpleMath::Vector2& camOffset) const;
 
 	float GetLength() const;
 

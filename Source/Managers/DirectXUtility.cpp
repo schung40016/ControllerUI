@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "DirectXUtility.h"
 #include "GameObjectManager.h"
 
@@ -22,9 +22,6 @@ void DirectXUtility::UpdateGameObjects(float elapsedTime)
     frameCount++;
 
     std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
-
-    // Check for any collisions between objects from the same layer..
-    //UpdateCollisions();
 
     for (auto& curr : gameObjs)
     {
@@ -59,8 +56,30 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
 {
     PIXBeginEvent(commandList, PIX_COLOR_DEFAULT, L"Render");
 
-    ID3D12DescriptorHeap* heaps[] = { m_resourceDescriptors->Heap() };
+    auto viewport = m_deviceResources->GetOutputSize();
+    width = static_cast<float>(viewport.right - viewport.left);
+    height = static_cast<float>(viewport.bottom - viewport.top);
+
+    Camera* focusedCamera = GetFocusedCamera();
+
+    ID3D12DescriptorHeap* heaps[] =
+    {
+        m_resourceDescriptors->Heap(),
+        focusedCamera->GetPtrStates()->Heap()
+    };
+
     commandList->SetDescriptorHeaps(static_cast<UINT>(std::size(heaps)), heaps);
+
+    // after width/height and player are computed
+    DirectX::SimpleMath::Vector2 halfViewport(width * 0.5f, height * 0.5f);
+    DirectX::SimpleMath::Vector2 player = focusedCamera ? DirectX::SimpleMath::Vector2(focusedCamera->GetParent()->GetRenderPosition()) : Vector2::Zero;
+
+    // world → screen translation to keep player centered
+    camOffset = halfViewport - DirectX::SimpleMath::Vector2(player.x, player.y);
+
+    // keep camView2D for effects (shapes/lines)
+    camView2D = Matrix::CreateTranslation(camOffset.x, camOffset.y, 0.0f);
+
 
     // --- Controller ---
     // Render Camera Objects
@@ -73,7 +92,7 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     RenderShapeObjects(commandList, triObjects);
 
     // Render all shape objects
-    RenderShapeObjects(commandList, quadObjects);
+    RenderShapeObjects(m_deviceResources, commandList, quadObjects);
 
     // Render Lines
     RenderLineObjects(commandList, lnObjects);
@@ -91,23 +110,20 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
 
 void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects)
 {
-    m_spriteBatch->Begin(commandList);
     // -- RENDER TEXT --
-    // Prepare the text.
+    m_spriteBatch->Begin(commandList);
 
-    for (auto& current : txtObjects)
+    for (auto& [_, t] : txtObjects)
     {
-        current.second.SetOrigin(m_font);
-        current.second.DrawText(m_font, m_spriteBatch);
+        t.SetOrigin(m_font);
+        t.Draw(m_font, m_spriteBatch, camOffset);
     }
-    //------------------
 
     // -- RENDER IMAGE --
-    for (auto& current : imgObjects)
+    for (auto& [_, img] : imgObjects)
     {
-        current.second.RenderImage(m_spriteBatch, m_resourceDescriptors);
+        img.Render(m_spriteBatch, m_resourceDescriptors, camOffset);
     }
-    // ------------------
 
     m_spriteBatch->End();
 }
@@ -123,29 +139,37 @@ void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, 
     m_batch->End();
 }
 
-void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects)
+void DirectXUtility::RenderShapeObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects)
 {
+    if (focusedCamera)
+    {
+        Matrix orthoProj = Matrix::CreateOrthographic(width, height, 0.1f, 100.0f);
+        Matrix view = Matrix::CreateLookAt(Vector3(0, 0, -5), Vector3::Zero, Vector3::Up);
+
+        m_effect->SetView(camView2D);
+        m_effect->SetProjection(orthoProj);
+    }
+
     m_effect->Apply(commandList);
 
     m_batch->Begin(commandList);
-
     for (const auto& currObject : quadObjects)
     {
-        currObject.second.Draw(m_batch);
+        currObject.second.Draw(m_batch, camOffset);
     }
-
     m_batch->End();
 }
 
 void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects)
 {
+    m_lineEffect->SetView(camView2D);  // <-- add this
     m_lineEffect->Apply(commandList);
 
     m_batch->Begin(commandList);
 
     for (auto& current : lnObjects)
     {
-        current.second.DrawStickOrientation(m_batch);
+        current.second.DrawStickOrientation(m_batch, camOffset);
     }
 
     m_batch->End();
@@ -169,7 +193,7 @@ void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::D
 
     for (auto& current : imgObjects)
     {
-        current.second.PrepareImageResources(device, resourceUpload, m_resourceDescriptors);
+        current.second.PrepareResources(device, resourceUpload, m_resourceDescriptors);
     }
 
     for (auto& current : camObjects)
@@ -228,16 +252,7 @@ void DirectXUtility::PrepareWindowDependentResources(RECT size, const D3D12_VIEW
 
     Matrix proj;
 
-        
     proj = Matrix::CreateScale(2.f / float(size.right), -2.f / float(size.bottom), 1.f) * Matrix::CreateTranslation(-1.f, 1.f, 0.f);
-
-    //for (auto& current : camObjects)
-    //{
-    //    if (current.second.GetFocus())
-    //    {
-    //        proj = current.second.PrepareProjection(size);
-    //    }
-    //}
 
     m_effect->SetProjection(proj);
     m_lineEffect->SetProjection(proj);
@@ -250,7 +265,7 @@ void DirectXUtility::CheckInputs(const std::unordered_map<std::string, Triangle>
 
     for (const auto& currObject : shpObjects)
     {
-        currObject.second.Draw(m_batch);
+        currObject.second.Draw(m_batch, camOffset);
     }
 }
 
@@ -309,18 +324,16 @@ void DirectXUtility::PrepareCameraObjects(Camera& camObject, ID3D12Device* devic
     RenderTargetState rtState(m_deviceResources->GetBackBufferFormat(),
         m_deviceResources->GetDepthBufferFormat());
 
-    {
-        EffectPipelineStateDescription sd(
-            &GeometricPrimitive::VertexType::InputLayout,
-            CommonStates::Opaque,
-            CommonStates::DepthDefault,
-            CommonStates::CullCounterClockwise,
-            rtState);
+    EffectPipelineStateDescription sd(
+        &GeometricPrimitive::VertexType::InputLayout,
+        CommonStates::Opaque,
+        CommonStates::DepthDefault,
+        CommonStates::CullCounterClockwise,
+        rtState);
 
-        camObject.GetPtrRoomEffect() = std::make_shared<BasicEffect>(device,
-            EffectFlags::Lighting | EffectFlags::Texture, sd);
-        camObject.GetPtrRoomEffect()->EnableDefaultLighting();
-    }
+    camObject.GetPtrRoomEffect() = std::make_shared<BasicEffect>(device,
+        EffectFlags::Lighting | EffectFlags::Texture, sd);
+    camObject.GetPtrRoomEffect()->EnableDefaultLighting();
 
     DX::ThrowIfFailed(CreateDDSTextureFromFile(device, resourceUpload,
         L"roomtexture.dds",
@@ -332,4 +345,16 @@ void DirectXUtility::PrepareCameraObjects(Camera& camObject, ID3D12Device* devic
 
     camObject.GetPtrRoomEffect()->SetTexture(m_resourceDescriptors->GetFirstGpuHandle(),
         camObject.GetPtrStates()->LinearClamp());
+}
+
+Camera* DirectXUtility::GetFocusedCamera()
+{
+    for (auto& [name, cam] : resourceManager->GetCameraObjBank())
+    {
+        if (cam.GetFocus()) {
+            return &cam;
+        }
+    }
+
+    return nullptr;
 }

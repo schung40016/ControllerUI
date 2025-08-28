@@ -28,8 +28,13 @@ private:
     std::unique_ptr<DirectX::PrimitiveBatch<VertexType>> m_batch;
 
     GameObjectManager* resourceManager;
+    Camera* focusedCamera = nullptr;
+    Matrix camView2D;
 
     int frameCount = 0;
+    float width = 0.f;
+    float height = 0.f;
+    DirectX::SimpleMath::Vector2 camOffset = { 0, 0 };
 
 public: 
     DirectXUtility();
@@ -47,7 +52,7 @@ public:
 
     void RenderShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects);
 
-    void RenderShapeObjects(ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects);
+    void RenderShapeObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects);
 
     void RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects);
 
@@ -71,4 +76,6 @@ public:
     bool GetControllerConnected();
 
     void SetControllerConnected(bool inp_isControllerConnected);
+
+    Camera* GetFocusedCamera();
 };

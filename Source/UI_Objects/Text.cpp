@@ -15,24 +15,32 @@ Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text)
 	resourceManager->AddTxtObj(id, *this);
 }
 
-Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y)
+Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y, bool inp_isStatic = false)
 	: text(inp_text)
 {
 	SetName(id);
 	SetColor(inp_color);
 	SetParent(inp_parentObj);
 	SetPosition({ inp_x, inp_y });
+	SetIsStatic(inp_isStatic);
 	resourceManager->AddTxtObj(id, *this);
 }
 
-void Text::DrawText(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch)
+void Text::Draw(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, const DirectX::SimpleMath::Vector2& camOffset)
 {
 	if (GetDisplay() == false)
 	{
 		return;
 	}
 
-	m_font->DrawString(m_spriteBatch.get(), GetWStringText().c_str(), GetRenderPosition(), GetColor(), 0.f, m_origin, GetScale());
+	DirectX::SimpleMath::Vector2 pos = GetRenderPosition();
+
+	if (!GetIsStatic())
+	{
+		pos += camOffset;		// Apply camera off set.
+	}
+
+	m_font->DrawString(m_spriteBatch.get(), GetWStringText().c_str(), pos, GetColor(), 0.f, m_origin, GetScale());
 }
 
 // Getters & Setters

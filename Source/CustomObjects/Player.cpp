@@ -33,12 +33,12 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier, { inp_width, inp_length });
 	GameObject& tempPlayerGame = resourceManager->GetGameObj(sPlayerName);
 	tempPlayerGame.SetScale(.1f);
-	Image playerSprite = Image(sPlayerName + "_Image", DirectX::Colors::White, ".\\Images\\PlayerSpriteSheet.png", EnumData::Descriptors::PlayerImage, tempPlayerGame, .25f, .25f, .35f);
+	Image playerSprite = Image(sPlayerName + "_Image", DirectX::Colors::White, ".\\Images\\PlayerSpriteSheet.png", EnumData::Descriptors::PlayerImage, tempPlayerGame, .25f, .25f, .35f, false);
 	std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = FetchPositionPairs(inp_width, inp_length);
 
 	BoxCollider player_collider = BoxCollider(tempPlayerGame, playerCollisionBox, true);
 	PlayerController player_controller = PlayerController(tempPlayerGame, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName], 100.f, 5000.f);
-	RigidBody player_rigidBody = RigidBody(tempPlayerGame, 10.f, 10.f, -9.81f);
+	RigidBody player_rigidBody = RigidBody(tempPlayerGame, true, 10.f, -9.81f);
 	Camera player_camera = Camera(tempPlayerGame, true);
 	AnimationController player_animationController = AnimationController(tempPlayerGame, playerSprite, states);
 

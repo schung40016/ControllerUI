@@ -15,19 +15,18 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_texture = {};	// used for origin.
 	bool bFlip = false;
 
-
 public:
 	Image();
 
 	// Renders entire image.
-	Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale);
+	Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, bool inp_isStatic);
 	
 	// Renders partial sprite.
 	Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, DirectX::SimpleMath::Vector2 inp_originPos, RECT inp_renderingRect);
 
-	void RenderImage(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors);
+	void Render(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors, const DirectX::SimpleMath::Vector2& camOffset);
 
-	void PrepareImageResources(ID3D12Device* device, DirectX::ResourceUploadBatch& resourceUpload,
+	void PrepareResources(ID3D12Device* device, DirectX::ResourceUploadBatch& resourceUpload,
 		std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors);
 
 	void ResetTexture();

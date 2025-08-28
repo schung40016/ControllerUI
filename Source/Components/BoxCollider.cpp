@@ -20,7 +20,7 @@ BoxCollider::BoxCollider(GameObject& inp_parentObj, std::vector<DirectX::SimpleM
 	{
 		std::string colliderName = parentName + std::to_string(i);
 
-		vertexLines.emplace_back(Line(colliderName, Colors::DeepPink, inp_parentObj, inp_vertices[i], inp_vertices[(i + 1) % inp_vertices.size()], 1.0f));
+		vertexLines.emplace_back(Line(colliderName, Colors::DeepPink, inp_parentObj, inp_vertices[i], inp_vertices[(i + 1) % inp_vertices.size()], 1.0f, false));
 	}
 }
 

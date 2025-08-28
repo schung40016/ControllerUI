@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Shape.h"
 
-void Shape::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch) const 
+void Shape::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch, const DirectX::SimpleMath::Vector2& camOffset) const
 {
 }
 

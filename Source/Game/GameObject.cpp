@@ -71,17 +71,18 @@ const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 const DirectX::SimpleMath::Vector2 GameObject::GetRenderPosition() const			// Get render position. rename. 
 
 {
+	// TO-DO: Figure out rendering calculations here.
 	//if (gObj_parentObj)
 	//{
 	//	float scale = GetScale();
-	//	DirectX::SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPositionActual();
+	//	DirectX::SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPosition();
 	//	float calcX = gObj_positionActual.x * scale + parent_pos.x;
 	//	float calcY = gObj_positionActual.y * scale + parent_pos.y;
 	//	DirectX::SimpleMath::Vector2 temp = { calcX, calcY };
 	//	return temp;
 	//}
 	DirectX::SimpleMath::Vector2 temp = GetPosition();
-	temp = DirectX::SimpleMath::Vector2(temp.x, 975.f - temp.y);
+	temp = DirectX::SimpleMath::Vector2(temp.x, fRenderOffset - temp.y);
 
 	return temp;
 }

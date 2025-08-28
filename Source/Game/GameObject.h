@@ -21,7 +21,7 @@ private:
 	int layerMask = 0;
 	std::vector<Component*> components = {};
 	std::unordered_map<std::string, Component*> colliderObjBank = {};
-	float test = 0.f;
+	float fRenderOffset = 975.f;
 
 protected:
 	GameObjectManager* resourceManager;

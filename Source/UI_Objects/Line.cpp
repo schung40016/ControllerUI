@@ -7,7 +7,7 @@ Line::Line()
     resourceManager = GameObjectManager::GetInstance();
 }
 
-Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale)
+Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic)
     : shapeColor(inp_shapeColor)
 {
     SetName(id);
@@ -15,10 +15,11 @@ Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_par
     SetScale(inp_scale);
     SetPosition(inp_pt2);
     shapeColor = inp_shapeColor;
+    SetIsStatic(inp_isStatic);
     resourceManager->AddLnObj(id, *this);
 }
 
-Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale)
+Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic)
 {
     SetName(id);
     SetParent(inp_parentObj);
@@ -27,14 +28,18 @@ Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_par
     point2 = inp_pt2;
     SetScale(inp_scale);
     shapeColor = inp_shapeColor;
+    SetIsStatic(inp_isStatic);
     resourceManager->AddLnObj(id, *this);
 }
 
-void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch) const 
+void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch, const DirectX::SimpleMath::Vector2& camOffset) const
 {
     Vector2 pos = GetRenderPosition();
-    //float calcX = point2.x * lineSizeMultiplier * currScale + pos.x;
-    //float calcY = point2.y * lineSizeMultiplier * currScale * 1 + pos.y;
+
+    if (GetIsStatic())
+    {
+        pos += camOffset;
+    }
 
     float calcPt2X = (pos.x - point1.x) + point2.x;
     float calcPt2Y = (pos.y + point1.y) - point2.y;
