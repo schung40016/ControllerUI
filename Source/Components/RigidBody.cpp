@@ -46,6 +46,8 @@ void RigidBody::StopVelocity()
 		velocity.x = 0;
 	}
 
+
+	// Instead of doing this, alter collision so that it immediately stops you instead of shift player to the right.
 	if (topGrounded && actVelocity.y > 0)
 	{
 		actVelocity.y = 0;

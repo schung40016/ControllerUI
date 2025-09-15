@@ -149,11 +149,16 @@ bool BoxCollider::IsColliding_DIAG_STATIC(BoxCollider& other)
 				DirectX::SimpleMath::Vector2 line_r2s = poly2->worldVertices[q];
 				DirectX::SimpleMath::Vector2 line_r2e = poly2->worldVertices[(q + 1) % poly2->worldVertices.size()];	// neighboring point.
 
+
+				// Check for each edge. Top < below bottom edge for other item. Bottom > top edge for other item, etc.
+				// First check if new position is valid, do this in the rigidbody calculator.
+
 				// Standard "off the shelf" line segment intersection.
 				float h = (line_r2e.x - line_r2s.x) * (line_r1s.y - line_r1e.y) - (line_r1s.x - line_r1e.x) * (line_r2e.y - line_r2s.y);
 				float t1 = ((line_r2s.y - line_r2e.y) * (line_r1s.x - line_r2s.x) + (line_r2e.x - line_r2s.x) * (line_r1s.y - line_r2s.y)) / h;
 				float t2 = ((line_r1s.y - line_r1e.y) * (line_r1s.x - line_r2s.x) + (line_r1e.x - line_r1s.x) * (line_r1s.y - line_r2s.y)) / h;
 
+				// Shift problem is here, figure out why.
 				if (t1 >= 0.0f && t1 < 1.0f && t2 >= 0.0f && t2 < 1.0f)
 				{
 					displacement.x += (1.0f - t1) * (line_r1e.x - line_r1s.x);

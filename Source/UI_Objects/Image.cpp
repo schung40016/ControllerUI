@@ -51,6 +51,9 @@ void Image::Render(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::un
 			renderPosition, &renderingEdges, GetColor(), 0.f, m_origin, GetScale());
 	}
 }
+// Frustrum calling.
+// Before rendering, figure out what objects should be rendered (i.e. the stuff we only want to show in the camera). 
+// Future: Map arhcitecture. 
 
 void Image::PrepareResources(ID3D12Device* device, DirectX::ResourceUploadBatch& resourceUpload, 
 	std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors)
