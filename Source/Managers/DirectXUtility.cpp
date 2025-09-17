@@ -60,7 +60,7 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     width = static_cast<float>(viewport.right - viewport.left);
     height = static_cast<float>(viewport.bottom - viewport.top);
 
-    Camera* focusedCamera = GetFocusedCamera();
+    focusedCamera = GetFocusedCamera();
 
     ID3D12DescriptorHeap* heaps[] =
     {
@@ -70,15 +70,9 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
 
     commandList->SetDescriptorHeaps(static_cast<UINT>(std::size(heaps)), heaps);
 
-    // after width/height and player are computed
-    DirectX::SimpleMath::Vector2 halfViewport(width * 0.5f, height * 0.5f);
     DirectX::SimpleMath::Vector2 player = focusedCamera ? DirectX::SimpleMath::Vector2(focusedCamera->GetParent()->GetRenderPosition()) : Vector2::Zero;
 
-    // world → screen translation to keep player centered
-    camOffset = halfViewport - DirectX::SimpleMath::Vector2(player.x, player.y);
-
-    // keep camView2D for effects (shapes/lines)
-    camView2D = Matrix::CreateTranslation(camOffset.x, camOffset.y, 0.0f);
+    focusedCamera->PrepareProjection(player, {width, height});
 
 
     // --- Controller ---
@@ -116,13 +110,13 @@ void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* command
     for (auto& [_, t] : txtObjects)
     {
         t.SetOrigin(m_font);
-        t.Draw(m_font, m_spriteBatch, camOffset);
+        t.Draw(m_font, m_spriteBatch, focusedCamera->GetOffset());
     }
 
     // -- RENDER IMAGE --
     for (auto& [_, img] : imgObjects)
     {
-        img.Render(m_spriteBatch, m_resourceDescriptors, camOffset);
+        img.Render(m_spriteBatch, m_resourceDescriptors, focusedCamera->GetOffset());
     }
 
     m_spriteBatch->End();
@@ -141,35 +135,26 @@ void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, 
 
 void DirectXUtility::RenderShapeObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects)
 {
-    if (focusedCamera)
-    {
-        Matrix orthoProj = Matrix::CreateOrthographic(width, height, 0.1f, 100.0f);
-        Matrix view = Matrix::CreateLookAt(Vector3(0, 0, -5), Vector3::Zero, Vector3::Up);
-
-        m_effect->SetView(camView2D);
-        m_effect->SetProjection(orthoProj);
-    }
-
     m_effect->Apply(commandList);
 
     m_batch->Begin(commandList);
     for (const auto& currObject : quadObjects)
     {
-        currObject.second.Draw(m_batch, camOffset);
+        currObject.second.Draw(m_batch, focusedCamera->GetOffset());
     }
     m_batch->End();
 }
 
 void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects)
 {
-    m_lineEffect->SetView(camView2D);  // <-- add this
+    m_lineEffect->SetView(focusedCamera->GetProjection());
     m_lineEffect->Apply(commandList);
 
     m_batch->Begin(commandList);
 
     for (auto& current : lnObjects)
     {
-        current.second.DrawStickOrientation(m_batch, camOffset);
+        current.second.DrawStickOrientation(m_batch, focusedCamera->GetOffset());
     }
 
     m_batch->End();
@@ -265,7 +250,7 @@ void DirectXUtility::CheckInputs(const std::unordered_map<std::string, Triangle>
 
     for (const auto& currObject : shpObjects)
     {
-        currObject.second.Draw(m_batch, camOffset);
+        currObject.second.Draw(m_batch, focusedCamera->GetOffset());
     }
 }
 
@@ -310,9 +295,12 @@ void DirectXUtility::UpdateCollisions()
 
 void DirectXUtility::RenderCameraComponents(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Camera>& camObjects)
 {
-    for (auto& current : camObjects)
+    for (auto& [_, current] : camObjects)
     {
-        current.second.Render(commandList);
+        if (current.GetFocus())
+        {
+            current.Render(commandList);
+        }
     }
 }
 

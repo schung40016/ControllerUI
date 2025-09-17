@@ -8,7 +8,6 @@ class Camera : public Component
 private:
 	std::shared_ptr<class GameObject> parentObj = nullptr;
 
-    DirectX::XMVECTORF32 START_POSITION = { 0.f, -1.5f, 0.f, 0.f };
     DirectX::XMVECTORF32 ROOM_BOUNDS = { 8.f, 6.f, 12.f, 0.f };
     float ROTATION_GAIN = 0.1f;
 
@@ -21,6 +20,9 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> ptrRoomTex;
     std::shared_ptr<DirectX::CommonStates> ptrStates;
     std::shared_ptr<DirectX::BasicEffect> ptrRoomEffect;
+
+    DirectX::SimpleMath::Matrix camView2D;
+    DirectX::SimpleMath::Vector2 camOffset = { 0, 0 };
 
     float fPitch = 1.0f;
     float fYaw = 1.0f;
@@ -37,9 +39,7 @@ public:
 
     void ResetResources();
 
-    void FetchConvertParentPosition();
-
-    DirectX::SimpleMath::Matrix PrepareProjection(RECT size);
+    void PrepareProjection(DirectX::SimpleMath::Vector2 focusPosition, DirectX::SimpleMath::Vector2 viewPort);
 
     void PrepareResources(ID3D12Device* device);
 
@@ -56,10 +56,15 @@ public:
 
     DirectX::SimpleMath::Matrix GetView();
 
-    DirectX::SimpleMath::Matrix GetProj();
+    DirectX::SimpleMath::Matrix GetProjection();
 
+    DirectX::SimpleMath::Vector2 GetOffset();
+
+    /// <summary>
+    /// Determines if camera is focused (current display).
+    /// </summary>
+    /// <returns></returns>
     bool GetFocus();
 
     void SetPtrRoomEffect(const std::shared_ptr<DirectX::DX12::BasicEffect>& inp_basicEffectPtr);
-    
 };

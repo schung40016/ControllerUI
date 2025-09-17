@@ -29,12 +29,10 @@ private:
 
     GameObjectManager* resourceManager;
     Camera* focusedCamera = nullptr;
-    Matrix camView2D;
 
     int frameCount = 0;
     float width = 0.f;
     float height = 0.f;
-    DirectX::SimpleMath::Vector2 camOffset = { 0, 0 };
 
 public: 
     DirectXUtility();
@@ -66,16 +64,10 @@ public:
 
     void ResetAssets(std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Camera>& camObjects);
 
-    void SetButtonDisplays(std::unordered_map<std::string, Triangle>& shpObjects);
-
     void UpdateCollisions();
 
     void PrepareCameraObjects(Camera& camObject, ID3D12Device* device, ResourceUploadBatch& resourceUpload, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors, const std::unique_ptr<DX::DeviceResources>& m_deviceResources);
 
-    // Getters & Setters,
-    bool GetControllerConnected();
-
-    void SetControllerConnected(bool inp_isControllerConnected);
-
+    // Getters & Setters.
     Camera* GetFocusedCamera();
 };

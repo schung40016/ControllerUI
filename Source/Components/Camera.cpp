@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Camera.h"
 #include "Source/Game/GameObject.h"
 #include "DeviceResources.h"
@@ -16,7 +16,6 @@ Camera::Camera(GameObject& inp_parentObj, bool inp_focus) :
 {
    parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
    DirectX::SimpleMath::Vector2 parentPos = parentObj->GetRenderPosition();
-   FetchConvertParentPosition();
 }
 
 void Camera::Awake()
@@ -26,22 +25,16 @@ void Camera::Awake()
 
 void Camera::Update(float deltaTime) 
 {
-    FetchConvertParentPosition();
-
     float y = sinf(fPitch);
     float r = cosf(fPitch);
     float z = r * cosf(fYaw);
     float x = r * sinf(fYaw);
 
-    DirectX::XMVECTOR lookAt = v3CameraPos + DirectX::SimpleMath::Vector3(x, y, z);
-
-    mView = XMMatrixLookAtRH(v3CameraPos, lookAt, DirectX::SimpleMath::Vector3::Up);
-}
-
-void Camera::FetchConvertParentPosition() 
-{
     DirectX::SimpleMath::Vector2 parentPos = parentObj->GetRenderPosition();
     v3CameraPos = { parentPos.x, parentPos.y, 0 };
+
+    DirectX::XMVECTOR lookAt = v3CameraPos + DirectX::SimpleMath::Vector3(x, y, z);
+    mView = XMMatrixLookAtRH(v3CameraPos, lookAt, DirectX::SimpleMath::Vector3::Up);
 }
 
 void Camera::ResetResources() 
@@ -52,11 +45,15 @@ void Camera::ResetResources()
     ptrRoomEffect.reset();
 }
 
-DirectX::SimpleMath::Matrix Camera::PrepareProjection(RECT size)
+void Camera::PrepareProjection(DirectX::SimpleMath::Vector2 focusPosition, DirectX::SimpleMath::Vector2 viewPort)
 {
-    return DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(
-        DirectX::XMConvertToRadians(70.f),
-        float(size.right) / float(size.bottom), 0.01f, 100.f);
+    DirectX::SimpleMath::Vector2 halfViewport(viewPort.x * 0.5f, viewPort.y * 0.5f);
+
+    // world → screen translation to keep player centered
+    camOffset = halfViewport - DirectX::SimpleMath::Vector2(focusPosition.x, focusPosition.y);
+
+    // keep camView2D for effects (shapes/lines)
+    camView2D = DirectX::SimpleMath::Matrix::CreateTranslation(camOffset.x, camOffset.y, 0.0f);
 }
 
 void Camera::PrepareResources(ID3D12Device* device)
@@ -70,15 +67,6 @@ void Camera::PrepareResources(ID3D12Device* device)
 
 void Camera::Render(ID3D12GraphicsCommandList* commandList)
 {
-    // Check if mProj is initialized (all zeros means not set)
-    if (mProj == DirectX::SimpleMath::Matrix::Identity ||
-        (mProj.m[0][0] == 0 && mProj.m[1][1] == 0)) {
-        OutputDebugStringA("mProj matrix not initialized!\n");
-        // Set a default projection for testing
-        mProj = DirectX::SimpleMath::Matrix::CreatePerspectiveFieldOfView(
-            DirectX::XMConvertToRadians(70.0f), 16.0f / 9.0f, 0.1f, 100.0f);
-    }
-
     ptrRoomEffect->SetMatrices(DirectX::SimpleMath::Matrix::Identity, mView, mProj);
     ptrRoomEffect->SetDiffuseColor(colRoomColor);
     ptrRoomEffect->Apply(commandList);
@@ -111,11 +99,17 @@ DirectX::SimpleMath::Matrix Camera::GetView()
     return mView;
 }
 
-DirectX::SimpleMath::Matrix Camera::GetProj()
+DirectX::SimpleMath::Matrix Camera::GetProjection()
 {
-    return mProj;
+    return camView2D;
 }
 
+DirectX::SimpleMath::Vector2 Camera::GetOffset()
+{
+    return camOffset;
+}
+
+/// <inheritdoc/>
 bool Camera::GetFocus()
 {
     return bFocus;
