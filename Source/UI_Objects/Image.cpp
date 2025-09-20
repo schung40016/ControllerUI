@@ -112,6 +112,11 @@ std::wstring Image::GetWStringImgLocation()
 	return std::wstring(imgLocation.begin(), imgLocation.end());
 }
 
+DirectX::SimpleMath::Vector2 Image::GetDimensions() const
+{
+	return {(float)(renderingEdges.right - renderingEdges.left), (float)(renderingEdges.bottom - renderingEdges.top)};
+}
+
 void Image::SetSpriteRender(const DirectX::SimpleMath::Vector2 origin, const RECT sprite_rect)
 {
 	m_origin = origin;

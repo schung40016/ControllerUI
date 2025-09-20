@@ -73,6 +73,27 @@ void Camera::Render(ID3D12GraphicsCommandList* commandList)
     ptrRoom->Draw(commandList);
 }
 
+bool Camera::CanRender(DirectX::SimpleMath::Vector2 objectPosition, DirectX::SimpleMath::Vector2 objectDimensions)
+{
+    float halfWidth = objectDimensions.x / 2.0f;
+    float halfLength = objectDimensions.y / 2.0f;
+
+    // Calculate all the bounds of the shape.
+    float topEdge = objectPosition.y + halfLength;
+    float bottomEdge = objectPosition.y - halfLength;
+    float leftEdge = objectPosition.x - halfWidth;
+    float rightEdge = objectPosition.x + halfWidth;
+
+    // Compare the bounds of the shape's to the camera's.
+    if (topEdge < screenEdgePoints.z && bottomEdge > screenEdgePoints.x && leftEdge > screenEdgePoints.y && rightEdge < screenEdgePoints.w)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+
 // Getters & Setters.
 std::shared_ptr<GameObject> Camera::GetParent() const
 {
@@ -118,4 +139,15 @@ bool Camera::GetFocus()
 void Camera::SetPtrRoomEffect(const std::shared_ptr<DirectX::DX12::BasicEffect>& inp_basicEffectPtr)
 {
     ptrRoomEffect = inp_basicEffectPtr;
+}
+
+void Camera::SetScreenSizeHalved(float width, float height)
+{
+    float halvedWidth = width / 2.0f;
+    float halvedHeight = height / 2.0f;
+
+    float x = v3CameraPos.x;
+    float y = v3CameraPos.y;
+
+    screenEdgePoints = { y + halvedHeight, x + halvedWidth, y - halvedHeight, x - halvedWidth};
 }

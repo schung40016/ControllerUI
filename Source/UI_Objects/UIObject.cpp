@@ -17,6 +17,11 @@ bool UIObject::GetIsStatic() const
 	return isStatic;
 }
 
+DirectX::SimpleMath::Vector2 UIObject::GetDimensions() const
+{
+	return { 0, 0 };
+}
+
 void UIObject::SetColor(DirectX::XMVECTOR inp_color)
 {
 	uiObj_color = inp_color;

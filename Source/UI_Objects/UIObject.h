@@ -20,6 +20,11 @@ public:
 	/// <returns></returns>
 	virtual bool GetIsStatic() const;
 
+	/// <summary>
+	/// Returns UI object's dimensions: width and height.
+	/// </summary>
+	virtual DirectX::SimpleMath::Vector2 GetDimensions() const;
+
 	virtual void SetColor(DirectX::XMVECTOR inp_color);
 
 	/// <summary>

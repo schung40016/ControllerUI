@@ -44,5 +44,7 @@ public:
 
 	std::wstring GetWStringImgLocation();
 
+	DirectX::SimpleMath::Vector2 GetDimensions() const override;
+
 	void SetSpriteRender(DirectX::SimpleMath::Vector2 origin, RECT sprite_rect);
 };

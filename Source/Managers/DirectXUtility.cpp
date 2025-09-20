@@ -61,6 +61,7 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     height = static_cast<float>(viewport.bottom - viewport.top);
 
     focusedCamera = GetFocusedCamera();
+    focusedCamera->SetScreenSizeHalved(width, height);
 
     ID3D12DescriptorHeap* heaps[] =
     {
@@ -107,16 +108,19 @@ void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* command
     // -- RENDER TEXT --
     m_spriteBatch->Begin(commandList);
 
-    for (auto& [_, t] : txtObjects)
+    for (auto& [_, txt] : txtObjects)
     {
-        t.SetOrigin(m_font);
-        t.Draw(m_font, m_spriteBatch, focusedCamera->GetOffset());
+        txt.SetOrigin(m_font);
+        txt.Draw(m_font, m_spriteBatch, focusedCamera->GetOffset());
     }
 
     // -- RENDER IMAGE --
     for (auto& [_, img] : imgObjects)
     {
-        img.Render(m_spriteBatch, m_resourceDescriptors, focusedCamera->GetOffset());
+        if (focusedCamera->CanRender(img.GetRenderPosition(), img.GetDimensions()))
+        {
+            img.Render(m_spriteBatch, m_resourceDescriptors, focusedCamera->GetOffset());
+        }
     }
 
     m_spriteBatch->End();
