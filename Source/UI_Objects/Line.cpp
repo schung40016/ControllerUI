@@ -55,6 +55,11 @@ DirectX::SimpleMath::Vector2 Line::GetPoint2()
     return point2;
 }
 
+DirectX::SimpleMath::Vector2 Line::GetDimensions() const
+{
+    return { abs(point2.x - point1.x), abs(point2.y - point1.y) };
+}
+
 void Line::SetPoint2(float v2x, float v2y)
 {
      point2 = { v2x, v2y };

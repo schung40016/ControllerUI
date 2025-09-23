@@ -84,7 +84,7 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     RenderSpriteBatchObjects(commandList, txtObjects, imgObjects);
 
     // Render Triangles
-    RenderShapeObjects(commandList, triObjects);
+    RenderInputShapeObjects(commandList, triObjects);
 
     // Render all shape objects
     RenderShapeObjects(m_deviceResources, commandList, quadObjects);
@@ -110,8 +110,11 @@ void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* command
 
     for (auto& [_, txt] : txtObjects)
     {
-        txt.SetOrigin(m_font);
-        txt.Draw(m_font, m_spriteBatch, focusedCamera->GetOffset());
+        if (focusedCamera->CanRender(txt.GetRenderPosition(), txt.GetDimensions()))
+        {
+            txt.SetOrigin(m_font);
+            txt.Draw(m_font, m_spriteBatch, focusedCamera->GetOffset());
+        }
     }
 
     // -- RENDER IMAGE --
@@ -126,7 +129,7 @@ void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* command
     m_spriteBatch->End();
 }
 
-void DirectXUtility::RenderShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects)
+void DirectXUtility::RenderInputShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects)
 {
     m_effect->Apply(commandList);
 
@@ -142,9 +145,12 @@ void DirectXUtility::RenderShapeObjects(const std::unique_ptr<DX::DeviceResource
     m_effect->Apply(commandList);
 
     m_batch->Begin(commandList);
-    for (const auto& currObject : quadObjects)
+    for (const auto& quad : quadObjects)
     {
-        currObject.second.Draw(m_batch, focusedCamera->GetOffset());
+        if (focusedCamera->CanRender(quad.second.GetRenderPosition(), quad.second.GetDimensions()))
+        {
+            quad.second.Draw(m_batch, focusedCamera->GetOffset());
+        }
     }
     m_batch->End();
 }
@@ -156,9 +162,12 @@ void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, s
 
     m_batch->Begin(commandList);
 
-    for (auto& current : lnObjects)
+    for (const auto& line : lnObjects)
     {
-        current.second.DrawStickOrientation(m_batch, focusedCamera->GetOffset());
+        if (focusedCamera->CanRender(line.second.GetRenderPosition(), line.second.GetDimensions()))
+        {
+            line.second.DrawStickOrientation(m_batch, focusedCamera->GetOffset());
+        }
     }
 
     m_batch->End();

@@ -28,6 +28,8 @@ Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, Ga
 
 void Text::Draw(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, const DirectX::SimpleMath::Vector2& camOffset)
 {
+	SetDimensions(m_font->MeasureString(GetWStringText().c_str()));
+
 	if (GetDisplay() == false)
 	{
 		return;
@@ -44,6 +46,21 @@ void Text::Draw(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::u
 }
 
 // Getters & Setters
+std::wstring Text::GetWStringText()
+{
+	return std::wstring(text.begin(), text.end());
+}
+
+DirectX::SimpleMath::Vector2 Text::GetDimensions() const
+{
+	return dimensions;
+}
+
+void Text::SetDimensions(DirectX::SimpleMath::Vector2 dimensionsInput)
+{
+	dimensions = { dimensionsInput.x * GetScale(), dimensionsInput.y * GetScale() };
+}
+
 void Text::SetOrigin(const std::unique_ptr<DirectX::SpriteFont>& m_font)
 {
 	m_origin = m_font->MeasureString(GetWStringText().c_str());
@@ -55,7 +72,8 @@ void Text::SetText(std::string inp_string)
 	text = inp_string;
 }
 
-std::wstring Text::GetWStringText()
+// Destructor
+Text::~Text()
 {
-	return std::wstring(text.begin(), text.end());
 }
+

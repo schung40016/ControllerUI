@@ -25,5 +25,7 @@ public:
 	// Getters & Setters
 	DirectX::SimpleMath::Vector2 GetPoint2();
 
+	DirectX::SimpleMath::Vector2 GetDimensions() const override;
+
 	void SetPoint2(float v2x, float v2y);
 };

@@ -16,6 +16,8 @@ public:
 
 	float GetWidth() const;
 
+	DirectX::SimpleMath::Vector2 GetDimensions() const override;
+
 	void SetLength(float inp_len);
 	 
 	void SetWidth(float inp_wid);

@@ -122,3 +122,7 @@ void Image::SetSpriteRender(const DirectX::SimpleMath::Vector2 origin, const REC
 	m_origin = origin;
 	renderingEdges = sprite_rect;
 }
+
+Image::~Image()
+{
+}

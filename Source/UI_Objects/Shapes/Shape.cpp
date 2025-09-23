@@ -15,6 +15,11 @@ float Shape::GetWidth() const
 	return width;
 }
 
+DirectX::SimpleMath::Vector2 Shape::GetDimensions() const
+{
+	return { width, length };
+}
+
 void Shape::SetLength(float inp_len)
 {
 	length = inp_len;
