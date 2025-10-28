@@ -41,9 +41,13 @@ public:
 
 	bool IsColliding_SAT_STATIC(BoxCollider& other);
 
+	bool IsColliding_Simplified(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other);
+
 	bool CanCollide();
 
 	bool CollidesWithLayer(int layer);
+
+	bool PredictedCollidesWithLayer(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, int layer);
 
 	void SetWorldPositions();
 

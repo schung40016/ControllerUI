@@ -36,8 +36,8 @@ void RigidBody::StopVelocity()
 {
 	if ((grounded && actVelocity.y < 0))
 	{
-		actVelocity.y = 0;
-		velocity.y = 0;
+		//actVelocity.y = 0;
+		//velocity.y = 0;
 	}
 
 	if ((rightGrounded && actVelocity.x > 0) || (leftGrounded && actVelocity.x < 0))
@@ -50,8 +50,8 @@ void RigidBody::StopVelocity()
 	// Instead of doing this, alter collision so that it immediately stops you instead of shift player to the right.
 	if (topGrounded && actVelocity.y > 0)
 	{
-		actVelocity.y = 0;
-		velocity.y = 0;
+		//actVelocity.y = 0;
+		//velocity.y = 0;
 		actVelocity.x = 0;
 	}
 }
@@ -89,20 +89,20 @@ void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in r
 
 	// Prevent parent object from moving to final location if collision is detected.
 	BoxCollider* boxCollider = parentObj->GetComponent<BoxCollider>();
-	const DirectX::SimpleMath::Vector2 parentPos = { parentObj->GetPosition().x, parentObj->GetPosition().y };
+	std::vector<DirectX::SimpleMath::Vector2> predictedPos = boxCollider->GetWorldPositions();
+
+	for (int i = 0; i < predictedPos.size(); i++)
+	{
+		predictedPos[i].x += actVelocity.x;
+		predictedPos[i].y += actVelocity.y;
+	}
+
+	if (boxCollider->PredictedCollidesWithLayer(predictedPos, 1))
+	{
+		return;
+	}
 
 	parentObj->MovePosition(actVelocity);
-
-	if (boxCollider)
-	{
-		bool result = boxCollider->CollidesWithLayer(1);
-
-		if (result)
-		{
-			parentObj->SetPosition(parentPos + boxCollider->GetTotalDisplacement());
-			boxCollider->ResetTotalDisplacement();
-		}
-	}
 }
 
 // We feed it velocity, why name the inputs position???

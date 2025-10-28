@@ -247,14 +247,64 @@ bool BoxCollider::CollidesWithLayer(int layer)
 
 	for (auto& curr_Collider : colliderLayers[layer])
 	{
-		if (IsColliding_DIAG(curr_Collider.second))
+		return IsColliding_SAT(curr_Collider.second);
+	}
+
+	return false;
+}
+
+bool BoxCollider::PredictedCollidesWithLayer(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, int layer)
+{
+	resourceManager = GameObjectManager::GetInstance();
+	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
+	std::vector<std::pair<int, int>>& colliderPairs = resourceManager->GetColliderLayerPairs();
+
+	for (auto& curr_Collider : colliderLayers[layer])
+	{
+		if (IsColliding_Simplified(predictedVertices, curr_Collider.second))
 		{
-			IsColliding_DIAG_STATIC(curr_Collider.second);
 			return true;
 		}
 	}
 
 	return false;
+}
+
+bool BoxCollider::IsColliding_Simplified(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other)
+{
+	// Vertices (corner positions) are stored in Top left, Top right, Bottom right, and Bottom left.
+	int topLeftCorner = 0;
+	int bottomRightCorner = 2;
+	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldPositions();
+
+	// Calculate the edges of current collider.
+	float top = predictedVertices[topLeftCorner].y;
+	float bottom = predictedVertices[bottomRightCorner].y;
+	float left = predictedVertices[topLeftCorner].x;
+	float right = predictedVertices[bottomRightCorner].x;
+
+	// Calculate the edges of other collider.
+	float otherTop = otherVertices[topLeftCorner].y;
+	float otherBottom = otherVertices[bottomRightCorner].y;
+	float otherLeft = otherVertices[topLeftCorner].x;
+	float otherRight = otherVertices[bottomRightCorner].x;
+
+	bool yIntersection = false;
+	bool xIntersection = false;
+
+	// Check for y overlaps.
+	if ((bottom >= otherBottom && bottom <= otherTop) || (top >= otherBottom && top <= otherTop))
+	{
+		yIntersection = true;
+	}
+
+	// Check for x overlaps.
+	if ((left >= otherLeft && left <= otherRight) || (right >= otherLeft && right <= otherRight))
+	{
+		xIntersection = true;
+	}
+
+	return yIntersection && xIntersection ? true : false;
 }
 
 bool BoxCollider::CanCollide()
