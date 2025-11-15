@@ -300,7 +300,7 @@ void DirectXUtility::UpdateCollisions()
         {
             for (auto& curr_SecCollider : colliderLayers[colliderPairs[i].second])
             {
-                curr_firstCollider.second.IsColliding_DIAG_STATIC(curr_SecCollider.second);
+                curr_firstCollider.second.IsColliding_SAT(curr_SecCollider.second);
             }
         }
     }
@@ -339,10 +339,6 @@ void DirectXUtility::PrepareCameraObjects(Camera& camObject, ID3D12Device* devic
     DX::ThrowIfFailed(CreateDDSTextureFromFile(device, resourceUpload,
         L"roomtexture.dds",
         camObject.GetPtrRoomTex().ReleaseAndGetAddressOf()));
-
-    // Creates a shading error on all text objects.
-    //CreateShaderResourceView(device, camObject.GetPtrRoomTex().Get(),
-    //    m_resourceDescriptors->GetFirstCpuHandle());
 
     camObject.GetPtrRoomEffect()->SetTexture(m_resourceDescriptors->GetFirstGpuHandle(),
         camObject.GetPtrStates()->LinearClamp());

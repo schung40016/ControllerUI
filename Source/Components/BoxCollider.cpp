@@ -168,9 +168,8 @@ bool BoxCollider::IsColliding_DIAG_STATIC(BoxCollider& other)
 			
 			if (isMovable)
 			{
-				displacementDisplay.x = displacement.x * (shape == 0 ? -1 : 1);
-				displacementDisplay.y = displacement.y * (shape == 0 ? -1 : 1);
-				totalDisplacement += displacementDisplay;
+				totalDisplacement.x = displacement.x * (shape == 0 ? -1 : 1);
+				totalDisplacement.y = displacement.y * (shape == 0 ? -1 : 1);
 			}
 		}
 	}
@@ -183,8 +182,6 @@ bool BoxCollider::IsColliding_SAT_STATIC(BoxCollider& other)
 	BoxCollider* poly2 = &other;
 
 	float overlap = INFINITY;
-
-	displacementDisplay = { 0, 0 };
 
 	for (int shape = 0; shape < 2; shape++)
 	{
@@ -233,8 +230,6 @@ bool BoxCollider::IsColliding_SAT_STATIC(BoxCollider& other)
 		DirectX::SimpleMath::Vector2 r2 = other.GetParent()->GetPosition();
 		DirectX::SimpleMath::Vector2 d = { r2.x - r1.x, r2.y - r1.y };
 		float s = sqrtf(d.x * d.x + d.y * d.y);
-		displacementDisplay.x -= overlap * d.x / s;
-		displacementDisplay.y -= overlap * d.y / s;
 	}
 	return true;
 }
@@ -261,8 +256,12 @@ bool BoxCollider::PredictedCollidesWithLayer(std::vector<DirectX::SimpleMath::Ve
 
 	for (auto& curr_Collider : colliderLayers[layer])
 	{
-		if (IsColliding_Simplified(predictedVertices, curr_Collider.second))
+		if (IsColliding(predictedVertices, curr_Collider.second))
 		{
+			// Calculate the displacement.
+			IsCollidingDisplacement_Simplified(predictedVertices, curr_Collider.second);
+
+			// Prevent object from moving to destination and use displacement instead.
 			return true;
 		}
 	}
@@ -270,18 +269,14 @@ bool BoxCollider::PredictedCollidesWithLayer(std::vector<DirectX::SimpleMath::Ve
 	return false;
 }
 
-bool BoxCollider::IsColliding_Simplified(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other)
+void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other)
 {
 	// Vertices (corner positions) are stored in Top left, Top right, Bottom right, and Bottom left.
 	int topLeftCorner = 0;
 	int bottomRightCorner = 2;
 	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldPositions();
-
-	// Calculate the edges of current collider.
-	float top = predictedVertices[topLeftCorner].y;
-	float bottom = predictedVertices[bottomRightCorner].y;
-	float left = predictedVertices[topLeftCorner].x;
-	float right = predictedVertices[bottomRightCorner].x;
+	std::vector<DirectX::SimpleMath::Vector2> currentEdges = predictedVertices;
+	totalDisplacement = { 0, 0 };
 
 	// Calculate the edges of other collider.
 	float otherTop = otherVertices[topLeftCorner].y;
@@ -289,22 +284,54 @@ bool BoxCollider::IsColliding_Simplified(std::vector<DirectX::SimpleMath::Vector
 	float otherLeft = otherVertices[topLeftCorner].x;
 	float otherRight = otherVertices[bottomRightCorner].x;
 
-	bool yIntersection = false;
-	bool xIntersection = false;
-
-	// Check for y overlaps.
-	if ((bottom >= otherBottom && bottom <= otherTop) || (top >= otherBottom && top <= otherTop))
+	for (int i = 0; i < 2; i++)
 	{
-		yIntersection = true;
-	}
+		// At this point, we already know that the object collides.
+		if (i != 0 && IsColliding(currentEdges, other))
+		{
+			break;
+		}
 
-	// Check for x overlaps.
-	if ((left >= otherLeft && left <= otherRight) || (right >= otherLeft && right <= otherRight))
-	{
-		xIntersection = true;
-	}
+		// Calculate the edges of current collider.
+		float top = currentEdges[topLeftCorner].y;
+		float bottom = currentEdges[bottomRightCorner].y;
+		float left = currentEdges[topLeftCorner].x;
+		float right = currentEdges[bottomRightCorner].x;
 
-	return yIntersection && xIntersection ? true : false;
+		bool isCollidingFromBottom = bottom >= otherBottom && bottom <= otherTop;
+		bool isCollidingFromTop = top >= otherBottom && top <= otherTop;
+		bool isCollidingFromLeft = left >= otherLeft && left <= otherRight;
+		bool isCollidingFromRight = right >= otherLeft && right <= otherRight;
+
+		if (isCollidingFromBottom)
+		{
+			// Shift the object up.
+			totalDisplacement.y += ((otherTop - bottom) + DISPLACEMENTBUFFER);
+		}
+
+		else if (isCollidingFromTop)
+		{
+			// Shift the object down.
+			totalDisplacement.y -= ((otherBottom - top) + DISPLACEMENTBUFFER);
+		}
+
+		else if (isCollidingFromLeft)
+		{
+			// Shift the object right.
+			totalDisplacement.x += ((otherRight - left) + DISPLACEMENTBUFFER);
+		}
+
+		else if (isCollidingFromRight)
+		{
+			// Shift the object left.
+			totalDisplacement.x -= ((otherLeft - right) + DISPLACEMENTBUFFER);
+		}
+
+		for (auto edge : currentEdges)
+		{
+			edge += totalDisplacement;
+		}
+	}
 }
 
 bool BoxCollider::CanCollide()
@@ -334,15 +361,53 @@ void BoxCollider::SetWorldPositions()
 
 DirectX::SimpleMath::Vector2 BoxCollider::GetDisplacement()
 {
-	return displacementDisplay;
-}
-
-DirectX::SimpleMath::Vector2 BoxCollider::GetTotalDisplacement()
-{
 	return totalDisplacement;
 }
 
 void BoxCollider::ResetTotalDisplacement()
 {
 	totalDisplacement = { 0, 0 };
+}
+
+/// <inheritdoc/>
+bool BoxCollider::IsColliding(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other)
+{
+	// Vertices (corner positions) are stored in Top left, Top right, Bottom right, and Bottom left.
+	int topLeftCorner = 0;
+	int bottomRightCorner = 2;
+	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldPositions();
+
+	// Calculate the edges of other collider.
+	float otherTop = otherVertices[topLeftCorner].y;
+	float otherBottom = otherVertices[bottomRightCorner].y;
+	float otherLeft = otherVertices[topLeftCorner].x;
+	float otherRight = otherVertices[bottomRightCorner].x;
+
+	// Calculate the edges of current collider.
+	float top = predictedVertices[topLeftCorner].y;
+	float bottom = predictedVertices[bottomRightCorner].y;
+	float left = predictedVertices[topLeftCorner].x;
+	float right = predictedVertices[bottomRightCorner].x;
+
+	bool isCollidingFromBottom = bottom >= otherBottom && bottom <= otherTop;
+	bool isCollidingFromTop = top >= otherBottom && top <= otherTop;
+	bool isCollidingFromLeft = left >= otherLeft && left <= otherRight;
+	bool isCollidingFromRight = right >= otherLeft && right <= otherRight;
+
+	bool yIntersection = false;
+	bool xIntersection = false;
+
+	// Check for y overlaps.
+	if (isCollidingFromBottom || isCollidingFromTop)
+	{
+		yIntersection = true;
+	}
+
+	// Check for x overlaps.
+	if (isCollidingFromLeft || isCollidingFromRight)
+	{
+		xIntersection = true;
+	}
+
+	return yIntersection && xIntersection ? true : false;
 }

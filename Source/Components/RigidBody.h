@@ -18,7 +18,6 @@ private:
 	DirectX::SimpleMath::Vector2 gravityAcceleration = { 0.f, fAcceleration * 2};
 	DirectX::SimpleMath::Vector2 accumulatedForce = { 0, 0 };
 	DirectX::SimpleMath::Vector2 actVelocity = { 0, 0 };
-	DirectX::SimpleMath::Vector2 totalGoalVelocity = { 0, 0 };
 
 	// Grounded variables.
 	bool grounded, rightGrounded, leftGrounded, topGrounded = false;

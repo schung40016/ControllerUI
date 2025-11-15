@@ -73,7 +73,7 @@ void RigidBody::AddForce(DirectX::SimpleMath::Vector2 inp_force)
 }
 
 // Redo
-void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in regards to the y axis.
+void RigidBody::ApplyForce(float deltaTime)
 {
 	// Apply resistance to the velocity overtime.
 	velocity *= (1.0f - fDamping * deltaTime);
@@ -99,6 +99,9 @@ void RigidBody::ApplyForce(float deltaTime)				// Fix force, it's backwards in r
 
 	if (boxCollider->PredictedCollidesWithLayer(predictedPos, 1))
 	{
+		// Collides displace rigidbody adjacent to the collided object.
+		parentObj->MovePosition(boxCollider->GetDisplacement() + actVelocity);
+
 		return;
 	}
 
@@ -155,5 +158,5 @@ DirectX::SimpleMath::Vector2 RigidBody::GetVelocity() const
 
 DirectX::SimpleMath::Vector2 RigidBody::GetAcceleration() const
 {
-	return totalGoalVelocity;
+	return actVelocity;
 }

@@ -8,12 +8,13 @@ class GameObject;
 
 class BoxCollider : public Component {
 private:
+	static constexpr float DISPLACEMENTBUFFER = 0.0f;
+
 	std::shared_ptr<GameObject> parentObj = nullptr;		// Need for determining the center point origin of our game object.
 	bool canCollide = false;
 	bool isMovable = false;
 	std::vector<DirectX::SimpleMath::Vector2> localVertices = {};	// FOr storing local point positions.
 	std::vector<DirectX::SimpleMath::Vector2> worldVertices = {};	// FOr storing world point positions.
-	DirectX::SimpleMath::Vector2 displacementDisplay = {0, 0};
 	DirectX::SimpleMath::Vector2 totalDisplacement = {0, 0};
 	std::vector<Line> vertexLines = {};
 	class GameObjectManager* resourceManager = nullptr;
@@ -41,7 +42,7 @@ public:
 
 	bool IsColliding_SAT_STATIC(BoxCollider& other);
 
-	bool IsColliding_Simplified(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other);
+	void IsCollidingDisplacement_Simplified(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other);
 
 	bool CanCollide();
 
@@ -51,9 +52,15 @@ public:
 
 	void SetWorldPositions();
 
-	DirectX::SimpleMath::Vector2 GetTotalDisplacement();
-
 	void ResetTotalDisplacement();
+
+	/// <summary>
+	/// Determines if box edges are colliding.
+	/// </summary>
+	/// <param name="predictedVertices"></param>
+	/// <param name="other"></param>
+	/// <returns></returns>
+	bool IsColliding(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other);
 
 	DirectX::SimpleMath::Vector2 GetDisplacement();
 };
