@@ -253,20 +253,22 @@ bool BoxCollider::PredictedCollidesWithLayer(std::vector<DirectX::SimpleMath::Ve
 	resourceManager = GameObjectManager::GetInstance();
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
 	std::vector<std::pair<int, int>>& colliderPairs = resourceManager->GetColliderLayerPairs();
+	bool collides = false;
+	totalDisplacement = { D3D12_FLOAT32_MAX, D3D12_FLOAT32_MAX };
 
 	for (auto& curr_Collider : colliderLayers[layer])
 	{
-		if (IsColliding(predictedVertices, curr_Collider.second))
+		bool currentCollides = IsColliding(predictedVertices, curr_Collider.second);
+
+		if (currentCollides)
 		{
 			// Calculate the displacement.
 			IsCollidingDisplacement_Simplified(predictedVertices, curr_Collider.second);
-
-			// Prevent object from moving to destination and use displacement instead.
-			return true;
+			collides = true;
 		}
 	}
 
-	return false;
+	return collides;
 }
 
 void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other)
@@ -275,64 +277,146 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 	int topLeftCorner = 0;
 	int bottomRightCorner = 2;
 	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldPositions();
-	std::vector<DirectX::SimpleMath::Vector2> currentEdges = predictedVertices;
 	totalDisplacement = { 0, 0 };
 
-	// Calculate the edges of other collider.
-	float otherTop = otherVertices[topLeftCorner].y;
-	float otherBottom = otherVertices[bottomRightCorner].y;
-	float otherLeft = otherVertices[topLeftCorner].x;
-	float otherRight = otherVertices[bottomRightCorner].x;
-
-	for (int i = 0; i < 2; i++)
+	std::vector<float> currentEdges		// top, bottom, left, right.
 	{
-		// At this point, we already know that the object collides.
-		if (i != 0 && IsColliding(currentEdges, other))
+		predictedVertices[topLeftCorner].y,
+		predictedVertices[bottomRightCorner].y,
+		predictedVertices[topLeftCorner].x,
+		predictedVertices[bottomRightCorner].x
+	};
+
+	// Calculate the edges of other collider.
+	std::vector<float> otherEdges		// top, bottom, left, right.
+	{
+		otherVertices[topLeftCorner].y,
+		otherVertices[bottomRightCorner].y,
+		otherVertices[topLeftCorner].x,
+		otherVertices[bottomRightCorner].x
+	};
+
+	float minDisplacement = INT_MAX;
+	int minDimension = 0;
+	float currentDisplacement = 0;
+
+	for (int i = 0; i < 4; i++)
+	{
+		// Calculate the edges of the current collider.
+		bool isCollidingFromEdge = otherEdges[floor(i / 2) + 1] <= currentEdges[i] && currentEdges[i] <= otherEdges[floor(i / 2) * 3];
+
+		if (isCollidingFromEdge)
 		{
-			break;
-		}
+			float otherEdge = i % 2 == 0 ? i + 1 : i - 1;
 
-		// Calculate the edges of current collider.
-		float top = currentEdges[topLeftCorner].y;
-		float bottom = currentEdges[bottomRightCorner].y;
-		float left = currentEdges[topLeftCorner].x;
-		float right = currentEdges[bottomRightCorner].x;
-
-		bool isCollidingFromBottom = bottom >= otherBottom && bottom <= otherTop;
-		bool isCollidingFromTop = top >= otherBottom && top <= otherTop;
-		bool isCollidingFromLeft = left >= otherLeft && left <= otherRight;
-		bool isCollidingFromRight = right >= otherLeft && right <= otherRight;
-
-		if (isCollidingFromBottom)
-		{
-			// Shift the object up.
-			totalDisplacement.y += ((otherTop - bottom) + DISPLACEMENTBUFFER);
-		}
-
-		else if (isCollidingFromTop)
-		{
 			// Shift the object down.
-			totalDisplacement.y -= ((otherBottom - top) + DISPLACEMENTBUFFER);
-		}
+			currentDisplacement = ((otherEdges[otherEdge] - currentEdges[i]) + DISPLACEMENTBUFFER);
 
-		else if (isCollidingFromLeft)
-		{
-			// Shift the object right.
-			totalDisplacement.x += ((otherRight - left) + DISPLACEMENTBUFFER);
-		}
-
-		else if (isCollidingFromRight)
-		{
-			// Shift the object left.
-			totalDisplacement.x -= ((otherLeft - right) + DISPLACEMENTBUFFER);
-		}
-
-		for (auto edge : currentEdges)
-		{
-			edge += totalDisplacement;
+			if (abs(currentDisplacement) < abs(minDisplacement))
+			{
+				minDisplacement = currentDisplacement;
+				minDimension = floor(i / 2) == 0 ? 1 : 0;
+			}
 		}
 	}
+
+	// After determining the minimal displacement to move away from the current prop. Compare against the final.
+	if (minDimension == 0)
+	{
+		totalDisplacement.x = -1 * abs(totalDisplacement.x) > -1 * abs(minDisplacement) ? minDisplacement : totalDisplacement.x;
+	}
+	else
+	{
+		totalDisplacement.y = -1 * abs(totalDisplacement.y) > -1 * abs(minDisplacement) ? minDisplacement : totalDisplacement.y;
+	}
 }
+
+//void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other)
+//{
+//	// Vertices (corner positions) are stored in Top left, Top right, Bottom right, and Bottom left.
+//	int topLeftCorner = 0;
+//	int bottomRightCorner = 2;
+//	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldPositions();
+//	std::vector<DirectX::SimpleMath::Vector2> currentEdges = predictedVertices;
+//	totalDisplacement = { 0, 0 };
+//
+//	// Calculate the edges of other collider.
+//	float otherTop = otherVertices[topLeftCorner].y;
+//	float otherBottom = otherVertices[bottomRightCorner].y;
+//	float otherLeft = otherVertices[topLeftCorner].x;
+//	float otherRight = otherVertices[bottomRightCorner].x;
+//
+//	float minDisplacement = INT_MAX;
+//	int minDimension = 0;
+//	float currentDisplacement = 0;
+//
+//	for (int i = 0; i < 1; i++)
+//	{
+//		// Calculate the edges of current collider.
+//		float top = currentEdges[topLeftCorner].y;
+//		float bottom = currentEdges[bottomRightCorner].y;
+//		float left = currentEdges[topLeftCorner].x;
+//		float right = currentEdges[bottomRightCorner].x;
+//
+//		bool isCollidingFromTop = top >= otherBottom && top <= otherTop;				// top <= otherTop && top >= otherBottom
+//		bool isCollidingFromBottom = bottom >= otherBottom && bottom <= otherTop;		// bottom <= otherTop && bottom >= otherBottom
+//		bool isCollidingFromLeft = left >= otherLeft && left <= otherRight;
+//		bool isCollidingFromRight = right >= otherLeft && right <= otherRight;
+//
+//		if (isCollidingFromTop)
+//		{
+//			// Shift the object down.
+//			currentDisplacement = ((otherBottom - top) + DISPLACEMENTBUFFER);
+//
+//			if (abs(currentDisplacement) < minDisplacement)
+//			{
+//				minDisplacement = currentDisplacement;
+//				minDimension = 1;
+//			}
+//		}
+//
+//		if (isCollidingFromBottom)
+//		{
+//			// Shift the object up.
+//			currentDisplacement = ((otherTop - bottom) + DISPLACEMENTBUFFER);
+//
+//			if (abs(currentDisplacement) < minDisplacement)
+//			{
+//				minDisplacement = currentDisplacement;
+//				minDimension = 1;
+//			}
+//		}
+//
+//		if (isCollidingFromLeft)
+//		{
+//			// Shift the object right.
+//			currentDisplacement = ((otherRight - left) + DISPLACEMENTBUFFER);
+//
+//			if (abs(currentDisplacement) < minDisplacement)
+//			{
+//				minDisplacement = currentDisplacement;
+//				minDimension = 0;
+//			}
+//		}
+//
+//		if (isCollidingFromRight)
+//		{
+//			// Shift the object left.
+//			currentDisplacement = ((otherLeft - right) + DISPLACEMENTBUFFER);
+//
+//			if (abs(currentDisplacement) < minDisplacement)
+//			{
+//				minDisplacement = currentDisplacement;
+//				minDimension = 0;
+//			}
+//		}
+//	}
+//
+//	if (minDimension == 0)
+//		totalDisplacement.x = minDisplacement;
+//	else
+//		totalDisplacement.y = minDisplacement;
+//}
 
 bool BoxCollider::CanCollide()
 {

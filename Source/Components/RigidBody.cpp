@@ -34,25 +34,17 @@ void RigidBody::ApplyGravity(float deltaTime)			// unsigned int, change deltaTim
 
 void RigidBody::StopVelocity()
 {
-	if ((grounded && actVelocity.y < 0))
-	{
-		//actVelocity.y = 0;
-		//velocity.y = 0;
-	}
-
 	if ((rightGrounded && actVelocity.x > 0) || (leftGrounded && actVelocity.x < 0))
 	{
 		actVelocity.x = 0;
 		velocity.x = 0;
 	}
 
-
 	// Instead of doing this, alter collision so that it immediately stops you instead of shift player to the right.
 	if (topGrounded && actVelocity.y > 0)
 	{
-		//actVelocity.y = 0;
-		//velocity.y = 0;
 		actVelocity.x = 0;
+		velocity.y = 0;
 	}
 }
 
@@ -139,7 +131,7 @@ void RigidBody::CheckIfGrounded()
 
 	leftGrounded = Raycast::CastRaycast(parentPos, { -1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
 	rightGrounded = Raycast::CastRaycast(parentPos, { 1, 0 }, EnumData::ColliderLayers::Ground, rayCastHorizontalLength);
-	bool topGroundedLeftCheck = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
+	bool topGroundedLeftCheck = Raycast::CastRaycast(leftEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
 	bool topGroundedRightCheck = Raycast::CastRaycast(rightEdge, { 0, 1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);
 
 	topGrounded = topGroundedLeftCheck || topGroundedRightCheck;
