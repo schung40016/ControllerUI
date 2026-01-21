@@ -26,7 +26,9 @@ public:
 
 	BoxCollider(GameObject& inp_parentObj, std::vector<DirectX::SimpleMath::Vector2>& inp_vertices, bool inp_isMovable);
 
-	std::vector<DirectX::SimpleMath::Vector2> GetWorldPositions();
+	std::vector<DirectX::SimpleMath::Vector2> GetLocalVertices();
+
+	std::vector<DirectX::SimpleMath::Vector2> GetWorldVertices();
 
 	std::shared_ptr<GameObject> GetParent() const;
 

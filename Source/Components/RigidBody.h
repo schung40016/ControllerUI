@@ -18,11 +18,11 @@ private:
 	DirectX::SimpleMath::Vector2 gravityAcceleration = { 0.f, fAcceleration * 2};
 	DirectX::SimpleMath::Vector2 accumulatedForce = { 0, 0 };
 	DirectX::SimpleMath::Vector2 actVelocity = { 0, 0 };
+	std::vector<DirectX::SimpleMath::Vector2> predictedPos = {};
 
 	// Grounded variables.
 	bool grounded, rightGrounded, leftGrounded, topGrounded = false;
 	float isGroundedErrorMargin = 0.1f;
-	DirectX::SimpleMath::Vector2 prevPosition = { 0, 0 };
 
 public:
 	RigidBody();
@@ -53,4 +53,6 @@ public:
 	DirectX::SimpleMath::Vector2 GetVelocity() const;
 
 	DirectX::SimpleMath::Vector2 GetAcceleration() const;
+
+	std::vector<DirectX::SimpleMath::Vector2> GetPredictedPosition() const;
 };

@@ -2,6 +2,7 @@
 #include "BoxCollider.h";
 #include "Source/Managers/GameObjectManager.h";
 #include "Source/Game/GameObject.h"
+#include "Source/UI_Objects/WireFrame.h"
 
 BoxCollider::BoxCollider()
 {
@@ -14,14 +15,7 @@ BoxCollider::BoxCollider(GameObject& inp_parentObj, std::vector<DirectX::SimpleM
 	worldVertices = inp_vertices;
 	isMovable = inp_isMovable;
 
-	std::string parentName = parentObj->GetName() + " - ColliderLine ";
-
-	for (int i = 0; i < inp_vertices.size(); ++i)
-	{
-		std::string colliderName = parentName + std::to_string(i);
-
-		vertexLines.emplace_back(Line(colliderName, Colors::DeepPink, inp_parentObj, inp_vertices[i], inp_vertices[(i + 1) % inp_vertices.size()], 1.0f, false));
-	}
+	WireFrame::SetWireFrame(*parentObj, "ColliderFrame", inp_vertices, Colors::Red);
 }
 
 void BoxCollider::Update(float deltaTime)
@@ -276,7 +270,7 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 	// Vertices (corner positions) are stored in Top left, Top right, Bottom right, and Bottom left.
 	int topLeftCorner = 0;
 	int bottomRightCorner = 2;
-	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldPositions();
+	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldVertices();
 	totalDisplacement = { 0, 0 };
 
 	std::vector<float> currentEdges		// top, bottom, left, right.
@@ -302,6 +296,7 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 
 	for (int i = 0; i < 4; i++)
 	{
+		// Ghosting. 
 		// Calculate the edges of the current collider.
 		bool isCollidingFromEdge = otherEdges[floor(i / 2) + 1] <= currentEdges[i] && currentEdges[i] <= otherEdges[floor(i / 2) * 3];
 
@@ -331,93 +326,6 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 	}
 }
 
-//void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, BoxCollider& other)
-//{
-//	// Vertices (corner positions) are stored in Top left, Top right, Bottom right, and Bottom left.
-//	int topLeftCorner = 0;
-//	int bottomRightCorner = 2;
-//	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldPositions();
-//	std::vector<DirectX::SimpleMath::Vector2> currentEdges = predictedVertices;
-//	totalDisplacement = { 0, 0 };
-//
-//	// Calculate the edges of other collider.
-//	float otherTop = otherVertices[topLeftCorner].y;
-//	float otherBottom = otherVertices[bottomRightCorner].y;
-//	float otherLeft = otherVertices[topLeftCorner].x;
-//	float otherRight = otherVertices[bottomRightCorner].x;
-//
-//	float minDisplacement = INT_MAX;
-//	int minDimension = 0;
-//	float currentDisplacement = 0;
-//
-//	for (int i = 0; i < 1; i++)
-//	{
-//		// Calculate the edges of current collider.
-//		float top = currentEdges[topLeftCorner].y;
-//		float bottom = currentEdges[bottomRightCorner].y;
-//		float left = currentEdges[topLeftCorner].x;
-//		float right = currentEdges[bottomRightCorner].x;
-//
-//		bool isCollidingFromTop = top >= otherBottom && top <= otherTop;				// top <= otherTop && top >= otherBottom
-//		bool isCollidingFromBottom = bottom >= otherBottom && bottom <= otherTop;		// bottom <= otherTop && bottom >= otherBottom
-//		bool isCollidingFromLeft = left >= otherLeft && left <= otherRight;
-//		bool isCollidingFromRight = right >= otherLeft && right <= otherRight;
-//
-//		if (isCollidingFromTop)
-//		{
-//			// Shift the object down.
-//			currentDisplacement = ((otherBottom - top) + DISPLACEMENTBUFFER);
-//
-//			if (abs(currentDisplacement) < minDisplacement)
-//			{
-//				minDisplacement = currentDisplacement;
-//				minDimension = 1;
-//			}
-//		}
-//
-//		if (isCollidingFromBottom)
-//		{
-//			// Shift the object up.
-//			currentDisplacement = ((otherTop - bottom) + DISPLACEMENTBUFFER);
-//
-//			if (abs(currentDisplacement) < minDisplacement)
-//			{
-//				minDisplacement = currentDisplacement;
-//				minDimension = 1;
-//			}
-//		}
-//
-//		if (isCollidingFromLeft)
-//		{
-//			// Shift the object right.
-//			currentDisplacement = ((otherRight - left) + DISPLACEMENTBUFFER);
-//
-//			if (abs(currentDisplacement) < minDisplacement)
-//			{
-//				minDisplacement = currentDisplacement;
-//				minDimension = 0;
-//			}
-//		}
-//
-//		if (isCollidingFromRight)
-//		{
-//			// Shift the object left.
-//			currentDisplacement = ((otherLeft - right) + DISPLACEMENTBUFFER);
-//
-//			if (abs(currentDisplacement) < minDisplacement)
-//			{
-//				minDisplacement = currentDisplacement;
-//				minDimension = 0;
-//			}
-//		}
-//	}
-//
-//	if (minDimension == 0)
-//		totalDisplacement.x = minDisplacement;
-//	else
-//		totalDisplacement.y = minDisplacement;
-//}
-
 bool BoxCollider::CanCollide()
 {
 	return canCollide;
@@ -428,9 +336,14 @@ std::shared_ptr<GameObject> BoxCollider::GetParent() const
 	return parentObj;
 }
 
-std::vector<DirectX::SimpleMath::Vector2> BoxCollider::GetWorldPositions()
+std::vector<DirectX::SimpleMath::Vector2> BoxCollider::GetWorldVertices()
 {
 	return worldVertices;
+}
+
+std::vector<DirectX::SimpleMath::Vector2> BoxCollider::GetLocalVertices()
+{
+	return localVertices;
 }
 
 void BoxCollider::SetWorldPositions()
@@ -459,7 +372,7 @@ bool BoxCollider::IsColliding(std::vector<DirectX::SimpleMath::Vector2>& predict
 	// Vertices (corner positions) are stored in Top left, Top right, Bottom right, and Bottom left.
 	int topLeftCorner = 0;
 	int bottomRightCorner = 2;
-	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldPositions();
+	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldVertices();
 
 	// Calculate the edges of other collider.
 	float otherTop = otherVertices[topLeftCorner].y;

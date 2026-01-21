@@ -13,12 +13,14 @@ private:
 	DirectX::SimpleMath::Vector2 point1 = { 0.f, 0.f };
 	DirectX::SimpleMath::Vector2 point2 = { 0.f, 0.f }; // 2nd point.
 	float lineSizeMultiplier = 30.f;
+	int layer = 0;
+
 public:
 	Line();
 
 	Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic = false);
 
-	Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic = false);
+	Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic = false, int inp_layer = 0);
 
 	void DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch, const DirectX::SimpleMath::Vector2& camOffset) const;
 

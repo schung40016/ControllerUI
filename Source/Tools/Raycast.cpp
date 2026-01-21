@@ -12,7 +12,7 @@ bool Raycast::CastRaycast(DirectX::SimpleMath::Vector2 origin, DirectX::SimpleMa
 
 	for (auto& curr_collider : currColliderObjectLayer)
 	{
-		std::vector<DirectX::SimpleMath::Vector2> currentColliderWorld = curr_collider.second.GetWorldPositions();
+		std::vector<DirectX::SimpleMath::Vector2> currentColliderWorld = curr_collider.second.GetWorldVertices();
 
 		// against the other polygon's edges.
 		for (int q = 0; q < currentColliderWorld.size(); q++)

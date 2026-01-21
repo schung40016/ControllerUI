@@ -61,8 +61,7 @@ const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 		DirectX::SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPosition();
 		float calcX = gObj_position.x * scale + parent_pos.x;
 		float calcY = gObj_position.y * scale + parent_pos.y;
-		DirectX::SimpleMath::Vector2 temp = { calcX, calcY };
-		return temp;
+		return { calcX, calcY };
 	}
 
 	return gObj_position;
@@ -82,9 +81,7 @@ const DirectX::SimpleMath::Vector2 GameObject::GetRenderPosition() const			// Ge
 	//	return temp;
 	//}
 	DirectX::SimpleMath::Vector2 temp = GetPosition();
-	temp = DirectX::SimpleMath::Vector2(temp.x, fRenderOffset - temp.y);
-
-	return temp;
+	return DirectX::SimpleMath::Vector2(temp.x, fRenderOffset - temp.y);
 }
 
 const std::shared_ptr<GameObject> GameObject::GetParentObj() const
@@ -171,5 +168,5 @@ void GameObject::MovePosition(const DirectX::SimpleMath::Vector2 inp_position)
 
 void GameObject::CalculatePositionActual(DirectX::SimpleMath::Vector2 inp_position)
 {
-	gObj_positionActual = { inp_position.x, 975.f - inp_position.y };
+	gObj_positionActual = { inp_position.x, fRenderOffset - inp_position.y };
 }

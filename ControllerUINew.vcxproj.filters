@@ -122,6 +122,7 @@
     <ClInclude Include="Source\Components\AnimationController.h" />
     <ClInclude Include="Source\Managers\SpriteManager.h" />
     <ClInclude Include="ExternalLibraries\json.hpp" />
+    <ClInclude Include="Source\UI_Objects\WireFrame.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="Source\CustomObjects\Sprite.cpp" />
     <ClCompile Include="Source\Managers\SpriteManager.cpp" />
     <ClCompile Include="Source\Components\AnimationController.cpp" />
+    <ClCompile Include="Source\UI_Objects\WireFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

@@ -19,7 +19,8 @@ Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_par
     resourceManager->AddLnObj(id, *this);
 }
 
-Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic)
+Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic, int inp_layer)
+    : shapeColor(inp_shapeColor), layer(inp_layer)
 {
     SetName(id);
     SetParent(inp_parentObj);
@@ -44,8 +45,13 @@ void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPo
     float calcPt2X = (pos.x - point1.x) + point2.x;
     float calcPt2Y = (pos.y + point1.y) - point2.y;
 
-    DirectX::DX12::VertexPositionColor vec1(Vector3(pos.x, pos.y, 0.f), shapeColor);
-    DirectX::DX12::VertexPositionColor vec2(Vector3(calcPt2X, calcPt2Y, 0.f), shapeColor);
+    if (GetName().find("player") != std::string::npos)
+    {
+        int hi = 1;
+    }
+
+    DirectX::DX12::VertexPositionColor vec1(Vector3(pos.x, pos.y, layer), shapeColor);
+    DirectX::DX12::VertexPositionColor vec2(Vector3(calcPt2X, calcPt2Y, layer), shapeColor);
     m_batch->DrawLine(vec1, vec2);
 }
 

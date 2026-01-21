@@ -4,6 +4,7 @@
 #include "Source/Tools/Raycast.h"
 #include "BoxCollider.h"
 #include "vector"
+#include "Source/UI_Objects/WireFrame.h"
 
 RigidBody::RigidBody()
 {}
@@ -81,13 +82,20 @@ void RigidBody::ApplyForce(float deltaTime)
 
 	// Prevent parent object from moving to final location if collision is detected.
 	BoxCollider* boxCollider = parentObj->GetComponent<BoxCollider>();
-	std::vector<DirectX::SimpleMath::Vector2> predictedPos = boxCollider->GetWorldPositions();
-
+	predictedPos = boxCollider->GetWorldVertices();
+	std::vector<DirectX::SimpleMath::Vector2> wireFramePredPos = boxCollider->GetLocalVertices();
+	
+	// Debugger: highlight edge thats colliding. Draw the prediction position.
 	for (int i = 0; i < predictedPos.size(); i++)
 	{
 		predictedPos[i].x += actVelocity.x;
 		predictedPos[i].y += actVelocity.y;
+	
+		wireFramePredPos[i].x += actVelocity.x;
+		wireFramePredPos[i].y += actVelocity.y;
 	}
+	
+	WireFrame::SetWireFrame(*parentObj, "RigidFrame", wireFramePredPos, Colors::DarkMagenta, 1);
 
 	if (boxCollider->PredictedCollidesWithLayer(predictedPos, 1))
 	{
@@ -151,4 +159,9 @@ DirectX::SimpleMath::Vector2 RigidBody::GetVelocity() const
 DirectX::SimpleMath::Vector2 RigidBody::GetAcceleration() const
 {
 	return actVelocity;
+}
+
+std::vector<DirectX::SimpleMath::Vector2> RigidBody::GetPredictedPosition() const
+{
+	return predictedPos;
 }
