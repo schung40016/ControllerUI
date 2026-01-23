@@ -15,7 +15,7 @@ BoxCollider::BoxCollider(GameObject& inp_parentObj, std::vector<DirectX::SimpleM
 	worldVertices = inp_vertices;
 	isMovable = inp_isMovable;
 
-	WireFrame::SetWireFrame(*parentObj, "ColliderFrame", inp_vertices, Colors::Red);
+	WireFrame::SetWireFrame(*parentObj, std::string(BoxCollider::COLLIDERNAME), inp_vertices, Colors::Red);
 }
 
 void BoxCollider::Update(float deltaTime)
@@ -307,10 +307,18 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 			// Shift the object down.
 			currentDisplacement = ((otherEdges[otherEdge] - currentEdges[i]) + DISPLACEMENTBUFFER);
 
+			int highlightedEdgeIndex = i % 3 == 0 ? i / 3 : i + 1;		// Fix the indexing, so that math is not constantly needed.
+
 			if (abs(currentDisplacement) < abs(minDisplacement))
 			{
 				minDisplacement = currentDisplacement;
 				minDimension = floor(i / 2) == 0 ? 1 : 0;
+				
+				WireFrame::SetEdgeColor(*parentObj, std::string(BoxCollider::COLLIDERNAME), Colors::Green, highlightedEdgeIndex);
+			}
+			else
+			{
+				WireFrame::SetEdgeColor(*parentObj, std::string(BoxCollider::COLLIDERNAME), Colors::Red, highlightedEdgeIndex);
 			}
 		}
 	}

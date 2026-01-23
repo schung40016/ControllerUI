@@ -9,6 +9,7 @@ class GameObject;
 class BoxCollider : public Component {
 private:
 	static constexpr float DISPLACEMENTBUFFER = 0.0f;
+	static inline constexpr std::string_view COLLIDERNAME = "ColliderFrame";
 
 	std::shared_ptr<GameObject> parentObj = nullptr;		// Need for determining the center point origin of our game object.
 	bool canCollide = false;

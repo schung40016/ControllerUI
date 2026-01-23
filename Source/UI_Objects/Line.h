@@ -9,7 +9,6 @@ using namespace DirectX::SimpleMath;
 class Line : public UIObject
 {
 private:
-	DirectX::XMVECTOR shapeColor = DirectX::Colors::Black;
 	DirectX::SimpleMath::Vector2 point1 = { 0.f, 0.f };
 	DirectX::SimpleMath::Vector2 point2 = { 0.f, 0.f }; // 2nd point.
 	float lineSizeMultiplier = 30.f;
