@@ -97,11 +97,12 @@ void RigidBody::ApplyForce(float deltaTime)
 	
 	WireFrame::SetWireFrame(*parentObj, "RigidFrame", wireFramePredPos, Colors::DarkMagenta, 1);
 
+	boxCollider->ResetTotalDisplacement();
+
 	if (boxCollider->PredictedCollidesWithLayer(predictedPos, 1))
 	{
 		// Collides displace rigidbody adjacent to the collided object.
 		parentObj->MovePosition(boxCollider->GetDisplacement() + actVelocity);
-
 		return;
 	}
 

@@ -248,7 +248,6 @@ bool BoxCollider::PredictedCollidesWithLayer(std::vector<DirectX::SimpleMath::Ve
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
 	std::vector<std::pair<int, int>>& colliderPairs = resourceManager->GetColliderLayerPairs();
 	bool collides = false;
-	totalDisplacement = { D3D12_FLOAT32_MAX, D3D12_FLOAT32_MAX };
 
 	for (auto& curr_Collider : colliderLayers[layer])
 	{
@@ -262,6 +261,14 @@ bool BoxCollider::PredictedCollidesWithLayer(std::vector<DirectX::SimpleMath::Ve
 		}
 	}
 
+	if (!collides)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			WireFrame::SetEdgeColor(*parentObj, std::string(BoxCollider::COLLIDERNAME), Colors::Red, i);
+		}
+	}
+
 	return collides;
 }
 
@@ -271,7 +278,6 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 	int topLeftCorner = 0;
 	int bottomRightCorner = 2;
 	std::vector<DirectX::SimpleMath::Vector2> otherVertices = other.GetWorldVertices();
-	totalDisplacement = { 0, 0 };
 
 	std::vector<float> currentEdges		// top, bottom, left, right.
 	{
@@ -292,8 +298,10 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 
 	float minDisplacement = INT_MAX;
 	int minDimension = 0;
+	int minEdge = 0;
 	float currentDisplacement = 0;
 
+	// Fix the indexing, so that math is not constantly needed.
 	for (int i = 0; i < 4; i++)
 	{
 		// Ghosting. 
@@ -304,24 +312,21 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 		{
 			float otherEdge = i % 2 == 0 ? i + 1 : i - 1;
 
-			// Shift the object down.
 			currentDisplacement = ((otherEdges[otherEdge] - currentEdges[i]) + DISPLACEMENTBUFFER);
 
-			int highlightedEdgeIndex = i % 3 == 0 ? i / 3 : i + 1;		// Fix the indexing, so that math is not constantly needed.
+			int highlightedEdgeIndex = i % 3 == 0 ? i / 3 : i + 1;
 
-			if (abs(currentDisplacement) < abs(minDisplacement))
+			if (abs(currentDisplacement) < abs(minDisplacement))	/// maybe instead of ovwrwriting the displacement, we can total it up. 
 			{
 				minDisplacement = currentDisplacement;
 				minDimension = floor(i / 2) == 0 ? 1 : 0;
-				
-				WireFrame::SetEdgeColor(*parentObj, std::string(BoxCollider::COLLIDERNAME), Colors::Green, highlightedEdgeIndex);
-			}
-			else
-			{
-				WireFrame::SetEdgeColor(*parentObj, std::string(BoxCollider::COLLIDERNAME), Colors::Red, highlightedEdgeIndex);
+
+				minEdge = highlightedEdgeIndex;
 			}
 		}
 	}
+
+	WireFrame::SetEdgeColor(*parentObj, std::string(BoxCollider::COLLIDERNAME), Colors::Green, minEdge);
 
 	// After determining the minimal displacement to move away from the current prop. Compare against the final.
 	if (minDimension == 0)
