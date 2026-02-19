@@ -301,10 +301,8 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 	int minEdge = 0;
 	float currentDisplacement = 0;
 
-	// Fix the indexing, so that math is not constantly needed.
 	for (int i = 0; i < 4; i++)
 	{
-		// Ghosting. 
 		// Calculate the edges of the current collider.
 		bool isCollidingFromEdge = otherEdges[floor(i / 2) + 1] <= currentEdges[i] && currentEdges[i] <= otherEdges[floor(i / 2) * 3];
 
@@ -316,7 +314,7 @@ void BoxCollider::IsCollidingDisplacement_Simplified(std::vector<DirectX::Simple
 
 			int highlightedEdgeIndex = i % 3 == 0 ? i / 3 : i + 1;
 
-			if (abs(currentDisplacement) < abs(minDisplacement))	/// maybe instead of ovwrwriting the displacement, we can total it up. 
+			if (abs(currentDisplacement) < abs(minDisplacement))
 			{
 				minDisplacement = currentDisplacement;
 				minDimension = floor(i / 2) == 0 ? 1 : 0;
