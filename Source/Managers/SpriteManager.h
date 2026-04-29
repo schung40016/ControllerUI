@@ -9,7 +9,6 @@ class SpriteManager {
 private:
 	std::string id = "";
 	std::unordered_map<std::string, std::vector<Sprite>> sprites = {};
-	GameObjectManager* resourceManager;
 
 public:
 	SpriteManager();

@@ -6,10 +6,13 @@
 
 BoxCollider::BoxCollider()
 {
+	resourceManager = GameObjectManager::GetInstance();
 }
 
 BoxCollider::BoxCollider(GameObject& inp_parentObj, std::vector<DirectX::SimpleMath::Vector2>& inp_vertices, bool inp_isMovable)
 {
+	resourceManager = GameObjectManager::GetInstance();
+
 	parentObj = std::shared_ptr<GameObject>(&inp_parentObj, [](GameObject*) {});
 	localVertices = inp_vertices;
 	worldVertices = inp_vertices;
@@ -230,7 +233,6 @@ bool BoxCollider::IsColliding_SAT_STATIC(BoxCollider& other)
 
 bool BoxCollider::CollidesWithLayer(int layer)
 {
-	resourceManager = GameObjectManager::GetInstance();
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
 	std::vector<std::pair<int, int>>& colliderPairs = resourceManager->GetColliderLayerPairs();
 
@@ -244,7 +246,6 @@ bool BoxCollider::CollidesWithLayer(int layer)
 
 bool BoxCollider::PredictedCollidesWithLayer(std::vector<DirectX::SimpleMath::Vector2>& predictedVertices, int layer)
 {
-	resourceManager = GameObjectManager::GetInstance();
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
 	std::vector<std::pair<int, int>>& colliderPairs = resourceManager->GetColliderLayerPairs();
 	bool collides = false;

@@ -12,12 +12,11 @@
 
 Player::Player()
 {
-	resourceManager = GameObjectManager::GetInstance();
 }
 
 Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::Vector2 inp_position, float inp_width, float inp_length)
 {
-	resourceManager = GameObjectManager::GetInstance();
+	GameObjectManager* resourceManager = GameObjectManager::GetInstance();
 	sPlayerName = inp_playerName;
 	fSizeMultiplier = inp_size;
 

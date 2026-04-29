@@ -7,13 +7,12 @@
 
 Box::Box()
 {
-	resourceManager = GameObjectManager::GetInstance();
 }
 
 Box::Box(float size, std::string boxName, DirectX::SimpleMath::Vector2 position, float width, float length, bool isColliding)
 	: sBoxName(boxName), v2Position(position), fWidth(width), fLength(length), bIsColliding(isColliding)
 {
-	resourceManager = GameObjectManager::GetInstance();
+	GameObjectManager* resourceManager = GameObjectManager::GetInstance();
 	sBoxName = boxName;
 	fSizeMultiplier = size;
 

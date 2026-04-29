@@ -4,8 +4,7 @@
 
 class Player 
 {
-private: 
-	class GameObjectManager* resourceManager = nullptr;
+private:
 	std::string sPlayerName = "";
 	float fSizeMultiplier = 975.f;
 

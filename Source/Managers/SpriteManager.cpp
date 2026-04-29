@@ -5,12 +5,11 @@
 
 SpriteManager::SpriteManager()
 {
-	resourceManager = GameObjectManager::GetInstance();
 }
 
 SpriteManager::SpriteManager(std::string inp_id, std::unordered_map<std::string, std::vector<Sprite>> inp_sprites)
 {
-	resourceManager = GameObjectManager::GetInstance();
+	GameObjectManager* resourceManager = GameObjectManager::GetInstance();
 	id = inp_id + "_SpriteManager";
 	sprites = inp_sprites;
 	resourceManager->AddSpriteManager(id, *this);

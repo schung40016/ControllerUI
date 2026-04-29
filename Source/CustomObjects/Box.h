@@ -5,8 +5,6 @@
 class Box
 {
 private:
-	class GameObjectManager* resourceManager = nullptr;
-
 	std::string sBoxName = "";
 	DirectX::SimpleMath::Vector2 v2Position = { 0, 0 };
 	float fWidth = 0.f;

@@ -7,12 +7,11 @@
 
 Controller::Controller()
 {
-    resourceManager = GameObjectManager::GetInstance();
 }
 
 Controller::Controller(float inp_size, std::string inp_controllerName, DirectX::SimpleMath::Vector2 inp_position)
 {
-    resourceManager = GameObjectManager::GetInstance();
+    GameObjectManager* resourceManager = GameObjectManager::GetInstance();
     sControllerName = inp_controllerName;
     fSizeMultiplier = inp_size;
 

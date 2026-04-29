@@ -8,7 +8,6 @@
 class Controller
 {
 private:
-    class GameObjectManager* resourceManager = nullptr;
     std::string sControllerName = "";
     float fSizeMultiplier = 975.f;
 
