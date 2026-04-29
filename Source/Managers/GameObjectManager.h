@@ -4,6 +4,7 @@
 #include "unordered_map"
 #include "Source/Components/BoxCollider.h"
 #include "Source/UI_Objects/Line.h"
+#include "Source/CustomObjects/Box.h"
 
 class GameObject;
 class Image;
@@ -33,6 +34,7 @@ private:
 	std::unordered_map<std::string, Line> lnObjBank = {};
 	std::unordered_map<std::string, Quad> quadObjBank = {};
 	std::unordered_map<std::string, SpriteManager> spriteManagerBank = {};
+	std::unordered_map<std::string, Box> boxBank = {};
 
 	// Components.
 	std::unordered_map<std::string, PlayerController> controllerBank = {};
@@ -79,6 +81,8 @@ public:
 
 	std::unordered_map<std::string, AnimationController>& GetAnimationControllerBank();
 
+	std::unordered_map<std::string, Box>& GetBoxBank();
+
 	GameObject& GetGameObj(const std::string id);
 
 	Image& GetImgObj(const std::string id);
@@ -104,6 +108,8 @@ public:
 	SpriteManager& GetSpriteManager(const std::string id);
 
 	AnimationController& GetAnimationController(const std::string id);
+
+	Box& GetBox(const std::string id);
 
 	// Adders.
 	void AddGameObj(std::string id, const GameObject& inp_gameObject);
@@ -135,6 +141,8 @@ public:
 	void AddSpriteManager(std::string id, const SpriteManager& inp_spriteManager);
 
 	void AddAnimationController(std::string id, const AnimationController& inp_animationController);
+
+	void AddBox(std::string id, const Box& inp_box);
 
 	// Destructor
 	~GameObjectManager();

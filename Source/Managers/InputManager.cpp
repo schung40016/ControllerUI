@@ -7,6 +7,8 @@ InputManager* InputManager::instance = NULL;
 InputManager::InputManager()
 {
 	m_gamePad = std::make_unique<DirectX::GamePad>();
+	m_keyboard = std::make_unique<DirectX::Keyboard>();
+	m_mouse = std::make_unique<DirectX::Mouse>();
 }
 
 void InputManager::UpdateButtons()
@@ -55,11 +57,24 @@ void InputManager::ResumeGamepad()
 	m_gamePad->Resume();
 }
 
+/// <inheritdoc/>
+DirectX::Keyboard* InputManager::GetKeyboard()
+{
+	return m_keyboard.get();
+}
+
+/// <inheritdoc/>
+DirectX::Mouse::State InputManager::GetMouse()
+{
+	return m_mouse.get()->GetState();
+}
+
 void InputManager::SuspendGamepad()
 {
 	m_gamePad->Suspend();
 }
 
+/// <inheritdoc/>
 InputManager* InputManager::GetInstance()
 {
 	if (instance == NULL)

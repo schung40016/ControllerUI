@@ -6,17 +6,27 @@
 	and we want to export the instance to all files within the 
 	project w/o worrying about constant passing and initialization,
 	use Singleton design.
+
+	This script checks what buttons on the Controller/PC were pressed.
 */ 
 class InputManager {
 private:
 	static InputManager* instance;
 	std::unique_ptr<DirectX::GamePad> m_gamePad;
-	DirectX::GamePad::ButtonStateTracker m_buttons;
+	std::unique_ptr<DirectX::Keyboard> m_keyboard;
+	std::unique_ptr<DirectX::Mouse> m_mouse;
 
 	// Constructor.
 	InputManager();
 
 public:
+	DirectX::GamePad::ButtonStateTracker m_buttons;
+
+	// Keyboard & Mouse
+	boolean m1 = false;
+	boolean m2 = false;
+
+	// Gamepad
 	boolean a = false;
 	boolean b = false;
 	boolean x = false;
@@ -46,13 +56,26 @@ public:
 	InputManager(const InputManager& obj) = delete;
 
 	void UpdateButtons();
-
 	void ResetButtons();
-
 	void SuspendGamepad();
-
 	void ResumeGamepad();
 
+	/// <summary>
+	/// Fetches keyboard for instant access to keyboard button checks.
+	/// </summary>
+	/// <returns></returns>
+	DirectX::Keyboard* GetKeyboard();
+
+	/// <summary>
+	/// Fetches mouse state for instant access to mouse button checks.
+	/// </summary>
+	/// <returns></returns>
+	DirectX::Mouse::State GetMouse();
+
+	/// <summary>
+	/// Returns an instance of the input manager.
+	/// </summary>
+	/// <returns></returns>
 	static InputManager* GetInstance();
 
 	~InputManager();

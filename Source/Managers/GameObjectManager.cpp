@@ -94,6 +94,12 @@ std::unordered_map<std::string, AnimationController>& GameObjectManager::GetAnim
     return animationControllerBank;
 }
 
+std::unordered_map<std::string, Box>& GameObjectManager::GetBoxBank()
+{
+    return boxBank;
+}
+
+// Fetch single object from bank.
 GameObject& GameObjectManager::GetGameObj(const std::string id)
 {
     return gameObjBank[id];
@@ -157,6 +163,11 @@ SpriteManager& GameObjectManager::GetSpriteManager(const std::string id)
 AnimationController& GameObjectManager::GetAnimationController(const std::string id)
 {
     return animationControllerBank[id];
+}
+
+Box& GameObjectManager::GetBox(const std::string id)
+{
+    return boxBank[id];
 }
 
 // Adders
@@ -237,6 +248,11 @@ void GameObjectManager::AddSpriteManager(std::string id, const SpriteManager& in
 void GameObjectManager::AddAnimationController(std::string id, const AnimationController& inp_animationController)
 {
     animationControllerBank[id] = inp_animationController;
+}
+
+void GameObjectManager::AddBox(std::string id, const Box& inp_box)
+{
+    boxBank[id] = inp_box;
 }
 
 GameObjectManager::~GameObjectManager() {

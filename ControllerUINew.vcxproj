@@ -214,9 +214,11 @@
     <ClInclude Include="Source\Enum\EnumData.h" />
     <ClInclude Include="Source\CustomObjects\Controller.h" />
     <ClInclude Include="Source\Game\GameObject.h" />
+    <ClInclude Include="Source\Game\MapEditor.h" />
     <ClInclude Include="Source\Game\World.h" />
     <ClInclude Include="Source\Managers\DirectXUtility.h" />
     <ClInclude Include="Source\Managers\GameObjectManager.h" />
+    <ClInclude Include="Source\Managers\InputController.h" />
     <ClInclude Include="Source\Managers\InputManager.h" />
     <ClInclude Include="Source\Managers\SpriteManager.h" />
     <ClInclude Include="Source\Tools\Raycast.h" />
@@ -243,16 +245,19 @@
     <ClCompile Include="Source\Components\PlayerController.cpp" />
     <ClCompile Include="Source\Components\RigidBody.cpp" />
     <ClCompile Include="Source\Components\DebuggerUI.cpp" />
+    <ClCompile Include="Source\Constants\DefaultValues.h" />
     <ClCompile Include="Source\CustomObjects\Debugger.cpp" />
-    <ClCompile Include="Source\CustomObjects\SolidBox.cpp" />
+    <ClCompile Include="Source\CustomObjects\Box.cpp" />
     <ClCompile Include="Source\CustomObjects\Controller.cpp" />
     <ClCompile Include="Source\CustomObjects\Player.cpp" />
-    <ClCompile Include="Source\CustomObjects\SolidBox.h" />
+    <ClCompile Include="Source\CustomObjects\Box.h" />
     <ClCompile Include="Source\CustomObjects\Sprite.cpp" />
     <ClCompile Include="Source\Game\GameObject.cpp" />
+    <ClCompile Include="Source\Game\MapEditor.cpp" />
     <ClCompile Include="Source\Game\World.cpp" />
     <ClCompile Include="Source\Managers\DirectXUtility.cpp" />
     <ClCompile Include="Source\Managers\GameObjectManager.cpp" />
+    <ClCompile Include="Source\Managers\InputController.cpp" />
     <ClCompile Include="Source\Managers\InputManager.cpp" />
     <ClCompile Include="Source\Managers\SpriteManager.cpp" />
     <ClCompile Include="Source\Tools\Raycast.cpp" />
@@ -286,6 +291,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="JSON\Sprites.json" />
+    <None Include="JSON\World - Copy.json" />
     <None Include="JSON\World.json" />
     <None Include="myfile.spritefont" />
     <None Include="packages.config" />

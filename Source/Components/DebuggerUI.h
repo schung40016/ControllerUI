@@ -10,7 +10,6 @@ class DebuggerUI : public Component
 {
 private:
 	class GameObjectManager *resourceManager = nullptr;
-	class InputManager* inputManager = nullptr;
 
 	boolean bOn = true;
 	class RigidBody *rb = nullptr; 

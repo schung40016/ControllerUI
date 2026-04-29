@@ -9,7 +9,6 @@ class GameObject;
 
 class PlayerController : public Component {
 private:
-	class InputManager* inputManager = nullptr;
 	std::shared_ptr<class GameObject> parentObj = nullptr;
 	class Image* playerSprite = nullptr;
 	RigidBody* rb = nullptr;								// Applies physics on gameobject.

@@ -3,9 +3,9 @@
 #include "Source/Components/RigidBody.h"
 #include "Source/Components/AnimationController.h"
 #include "Source/Game/GameObject.h"
-#include "Source/Managers/InputManager.h"
 #include "Source/UI_Objects/Image.h"
 #include "Source/Managers/GameObjectManager.h"
+#include "Source/Managers/InputController.h"
 
 PlayerController::PlayerController()
 {}
@@ -19,7 +19,6 @@ PlayerController::PlayerController(GameObject& inp_parentObj, BoxCollider& inp_c
 
 void PlayerController::Awake()
 {
-	inputManager = InputManager::GetInstance();
 	playerSprite = &GameObjectManager::GetInstance()->GetImgObj(parentObj->GetName() + "_Image");
 	rb = parentObj->GetComponent<RigidBody>();
 	ac = parentObj->GetComponent<AnimationController>();
@@ -33,7 +32,7 @@ void PlayerController::Update(float deltaTime)
 void PlayerController::Movement(float dt)
 {
 	// Horizontal Movement.
-	DirectX::SimpleMath::Vector2 input = inputManager->leftStickPos;
+	DirectX::SimpleMath::Vector2 input = InputController::GetAxis("Move");
 
 	if (input.x > 0)
 	{
@@ -45,7 +44,7 @@ void PlayerController::Movement(float dt)
 	}
 
 	// Jump Movement.
-	bool jumped = inputManager->a;
+	bool jumped = InputController::GetButton("Jump");
 
 	rb->AddForce({ fSpeed * input.x, 0 });
 	if (abs(rb->GetVelocity().x) > 1.f)

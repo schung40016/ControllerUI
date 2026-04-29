@@ -123,6 +123,8 @@
     <ClInclude Include="Source\Managers\SpriteManager.h" />
     <ClInclude Include="ExternalLibraries\json.hpp" />
     <ClInclude Include="Source\UI_Objects\WireFrame.h" />
+    <ClInclude Include="Source\Game\MapEditor.h" />
+    <ClInclude Include="Source\Managers\InputController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -186,8 +188,8 @@
       <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\CustomObjects\Player.cpp" />
-    <ClCompile Include="Source\CustomObjects\SolidBox.cpp" />
-    <ClCompile Include="Source\CustomObjects\SolidBox.h" />
+    <ClCompile Include="Source\CustomObjects\Box.cpp" />
+    <ClCompile Include="Source\CustomObjects\Box.h" />
     <ClCompile Include="Source\Components\ControllerUI.cpp" />
     <ClCompile Include="Source\Components\DebuggerUI.cpp" />
     <ClCompile Include="Source\CustomObjects\Debugger.cpp" />
@@ -196,6 +198,9 @@
     <ClCompile Include="Source\Managers\SpriteManager.cpp" />
     <ClCompile Include="Source\Components\AnimationController.cpp" />
     <ClCompile Include="Source\UI_Objects\WireFrame.cpp" />
+    <ClCompile Include="Source\Game\MapEditor.cpp" />
+    <ClCompile Include="Source\Constants\DefaultValues.h" />
+    <ClCompile Include="Source\Managers\InputController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -221,5 +226,6 @@
     <None Include="packages.config" />
     <None Include="JSON\World.json" />
     <None Include="JSON\Sprites.json" />
+    <None Include="JSON\World - Copy.json" />
   </ItemGroup>
 </Project>

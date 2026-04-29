@@ -4,6 +4,7 @@
 #include "pch.h"
 #include "Game.h"
 #include <iostream>
+#include <Source/Managers/InputController.h>
 
 Game::Game() noexcept(false) 
 {
@@ -39,8 +40,11 @@ void Game::Initialize(HWND window, int width, int height)
     m_deviceResources->CreateWindowSizeDependentResources();
 
     gameWorld.Initialize();
-
+    
+    // Initialize controllers and managers here.
     directXUtility.AwakeGameObjects();
+    InputController::Initialize();
+
     CreateDeviceDependentResources();
     CreateWindowSizeDependentResources();
 
