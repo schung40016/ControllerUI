@@ -44,11 +44,6 @@ void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPo
     float calcPt2X = (pos.x - point1.x) + point2.x;
     float calcPt2Y = (pos.y + point1.y) - point2.y;
 
-    if (GetName().find("player") != std::string::npos)
-    {
-        int hi = 1;
-    }
-
     DirectX::DX12::VertexPositionColor vec1(Vector3(pos.x, pos.y, layer), GetColor());
     DirectX::DX12::VertexPositionColor vec2(Vector3(calcPt2X, calcPt2Y, layer), GetColor());
     m_batch->DrawLine(vec1, vec2);

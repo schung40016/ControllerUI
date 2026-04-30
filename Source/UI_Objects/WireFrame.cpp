@@ -14,7 +14,7 @@ void WireFrame::SetWireFrame(GameObject& parentObj, std::string name, std::vecto
 	{
 		std::string colliderName = parentName + std::to_string(i);
 
-		auto temp = new Line(colliderName, color, parentObj, vertexLines[i], vertexLines[(i + 1) % vertexLines.size()], 1.0f, false, layer);
+		new Line(colliderName, color, parentObj, vertexLines[i], vertexLines[(i + 1) % vertexLines.size()], 1.0f, false, layer);
 	}
 }
 

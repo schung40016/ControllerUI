@@ -226,7 +226,6 @@ bool BoxCollider::IsColliding_SAT_STATIC(BoxCollider& other)
 		DirectX::SimpleMath::Vector2 r1 = this->GetParent()->GetPosition();
 		DirectX::SimpleMath::Vector2 r2 = other.GetParent()->GetPosition();
 		DirectX::SimpleMath::Vector2 d = { r2.x - r1.x, r2.y - r1.y };
-		float s = sqrtf(d.x * d.x + d.y * d.y);
 	}
 	return true;
 }
@@ -234,7 +233,6 @@ bool BoxCollider::IsColliding_SAT_STATIC(BoxCollider& other)
 bool BoxCollider::CollidesWithLayer(int layer)
 {
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& colliderLayers = resourceManager->GetColliderObjBank();
-	std::vector<std::pair<int, int>>& colliderPairs = resourceManager->GetColliderLayerPairs();
 
 	for (auto& curr_Collider : colliderLayers[layer])
 	{

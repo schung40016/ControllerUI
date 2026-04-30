@@ -8,7 +8,7 @@ bool UIObject::CanRender() const
 
 const DirectX::XMVECTOR UIObject::GetColor() const 
 {
-	return uiObj_color;
+	return DirectX::XMLoadFloat4(&uiObj_color);
 }
 
 /// <inheritdoc/>
@@ -24,7 +24,7 @@ DirectX::SimpleMath::Vector2 UIObject::GetDimensions() const
 
 void UIObject::SetColor(DirectX::XMVECTOR inp_color)
 {
-	uiObj_color = inp_color;
+	DirectX::XMStoreFloat4(&uiObj_color, inp_color);
 }
 
 /// <inheritdoc/>

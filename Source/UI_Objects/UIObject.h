@@ -6,10 +6,13 @@
 class UIObject : public GameObject
 {
 private:
-	DirectX::XMVECTOR uiObj_color = DirectX::Colors::White;
+	DirectX::XMFLOAT4 uiObj_color;
 	bool isStatic = false;
 
 public:
+	// Set default color to white.
+	UIObject() : uiObj_color(1.0f, 1.0f, 1.0f, 1.0f) {}
+
 	virtual bool CanRender() const;
 
 	virtual const DirectX::XMVECTOR GetColor() const;
