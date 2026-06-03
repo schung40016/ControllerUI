@@ -16,7 +16,7 @@ Controller::Controller(float inp_size, std::string inp_controllerName, DirectX::
     fSizeMultiplier = inp_size;
 
     GameObject parentObj = GameObject(sControllerName, inp_position, fSizeMultiplier);
-    GameObject& tempControllerObj = resourceManager->GetGameObj(sControllerName);
+    GameObject& tempControllerObj = resourceManager->Get<GameObject>(sControllerName);
 
     Text controllerTitle = Text(sControllerName + "_controllerTitle", DirectX::Colors::Black, "ControllerUI", tempControllerObj, 0.f, -250.f, true);
     Text connectionTitle = Text(sControllerName + "_connectionTitle", DirectX::Colors::Black, "Controller Connection: ", tempControllerObj, -50.f, 250.f, true);
@@ -31,9 +31,9 @@ Controller::Controller(float inp_size, std::string inp_controllerName, DirectX::
     Image imgLeftTrigger = Image(imgLeftTriggerName, DirectX::Colors::White, ".\\Images\\LeftTrigger.png", EnumData::Descriptors::LeftTrigger, tempControllerObj, -290.f, 140.f, 1.f, true);    // left trigger.
     Image imgRightTrigger = Image(imgRightTriggerName, DirectX::Colors::White, ".\\Images\\RightTrigger.png", EnumData::Descriptors::RightTrigger, tempControllerObj, 290.f, 140.f, 1.f, true);  // right trigger.
 
-    Image& temp_gamePad = resourceManager->GetImgObj(gamePadName);
-    Image& temp_imgLeftTrigger = resourceManager->GetImgObj(imgLeftTriggerName);
-    Image& temp_imgRightTrigger = resourceManager->GetImgObj(imgRightTriggerName);
+    Image& temp_gamePad = resourceManager->Get<Image>(gamePadName);
+    Image& temp_imgLeftTrigger = resourceManager->Get<Image>(imgLeftTriggerName);
+    Image& temp_imgRightTrigger = resourceManager->Get<Image>(imgRightTriggerName);
 
 
     Triangle a = Triangle(sControllerName + "_a", DirectX::Colors::HotPink, temp_gamePad, 1.f, 159.f, 38.f, 40.f, 40.f, true);
@@ -61,8 +61,8 @@ Controller::Controller(float inp_size, std::string inp_controllerName, DirectX::
     std::string controllerUIName = sControllerName + "_ControllerUI";
 
     ControllerUI controller_controllerUI = ControllerUI(sControllerName);
-    resourceManager->AddControllerUI(controllerUIName, controller_controllerUI);
+    resourceManager->Add<ControllerUI>(controllerUIName, controller_controllerUI);
     tempControllerObj.SetComponents({
-       &resourceManager->GetControllerUI(controllerUIName)
+       &resourceManager->Get<ControllerUI>(controllerUIName)
     });
 }

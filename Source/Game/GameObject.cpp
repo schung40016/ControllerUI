@@ -17,7 +17,7 @@ GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position
 	gObj_position = inp_position;
 	CalculatePositionActual(gObj_position);
 	gObj_originalSize = inp_size;
-	resourceManager->AddGameObj(id, *this);
+	resourceManager->Add<GameObject>(id, *this);
 }
 
 
@@ -29,7 +29,7 @@ GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position
 	gObj_position = inp_position;
 	CalculatePositionActual(gObj_position);
 	gObj_originalSize = inp_size;
-	resourceManager->AddGameObj(id, *this);
+	resourceManager->Add<GameObject>(id, *this);
 }
 
 void GameObject::Awake()

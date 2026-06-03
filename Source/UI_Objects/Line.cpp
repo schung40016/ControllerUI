@@ -15,7 +15,7 @@ Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_par
     SetPosition(inp_pt2);
     SetColor(inp_shapeColor);
     SetIsStatic(inp_isStatic);
-    resourceManager->AddLnObj(id, *this);
+    resourceManager->Add<Line>(id, *this);
 }
 
 Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic, int inp_layer)
@@ -29,7 +29,7 @@ Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_par
     SetScale(inp_scale);
     SetColor(inp_shapeColor);
     SetIsStatic(inp_isStatic);
-    resourceManager->AddLnObj(id, *this);
+    resourceManager->Add<Line>(id, *this);
 }
 
 void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch, const DirectX::SimpleMath::Vector2& camOffset) const

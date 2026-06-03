@@ -19,7 +19,7 @@ Quad::Quad(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentO
 	SetWidth(inp_wid);
 	SetDisplay(inp_display);
 	SetIsStatic(inp_isStatic);
-	resourceManager->AddQuadObj(id, *this);
+	resourceManager->Add<Quad>(id, *this);
 }
 
 void Quad::Draw(const std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>& inp_batch, const DirectX::SimpleMath::Vector2& camOffset) const

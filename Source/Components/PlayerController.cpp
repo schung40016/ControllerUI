@@ -20,7 +20,7 @@ PlayerController::PlayerController(GameObject& inp_parentObj, BoxCollider& inp_c
 void PlayerController::Awake()
 {
 	GameObjectManager* resourceManager = GameObjectManager::GetInstance();
-	playerSprite = &resourceManager->GetImgObj(parentObj->GetName() + "_Image");
+	playerSprite = &resourceManager->Get<Image>(parentObj->GetName() + "_Image");
 	rb = parentObj->GetComponent<RigidBody>();
 	ac = parentObj->GetComponent<AnimationController>();
 }

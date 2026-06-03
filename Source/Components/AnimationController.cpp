@@ -18,8 +18,8 @@ AnimationController::AnimationController(GameObject& inp_parentObj, Image& inp_i
 void AnimationController::Awake()
 {
 	GameObjectManager* resourceManager = GameObjectManager::GetInstance();
-	image = &resourceManager->GetImgObj(parentObj->GetName() + "_Image");
-	spriteManager = &resourceManager->GetSpriteManager(parentObj->GetName() + "_SpriteManager");
+	image = &resourceManager->Get<Image>(parentObj->GetName() + "_Image");
+	spriteManager = &resourceManager->Get<SpriteManager>(parentObj->GetName() + "_SpriteManager");
 }
 
 void AnimationController::Update(float deltaTime)

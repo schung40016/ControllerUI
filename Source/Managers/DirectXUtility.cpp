@@ -9,7 +9,7 @@ DirectXUtility::DirectXUtility()
 
 void DirectXUtility::AwakeGameObjects()
 {
-    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
+    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetBank<GameObject>();
 
     for (auto& curr : gameObjs)
     {
@@ -21,7 +21,7 @@ void DirectXUtility::UpdateGameObjects(float elapsedTime)
 {
     frameCount++;
 
-    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
+    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetBank<GameObject>();
 
     for (auto& curr : gameObjs)
     {
@@ -346,7 +346,7 @@ void DirectXUtility::PrepareCameraObjects(Camera& camObject, ID3D12Device* devic
 
 Camera* DirectXUtility::GetFocusedCamera()
 {
-    for (auto& [name, cam] : resourceManager->GetCameraObjBank())
+    for (auto& [name, cam] : resourceManager->GetBank<Camera>())
     {
         if (cam.GetFocus()) {
             return &cam;

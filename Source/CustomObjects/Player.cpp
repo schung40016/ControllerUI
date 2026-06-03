@@ -14,7 +14,11 @@ Player::Player()
 {
 }
 
-Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::Vector2 inp_position, float inp_width, float inp_length)
+Player::Player(float inp_size,
+	std::string inp_playerName,
+	DirectX::SimpleMath::Vector2 inp_position,
+	float inp_width,
+	float inp_length)
 {
 	GameObjectManager* resourceManager = GameObjectManager::GetInstance();
 	sPlayerName = inp_playerName;
@@ -25,35 +29,44 @@ Player::Player(float inp_size, std::string inp_playerName, DirectX::SimpleMath::
 	std::string sRigidBodyName = sPlayerName + "_RigidBody";
 	std::string sCameraName = sPlayerName + "_Camera";
 	std::string sAnimationControllerName = sPlayerName + "_AnimationController";
+	std::string sImageName = sPlayerName + "_Image";
 
-	std::unordered_map<std::string, int> states = { {"Jump", 1}, {"Run", 2}, {"Idle", 3}};
+	std::unordered_map<std::string, int> states = { {"Jump", 1}, {"Run", 2}, {"Idle", 3} };
 
-	// Try setting the objects from within the resourcemanager.
+	// Create and store the GameObject first so components can reference it.
 	GameObject player_gameObj = GameObject(sPlayerName, inp_position, fSizeMultiplier, { inp_width, inp_length });
-	GameObject& tempPlayerGame = resourceManager->GetGameObj(sPlayerName);
+	resourceManager->Add<GameObject>(sPlayerName, player_gameObj);
+
+	GameObject& tempPlayerGame = resourceManager->Get<GameObject>(sPlayerName);
 	tempPlayerGame.SetScale(.1f);
-	Image playerSprite = Image(sPlayerName + "_Image", DirectX::Colors::White, ".\\Images\\PlayerSpriteSheet.png", EnumData::Descriptors::PlayerImage, tempPlayerGame, .25f, .25f, .35f, false);
+
+	Image playerSprite = Image(sImageName, DirectX::Colors::White, ".\\Images\\PlayerSpriteSheet.png", EnumData::Descriptors::PlayerImage, tempPlayerGame, .25f, .25f, .35f, false);
+	resourceManager->Add<Image>(sImageName, playerSprite);
+
+	// Create collider, store it, then create controller using the stored collider.
 	std::vector<DirectX::SimpleMath::Vector2> playerCollisionBox = FetchPositionPairs(inp_width, inp_length);
-
 	BoxCollider player_collider = BoxCollider(tempPlayerGame, playerCollisionBox, true);
-	PlayerController player_controller = PlayerController(tempPlayerGame, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName], 100.f, 5000.f);
-	RigidBody player_rigidBody = RigidBody(tempPlayerGame, true, 10.f, -9.81f);
-	Camera player_camera = Camera(tempPlayerGame, true);
-	AnimationController player_animationController = AnimationController(tempPlayerGame, playerSprite, states);
-
-	// Add to the game object manager.
 	resourceManager->AddColliderObj(EnumData::ColliderLayers::Player, sColliderName, player_collider);
-	resourceManager->AddPlayerController(sControllerName, player_controller);
-	resourceManager->AddRigidBody(sRigidBodyName, player_rigidBody);
-	resourceManager->AddCamera(sCameraName, player_camera);
-	resourceManager->AddAnimationController(sAnimationControllerName, player_animationController);
 
+	PlayerController player_controller = PlayerController(tempPlayerGame, resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName], 100.f, 5000.f);
+	resourceManager->Add<PlayerController>(sControllerName, player_controller);
+
+	RigidBody player_rigidBody = RigidBody(tempPlayerGame, true, 10.f, -9.81f);
+	resourceManager->Add<RigidBody>(sRigidBodyName, player_rigidBody);
+
+	Camera player_camera = Camera(tempPlayerGame, true);
+	resourceManager->Add<Camera>(sCameraName, player_camera);
+
+	AnimationController player_animationController = AnimationController(tempPlayerGame, playerSprite, states);
+	resourceManager->Add<AnimationController>(sAnimationControllerName, player_animationController);
+	
+	// Wire components into the GameObject by fetching them from the manager.
 	tempPlayerGame.SetComponents({
 		&resourceManager->GetColliderObjBank()[EnumData::ColliderLayers::Player][sColliderName],
-		&resourceManager->GetPlayerController(sControllerName),
-		&resourceManager->GetRigidBody(sRigidBodyName),
-		&resourceManager->GetCamera(sCameraName),
-		&resourceManager->GetAnimationController(sAnimationControllerName)
+		&resourceManager->Get<PlayerController>(sControllerName),
+		&resourceManager->Get<RigidBody>(sRigidBodyName),
+		&resourceManager->Get<Camera>(sCameraName),
+		&resourceManager->Get<AnimationController>(sAnimationControllerName)
 	});
 }
 

@@ -23,7 +23,7 @@ DebuggerUI::DebuggerUI(std::string inp_parentObjName, std::string inp_objectFocu
 
 void DebuggerUI::Awake()
 {
-    GameObject& refPlayerObj = resourceManager->GetGameObj(sObjectFocusName);
+    GameObject& refPlayerObj = resourceManager->Get<GameObject>(sObjectFocusName);
     rb = refPlayerObj.GetComponent<RigidBody>();
     bc = refPlayerObj.GetComponent<BoxCollider>();
 
@@ -32,7 +32,7 @@ void DebuggerUI::Awake()
         qFrameDesc.push("--");
     }
 
-    std::unordered_map<std::string, Text>& refTextBank = resourceManager->GetTxtObjBank();
+    std::unordered_map<std::string, Text>& refTextBank = resourceManager->GetBank<Text>();
 
     refTextBank[sParentObjName + "_velocity_num"].SetDisplay(bOn);
     refTextBank[sParentObjName + "_acceleration_num"].SetDisplay(bOn);
@@ -53,10 +53,10 @@ void DebuggerUI::Awake()
 
 void DebuggerUI::Update(float deltaTime)
 {
-    std::unordered_map<std::string, Text> &refTextBank = resourceManager->GetTxtObjBank();
-    Line& lnVelocity = resourceManager->GetLnObj(sParentObjName + "_VelocityLine");
+    std::unordered_map<std::string, Text> &refTextBank = resourceManager->GetBank<Text>();
+    Line& lnVelocity = resourceManager->Get<Line>(sParentObjName + "_VelocityLine");
 
-    GameObject &refPlayerObj = resourceManager->GetGameObj(sObjectFocusName);
+    GameObject &refPlayerObj = resourceManager->Get<GameObject>(sObjectFocusName);
     const DirectX::SimpleMath::Vector2 playerPos = refPlayerObj.GetRenderPosition();
     Text &velocityNum = refTextBank[sParentObjName + "_velocity_num"];
     Text &accelerationNum = refTextBank[sParentObjName + "_acceleration_num"];

@@ -12,7 +12,7 @@ Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text)
 {
 	SetName(id);
 	SetColor(inp_color);
-	resourceManager->AddTxtObj(id, *this);
+	resourceManager->Add<Text>(id, *this);
 }
 
 Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y, bool inp_isStatic = false)
@@ -23,7 +23,7 @@ Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, Ga
 	SetParent(inp_parentObj);
 	SetPosition({ inp_x, inp_y });
 	SetIsStatic(inp_isStatic);
-	resourceManager->AddTxtObj(id, *this);
+	resourceManager->Add<Text>(id, *this);
 }
 
 void Text::Draw(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, const DirectX::SimpleMath::Vector2& camOffset)

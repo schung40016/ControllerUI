@@ -18,8 +18,8 @@ Debugger::Debugger(float inp_size, std::string inp_debuggerName, std::string inp
 	std::string sDebuggerUIName = sDebuggerName + "_DebuggerUI";
 
 	GameObject parentObj = GameObject(sDebuggerName, inp_position, fSizeMultiplier);
-	GameObject& tempDebuggerObj = resourceManager->GetGameObj(sDebuggerName);
-	GameObject& refPlayerObj = resourceManager->GetGameObj("player");
+	GameObject& tempDebuggerObj = resourceManager->Get<GameObject>(sDebuggerName);
+	GameObject& refPlayerObj = resourceManager->Get<GameObject>("player");
 
 
 	tVelocity = Text(sDebuggerName + "_velocity", DirectX::Colors::Black, "Velocity: ", tempDebuggerObj, 0.f, 400.f, true);
@@ -41,8 +41,8 @@ Debugger::Debugger(float inp_size, std::string inp_debuggerName, std::string inp
 	lnVelocity = Line(sDebuggerName + "_VelocityLine", DirectX::Colors::Red, refPlayerObj, { 0.f, 0.f }, 1.f);
 
 	DebuggerUI debuggerUI = DebuggerUI(sDebuggerName, sObjectFocusName);
-	resourceManager->AddDebuggerUI(sDebuggerUIName, debuggerUI);
+	resourceManager->Add<DebuggerUI>(sDebuggerUIName, debuggerUI);
 	tempDebuggerObj.SetComponents({
-		&resourceManager->GetDebuggerUI(sDebuggerUIName)
+		&resourceManager->Get<DebuggerUI>(sDebuggerUIName)
 	});
 }

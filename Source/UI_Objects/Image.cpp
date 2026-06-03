@@ -16,7 +16,7 @@ Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLoc
 	SetPosition({ inp_x, inp_y });
 	SetScale(inp_scale);
 	SetIsStatic(inp_isStatic);
-	resourceManager->AddImgObj(id, *this);
+	resourceManager->Add<Image>(id, *this);
 }
 
 Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, DirectX::SimpleMath::Vector2 inp_originPos, RECT inp_renderingRect)
@@ -27,7 +27,7 @@ Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLoc
 	SetParent(inp_parentObj);
 	SetPosition({ inp_x, inp_y });
 	SetScale(inp_scale);
-	resourceManager->AddImgObj(id, *this);
+	resourceManager->Add<Image>(id, *this);
 }
 
 

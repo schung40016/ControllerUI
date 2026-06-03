@@ -19,8 +19,8 @@ Box::Box(float size, std::string boxName, DirectX::SimpleMath::Vector2 position,
 	std::string sColliderName = sBoxName + "_Collider";
 
 	GameObject box(sBoxName, position, fSizeMultiplier);
-	GameObject& tempBox = resourceManager->GetGameObj(sBoxName);
-	Quad quad(sBoxName + "_Shape", DirectX::Colors::DarkGray, resourceManager->GetGameObj(sBoxName), 1.f, 0, 0, width, length, true);
+	GameObject& tempBox = resourceManager->Get<GameObject>(sBoxName);
+	Quad quad(sBoxName + "_Shape", DirectX::Colors::DarkGray, resourceManager->Get<GameObject>(sBoxName), 1.f, 0, 0, width, length, true);
 
 	if (isColliding)
 	{
@@ -35,7 +35,7 @@ Box::Box(float size, std::string boxName, DirectX::SimpleMath::Vector2 position,
 			});
 	}
 
-	resourceManager->AddBox(boxName, *this);
+	resourceManager->Add<Box>(boxName, *this);
 }
 
 std::vector<DirectX::SimpleMath::Vector2> Box::FetchPositionPairs(const float width, const float length)

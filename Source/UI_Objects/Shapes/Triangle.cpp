@@ -19,7 +19,7 @@ Triangle::Triangle(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp
 	SetLength(inp_len);
 	SetWidth(inp_wid);
 	SetIsStatic(inp_isStatic);
-	resourceManager->AddTriObj(id, *this);
+	resourceManager->Add<Triangle>(id, *this);
 }
 
 // Draw Triangle.

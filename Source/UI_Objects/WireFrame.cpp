@@ -27,5 +27,5 @@ void WireFrame::SetEdgeColor(GameObject& parentObj, std::string name, DirectX::X
 
 	std::string parentName = parentObj.GetName() + " " + name + " - WireFrameLine " + std::to_string(index);
 
-	GameObjectManager::GetInstance()->GetLnObj(parentName).SetColor(color);
+	GameObjectManager::GetInstance()->Get<Line>(parentName).SetColor(color);
 }

@@ -5,6 +5,9 @@
 #include "Source/Components/BoxCollider.h"
 #include "Source/UI_Objects/Line.h"
 #include "Source/CustomObjects/Box.h"
+#include "any"
+#include "typeinfo"
+#include "typeindex"
 
 class GameObject;
 class Image;
@@ -26,25 +29,12 @@ class GameObjectManager {
 private:
 	static GameObjectManager* instance;
 
-	// Store all objects here.
-	std::unordered_map<std::string, GameObject> gameObjBank = {};
-	std::unordered_map<std::string, Image> imgObjBank = {};
-	std::unordered_map<std::string, Text> txtObjBank = {};
-	std::unordered_map<std::string, Triangle> triObjBank = {};
-	std::unordered_map<std::string, Line> lnObjBank = {};
-	std::unordered_map<std::string, Quad> quadObjBank = {};
-	std::unordered_map<std::string, SpriteManager> spriteManagerBank = {};
-	std::unordered_map<std::string, Box> boxBank = {};
+	// Generic bank.
+	std::unordered_map<std::type_index, std::any> banks;
 
-	// Components.
-	std::unordered_map<std::string, PlayerController> controllerBank = {};
-	std::unordered_map<std::string, RigidBody> rigidBodyBank = {};
-	std::unordered_map<std::string, ControllerUI> controllerUIBank = {};
-	std::unordered_map<std::string, DebuggerUI> debuggerUIBank = {};
-	std::unordered_map<std::string, Camera> cameraBank = {};
+	// Banks for specific object types.
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>> colliderObjBank = {};
 	std::vector<std::pair<int, int>> colliderPairs = {};
-	std::unordered_map<std::string, AnimationController> animationControllerBank = {};
 
 	// Constructor.
 	GameObjectManager();
@@ -52,97 +42,90 @@ private:
 public:
 	// Don't implement.
 	GameObjectManager(const GameObjectManager& obj) = delete;
+	GameObjectManager& operator=(const GameObjectManager& obj) = delete;
 
 	// Allow others to get a share of the object.
 	static GameObjectManager* GetInstance();
 
 	// Getters & Setters.
-	std::unordered_map<std::string, GameObject>& GetGameObjBank();
-
-	std::unordered_map<std::string, Image>& GetImgObjBank();
 	
-	std::unordered_map<std::string, Text>& GetTxtObjBank();
-	
-	std::unordered_map<std::string, Triangle>& GetTriObjBank();
+	/// <summary>
+	/// Retrieves the bank of specified type.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <returns></returns>
+	template<typename T>
+	std::unordered_map<std::string, T>& GetBank()
+	{
+		auto key = std::type_index(typeid(T));
+		auto it = banks.find(key);
+		if (it == banks.end())
+		{
+			banks.emplace(key, std::unordered_map<std::string, T>{});
+			it = banks.find(key);
+		}
 
-	std::unordered_map<std::string, Line>& GetLnObjBank();
+		return std::any_cast<std::unordered_map<std::string, T>&>(it->second);
+	}
 
-	std::unordered_map<std::string, Quad>& GetQuadObjBank();
+	/// <summary>
+	/// Adds a item into the bank of specified type.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="id"></param>
+	/// <param name="obj"></param>
+	template<typename T>
+	void Add(const std::string& id, const T& obj)
+	{
+		GetBank<T>()[id] = obj;
+	}
 
+	/// <summary>
+	/// Retrieves item from the bank of specified type by id.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="id"></param>
+	/// <returns></returns>
+	template<typename T>
+	T& Get(const std::string& id)
+	{
+		return GetBank<T>()[id];
+	}
+
+	/// <summary>
+	/// Checks if the bank of specified type contains an item with the given id.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="id"></param>
+	/// <returns></returns>
+	template<typename T>
+	bool Has(const std::string& id) const
+	{
+		auto key = std::type_index(typeid(T));
+		auto it = banks.find(key);
+		if (it != banks.end())
+		{
+			return false;
+		}
+
+		const std::any& a = it->second;
+		const std::any& a = it->second;
+
+		if (std::any_cast<const std::unordered_map<std::string, T>>(&a) == nullptr)
+		{
+			return false;
+		}
+
+		const auto& bank = std::any_cast<const std::unordered_map<std::string, T>&>(a);
+		return bank.find(id) != bank.end();
+	}
+
+	// Getters & setters for specific banks.
 	std::unordered_map<int, std::unordered_map<std::string, BoxCollider>>& GetColliderObjBank();
-
 	std::vector<std::pair<int, int>>& GetColliderLayerPairs();
 
-	std::unordered_map<std::string, DebuggerUI>& GetDebuggerUIObjBank();
-
-	std::unordered_map<std::string, Camera>& GetCameraObjBank();
-
-	std::unordered_map<std::string, SpriteManager>& GetSpriteManagerBank();
-
-	std::unordered_map<std::string, AnimationController>& GetAnimationControllerBank();
-
-	std::unordered_map<std::string, Box>& GetBoxBank();
-
-	GameObject& GetGameObj(const std::string id);
-
-	Image& GetImgObj(const std::string id);
-
-	Text& GetTxtObj(const std::string id);
-
-	Triangle& GetTriObj(const std::string id);
-
-	Line& GetLnObj(const std::string id);
-
-	Quad& GetQuadObj(const std::string id);
-
-	PlayerController& GetPlayerController(const std::string id);
-
-	RigidBody& GetRigidBody(const std::string id);
-
-	ControllerUI& GetControllerUI(const std::string id);
-
-	DebuggerUI& GetDebuggerUI(const std::string id);
-
-	Camera& GetCamera(const std::string id);
-
-	SpriteManager& GetSpriteManager(const std::string id);
-
-	AnimationController& GetAnimationController(const std::string id);
-
-	Box& GetBox(const std::string id);
-
-	// Adders.
-	void AddGameObj(std::string id, const GameObject& inp_gameObject);
-
-	void AddImgObj(std::string id, const Image& inp_imgObj);
-
-	void AddTxtObj(std::string id, const Text& inp_txtObj);
-
-	void AddTriObj(std::string id, const Triangle& inp_triObj);
-
-	void AddLnObj(std::string id, const Line& inp_lnObj);
-
-	void AddQuadObj(std::string id, const Quad& inp_quadObj);
-
-	void AddColliderLayerPair(std::pair<int, int>& inp_pair);
-
-	void AddColliderObj(int id, std::string objId, const BoxCollider& inp_colliderObj);
-
-	void AddPlayerController(std::string id, const PlayerController& inp_playerController);
-
-	void AddRigidBody(std::string id, const RigidBody& inp_rigidBody);
-
-	void AddControllerUI(std::string id, const ControllerUI& inp_controllerUI);
-
-	void AddDebuggerUI(std::string id, const DebuggerUI& inp_debuggerUI);
-
-	void AddCamera(std::string id, const Camera& inp_camera);
-
-	void AddSpriteManager(std::string id, const SpriteManager& inp_spriteManager);
-
-	void AddAnimationController(std::string id, const AnimationController& inp_animationController);
-
-	void AddBox(std::string id, const Box& inp_box);
+	void AddColliderLayerPair(const std::pair<int, int>& inp_pair);
+	void AddColliderObj(int id, const std::string& objId, const BoxCollider& inp_colliderObj);
 
 	// Destructor
 	~GameObjectManager();
