@@ -104,7 +104,14 @@ void Game::Render()
     directXUtility.CleanScreen(m_deviceResources);
 
     auto commandList = m_deviceResources->GetCommandList();
-    directXUtility.RenderAllGameObjects(m_deviceResources, commandList, resourceManager->GetTxtObjBank(), resourceManager->GetImgObjBank(), resourceManager->GetTriObjBank(), resourceManager->GetLnObjBank(), resourceManager->GetQuadObjBank(), resourceManager->GetCameraObjBank());
+    directXUtility.RenderAllGameObjects(
+        m_deviceResources, commandList, 
+        resourceManager->GetBank<Text>(), 
+        resourceManager->GetBank<Image>(), 
+        resourceManager->GetBank<Triangle>(), 
+        resourceManager->GetBank<Line>(), 
+        resourceManager->GetBank<Quad>(), 
+        resourceManager->GetBank<Camera>());
 }
 
 // Helper method to clear the back buffers.
@@ -202,13 +209,18 @@ void Game::CreateDeviceDependentResources()
     if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel)))
         || (shaderModel.HighestShaderModel < D3D_SHADER_MODEL_6_0))
     {
-#ifdef _DEBUG
-        OutputDebugStringA("ERROR: Shader Model 6.0 is not supported!\n");
-#endif
+        #ifdef _DEBUG
+            OutputDebugStringA("ERROR: Shader Model 6.0 is not supported!\n");
+        #endif
+
         throw std::runtime_error("Shader Model 6.0 is not supported!");
     }
 
-    directXUtility.PrepareDeviceDependentResources(m_deviceResources, device, resourceManager->GetImgObjBank(), resourceManager->GetCameraObjBank());
+    directXUtility.PrepareDeviceDependentResources(
+        m_deviceResources,
+        device,
+        resourceManager->GetBank<Image>(),
+        resourceManager->GetBank<Camera>());
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -222,7 +234,7 @@ void Game::CreateWindowSizeDependentResources()
     float horizontal = float(size.right);
     float vertical = float(size.bottom);
 
-    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetGameObjBank();
+    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetBank<GameObject>();
 
     for (auto &curr : gameObjs)
     {
@@ -230,13 +242,13 @@ void Game::CreateWindowSizeDependentResources()
         curr.second.CalcScale(std::min(horizontal, vertical));
     }
 
-    directXUtility.PrepareWindowDependentResources(size, viewport, resourceManager->GetCameraObjBank());
+    directXUtility.PrepareWindowDependentResources(size, viewport, resourceManager->GetBank<Camera>());
 }
 
 void Game::OnDeviceLost()
 {
     // Resets Assets
-    directXUtility.ResetAssets(resourceManager->GetImgObjBank(), resourceManager->GetCameraObjBank());
+    directXUtility.ResetAssets(resourceManager->GetBank<Image>(), resourceManager->GetBank<Camera>());
 }
 
 void Game::OnDeviceRestored()
