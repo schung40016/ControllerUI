@@ -12,4 +12,6 @@ public:
 	World();
 
 	void Initialize();
+
+	void Update(float elapsedTime);
 };

@@ -25,6 +25,8 @@ public:
 	// Keyboard & Mouse
 	boolean m1 = false;
 	boolean m2 = false;
+	DirectX::Keyboard::State m_prevKB{};
+	DirectX::Keyboard::State m_currKB{};
 
 	// Gamepad
 	boolean a = false;

@@ -80,7 +80,7 @@ void Game::Update(DX::StepTimer const& timer)
 
     // TODO: Add your game logic here.
     inputManager->UpdateButtons();
-
+	gameWorld.Update(elapsedTime);
     directXUtility.UpdateGameObjects(elapsedTime);
 
     elapsedTime;

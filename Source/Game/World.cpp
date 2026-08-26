@@ -10,6 +10,11 @@ void World::Initialize()
     editor.Initialize();
 }
 
+void World::Update(float elapsedTime)
+{
+	editor.Update();
+}
+
 /*
 SPRITE INFORMATION
 
