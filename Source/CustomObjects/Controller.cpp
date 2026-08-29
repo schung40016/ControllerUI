@@ -4,6 +4,9 @@
 #include "Source/UI_Objects/Image.h"
 #include "Source/Managers/GameObjectManager.h"
 #include "Source/Components/ControllerUI.h"
+#include "Source/UI_Objects/Text.h"
+#include "Source/UI_Objects/Shapes/Triangle.h"
+#include "Source/UI_Objects/Line.h"
 
 Controller::Controller()
 {

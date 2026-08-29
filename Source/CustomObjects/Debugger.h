@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "Source/UI_Objects/Text.h"
 #include "Source/UI_Objects/Line.h"
+#include "../Constants/DefaultValues.h"
 
 class Debugger
 {
@@ -10,7 +11,7 @@ private:
     class GameObjectManager* resourceManager = nullptr;
     std::string sDebuggerName = "";
     std::string sObjectFocusName = "";
-    float fSizeMultiplier = 975.f;
+    float fSizeMultiplier = DefaultValues::DEFAULT_SIZE;
 
     Text tVelocity;
     Text tAcceleration;

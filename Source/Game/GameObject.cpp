@@ -3,6 +3,7 @@
 #include "Source/Managers/GameObjectManager.h"
 #include "Source/Components/Component.h"
 #include "iostream"
+#include "../Constants/DefaultValues.h"
 
 GameObject::GameObject()
 {
@@ -68,18 +69,7 @@ const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
 }
 
 const DirectX::SimpleMath::Vector2 GameObject::GetRenderPosition() const			// Get render position. rename. 
-
 {
-	// TO-DO: Figure out rendering calculations here.
-	//if (gObj_parentObj)
-	//{
-	//	float scale = GetScale();
-	//	DirectX::SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPosition();
-	//	float calcX = gObj_positionActual.x * scale + parent_pos.x;
-	//	float calcY = gObj_positionActual.y * scale + parent_pos.y;
-	//	DirectX::SimpleMath::Vector2 temp = { calcX, calcY };
-	//	return temp;
-	//}
 	DirectX::SimpleMath::Vector2 temp = GetPosition();
 	return DirectX::SimpleMath::Vector2(temp.x, fRenderOffset - temp.y);
 }
@@ -127,7 +117,7 @@ void GameObject::SetName(std::string inp_name)
 void GameObject::SetPosition(const DirectX::SimpleMath::Vector2 inp_position)
 {
 	gObj_position = inp_position;
-	gObj_positionActual = { inp_position.x, 975.f - inp_position.y };
+	gObj_positionActual = { inp_position.x, fRenderOffset - inp_position.y };
 }
 
 void GameObject::SetScale(const float inp_size)

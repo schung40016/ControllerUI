@@ -1,15 +1,13 @@
 #pragma once
 
 #include "pch.h"
-#include "Source/UI_Objects/Text.h"
-#include "Source/UI_Objects/Shapes/Triangle.h"
-#include "Source/UI_Objects/Line.h"
+#include "../Constants/DefaultValues.h"
 
 class Controller
 {
 private:
     std::string sControllerName = "";
-    float fSizeMultiplier = 975.f;
+    float fSizeMultiplier = DefaultValues::DEFAULT_SIZE;
 
     float fStickLineMultiplier = 10.f;
 

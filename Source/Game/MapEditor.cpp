@@ -39,10 +39,10 @@ void MapEditor::Update()
 		if (inputManager->GetMouse().leftButton)
 		{
             // Prep properties.
-            DirectX::SimpleMath::Vector2 mousePos = { (float)inputManager->GetMouse().x, (float)inputManager->GetMouse().y };
+            DirectX::SimpleMath::Vector2 mousePos = { (float)inputManager->GetMouse().x, (float)inputManager->GetMouse().y};
 
             // Temporary
-            Box newBox(DefaultValues::DEFAULT_SIZE, DefaultValues::DEFAULT_NAME, mousePos);
+            Box newBox(1, DefaultValues::DEFAULT_NAME, mousePos);
 		}
 
 		if (inputManager->GetMouse().rightButton)

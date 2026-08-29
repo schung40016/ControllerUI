@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "Source/Enum/EnumData.h"
+#include "../Constants/DefaultValues.h"
 
 class GameObjectManager;
 
@@ -21,7 +22,7 @@ private:
 	int layerMask = 0;
 	std::vector<Component*> components = {};
 	std::unordered_map<std::string, Component*> colliderObjBank = {};
-	float fRenderOffset = 975.f;
+	float fRenderOffset = DefaultValues::Y_OFFSET;
 
 protected:
 	GameObjectManager* resourceManager;
