@@ -28,8 +28,8 @@ void MapEditor::Initialize()
 
 void MapEditor::Update()
 {
-    // Open up game engine console.
-	if (InputController::GetButton("Edit"))
+	// Open up game engine console.
+	if (InputController::GetButtonDown("Edit"))
 	{
 		isEditMode = !isEditMode;
 	}

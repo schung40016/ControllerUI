@@ -18,13 +18,6 @@ void InputManager::UpdateButtons()
 	m_prevKB = m_currKB;
 	m_currKB = m_keyboard->GetState();
 
-	bool f1Down = m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F1);
-
-	if (f1Down) 
-	{
-		int hi = 1;
-	}
-
 	isConnected = pad.IsConnected();
 
 	if (isConnected)
@@ -60,6 +53,11 @@ void InputManager::UpdateButtons()
 void InputManager::ResetButtons()
 {
 	m_buttons.Reset();
+}
+
+void InputManager::SetWindow(HWND window)
+{
+	m_mouse->SetWindow(window);
 }
 
 void InputManager::ResumeGamepad()

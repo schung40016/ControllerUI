@@ -31,6 +31,8 @@ void Game::Initialize(HWND window, int width, int height)
 
     m_deviceResources->SetWindow(window, width, height);
 
+    inputManager->SetWindow(window);
+
     auto size = m_deviceResources->GetOutputSize();
 
     directXUtility = DirectXUtility();

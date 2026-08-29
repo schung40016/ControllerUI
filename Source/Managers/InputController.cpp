@@ -70,8 +70,8 @@ void InputController::LoadDefaultLayout()
 	RegisterAction("Edit",
 	{
 		[im]() { return im->m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F1); },
-		[im]() { return im->GetKeyboard()->F1 == DirectX::GamePad::ButtonStateTracker::PRESSED; },
-		[im]() { return im->GetKeyboard()->F1 == DirectX::GamePad::ButtonStateTracker::RELEASED; }
+		[im]() { return im->m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F1) && !im->m_prevKB.IsKeyDown(DirectX::Keyboard::Keys::F1); },
+		[im]() { return !im->m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F1) && im->m_prevKB.IsKeyDown(DirectX::Keyboard::Keys::F1); }
 	});
 
 	RegisterAxis("Move", [im]() { return im->leftStickPos; });

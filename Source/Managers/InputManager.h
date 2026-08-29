@@ -63,6 +63,12 @@ public:
 	void ResumeGamepad();
 
 	/// <summary>
+	/// Binds the mouse to the game window so DirectX::Mouse can track cursor/button state.
+	/// </summary>
+	/// <param name="window"></param>
+	void SetWindow(HWND window);
+
+	/// <summary>
 	/// Fetches keyboard for instant access to keyboard button checks.
 	/// </summary>
 	/// <returns></returns>
