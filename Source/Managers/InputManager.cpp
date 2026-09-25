@@ -106,6 +106,6 @@ InputManager* InputManager::GetInstance()
 
 InputManager::~InputManager()
 {
-	delete instance;
+	instance = nullptr;
 }
 

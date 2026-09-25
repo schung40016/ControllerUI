@@ -11,6 +11,7 @@
 #include "Source/Managers/GameObjectManager.h"
 #include "Source/Managers/InputManager.h"
 #include "Source/Managers/InputController.h"
+#include "Source/Components/Camera.h"
 #include "Source/CustomObjects/Sprite.cpp"
 #include "ExternalLibraries/json.hpp"
 #include "Source/Constants/DefaultValues.h"
@@ -36,13 +37,19 @@ void MapEditor::Update()
 
 	if (isEditMode)
 	{
-		if (inputManager->GetMouse().leftButton)
-		{
-            // Prep properties.
-            DirectX::SimpleMath::Vector2 mousePos = { (float)inputManager->GetMouse().x, (float)inputManager->GetMouse().y};
+		const bool isLeftMouseDown = inputManager->GetMouse().leftButton;
 
-            // Temporary
-            Box newBox(1, DefaultValues::DEFAULT_NAME, mousePos);
+		// Only place a box on the frame the button transitions from up to down.
+		if (isLeftMouseDown && !wasLeftMouseDown)
+		{
+            DirectX::SimpleMath::Vector2 camOffset = GetCameraOffset();
+
+			DirectX::SimpleMath::Vector2 mousePos = {
+				(float)inputManager->GetMouse().x - camOffset.x,
+				DefaultValues::Y_OFFSET - ((float)inputManager->GetMouse().y - camOffset.y)
+			};
+
+			PlaceBox(mousePos);
 		}
 
 		if (inputManager->GetMouse().rightButton)
@@ -51,6 +58,30 @@ void MapEditor::Update()
 			//ShowProperties();
 		}
 	}
+
+	wasLeftMouseDown = inputManager->GetMouse().leftButton;
+}
+
+/// <inheritdoc/>
+void MapEditor::PlaceBox(const DirectX::SimpleMath::Vector2& position)
+{
+	const std::string boxName = GenerateBoxName();
+
+	blocks.emplace_back(DefaultValues::DEFAULT_SIZE, boxName, position, 100.f, 100.f, true);
+}
+
+/// <inheritdoc/>
+std::string MapEditor::GenerateBoxName()
+{
+	std::string boxName = placedBoxPrefix + std::to_string(nextPlacedBoxId++);
+
+	// Guard against a name that already exists in the bank (e.g. loaded from JSON).
+	while (resourceManager->GetBank<Box>().count(boxName) > 0)
+	{
+		boxName = placedBoxPrefix + std::to_string(nextPlacedBoxId++);
+	}
+
+	return boxName;
 }
 
 /// <inheritdoc/>
@@ -106,6 +137,25 @@ void MapEditor::PrepCollisionLayers()
     {
         resourceManager->AddColliderLayerPair(worldColliderLayerPairs[i]);
     }
+}
+
+DirectX::SimpleMath::Vector2 MapEditor::GetCameraOffset()
+{
+    // Mouse coordinates are in screen space. Objects are rendered with
+    // GetRenderPosition() (which flips Y) plus the camera's follow offset
+    // (Quad::Draw adds camOffset for non-static objects). To place a box
+    // under the cursor we must invert both of those transforms here.
+
+    DirectX::SimpleMath::Vector2 camOffset = { 0.f, 0.f };
+    for (auto& [name, cam] : resourceManager->GetBank<Camera>())
+    {
+        if (cam.GetFocus())
+        {
+            camOffset = cam.GetOffset();
+            break;
+        }
+    }
+    return camOffset;
 }
 
 /// <inheritdoc/>

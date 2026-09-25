@@ -15,6 +15,13 @@ private:
 
 	bool isEditMode = false;
 
+	// Previous frame's left mouse state, used to detect a single click instead of a held button.
+	bool wasLeftMouseDown = false;
+
+	// Incrementing suffix that keeps every placed box's name unique.
+	int nextPlacedBoxId = 0;
+	const std::string placedBoxPrefix = "editorBox_";
+
 	// Create custom objects:
 	std::vector<Box> blocks = {};
 	Player player;
@@ -41,6 +48,12 @@ private:
 	void PrepareObjects();
 
 	void PrepareSprites();
+
+	DirectX::SimpleMath::Vector2 GetCameraOffset();
+
+	void PlaceBox(const DirectX::SimpleMath::Vector2& position);
+
+	std::string GenerateBoxName();
 
 	std::ifstream GetJsonScanner(const std::string& path);
 
