@@ -15,6 +15,9 @@ void InputManager::UpdateButtons()
 {
 	auto pad = m_gamePad->GetState(0);
 
+	m_prevKB = m_currKB;
+	m_currKB = m_keyboard->GetState();
+
 	isConnected = pad.IsConnected();
 
 	if (isConnected)
@@ -50,6 +53,11 @@ void InputManager::UpdateButtons()
 void InputManager::ResetButtons()
 {
 	m_buttons.Reset();
+}
+
+void InputManager::SetWindow(HWND window)
+{
+	m_mouse->SetWindow(window);
 }
 
 void InputManager::ResumeGamepad()
@@ -98,6 +106,6 @@ InputManager* InputManager::GetInstance()
 
 InputManager::~InputManager()
 {
-	delete instance;
+	instance = nullptr;
 }
 

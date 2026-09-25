@@ -8,5 +8,6 @@ namespace DefaultValues
 	inline const std::string DEFAULT_NAME = "Default";
 
 	// Value constants
-	inline const float DEFAULT_SIZE = 1.f;
+	inline const float DEFAULT_SIZE = 975.f;
+	inline const float Y_OFFSET = 975.f;
 }

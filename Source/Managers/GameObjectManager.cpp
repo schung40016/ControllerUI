@@ -59,5 +59,5 @@ void GameObjectManager::AddColliderObj(int id, const std::string& objId, const B
 
 GameObjectManager::~GameObjectManager() 
 {
-    delete instance;
+    instance = nullptr;
 }

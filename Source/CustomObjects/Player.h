@@ -1,12 +1,13 @@
 #pragma once
 
 #include "pch.h"
+#include "../Constants/DefaultValues.h"
 
 class Player 
 {
 private:
 	std::string sPlayerName = "";
-	float fSizeMultiplier = 975.f;
+	float fSizeMultiplier = DefaultValues::DEFAULT_SIZE;
 
 public:
 	Player();

@@ -69,7 +69,16 @@ void InputController::LoadDefaultLayout()
 
 	RegisterAction("Edit",
 	{
-		[im]() { return im->GetKeyboard()->F1; },
+		[im]() { return im->m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F1); },
+		[im]() { return im->m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F1) && !im->m_prevKB.IsKeyDown(DirectX::Keyboard::Keys::F1); },
+		[im]() { return !im->m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F1) && im->m_prevKB.IsKeyDown(DirectX::Keyboard::Keys::F1); }
+	});
+
+	RegisterAction("Save",
+	{
+		[im]() { return im->m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F2); },
+		[im]() { return im->m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F2) && !im->m_prevKB.IsKeyDown(DirectX::Keyboard::Keys::F2); },
+		[im]() { return !im->m_currKB.IsKeyDown(DirectX::Keyboard::Keys::F2) && im->m_prevKB.IsKeyDown(DirectX::Keyboard::Keys::F2); }
 	});
 
 	RegisterAxis("Move", [im]() { return im->leftStickPos; });

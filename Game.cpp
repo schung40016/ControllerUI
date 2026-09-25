@@ -31,6 +31,8 @@ void Game::Initialize(HWND window, int width, int height)
 
     m_deviceResources->SetWindow(window, width, height);
 
+    inputManager->SetWindow(window);
+
     auto size = m_deviceResources->GetOutputSize();
 
     directXUtility = DirectXUtility();
@@ -80,7 +82,7 @@ void Game::Update(DX::StepTimer const& timer)
 
     // TODO: Add your game logic here.
     inputManager->UpdateButtons();
-
+	gameWorld.Update(elapsedTime);
     directXUtility.UpdateGameObjects(elapsedTime);
 
     elapsedTime;

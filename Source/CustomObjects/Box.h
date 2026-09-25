@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pch.h"
+#include "../Constants/DefaultValues.h"
 
 class Box
 {
@@ -9,7 +10,7 @@ private:
 	DirectX::SimpleMath::Vector2 v2Position = { 0, 0 };
 	float fWidth = 0.f;
 	float fLength = 0.f;
-	float fSizeMultiplier = 975.f;
+	float fSizeMultiplier = DefaultValues::DEFAULT_SIZE;
 	bool bIsColliding = false;
 
 public:

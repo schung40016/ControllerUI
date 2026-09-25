@@ -25,6 +25,8 @@ public:
 	// Keyboard & Mouse
 	boolean m1 = false;
 	boolean m2 = false;
+	DirectX::Keyboard::State m_prevKB{};
+	DirectX::Keyboard::State m_currKB{};
 
 	// Gamepad
 	boolean a = false;
@@ -59,6 +61,12 @@ public:
 	void ResetButtons();
 	void SuspendGamepad();
 	void ResumeGamepad();
+
+	/// <summary>
+	/// Binds the mouse to the game window so DirectX::Mouse can track cursor/button state.
+	/// </summary>
+	/// <param name="window"></param>
+	void SetWindow(HWND window);
 
 	/// <summary>
 	/// Fetches keyboard for instant access to keyboard button checks.

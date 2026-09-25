@@ -4,6 +4,7 @@
 #include "Source/Managers/GameObjectManager.h"
 #include "Source/UI_Objects/Shapes/Quad.h"
 #include "Source/Components/BoxCollider.h"
+#include "../Constants/DefaultValues.h"
 
 Box::Box()
 {
