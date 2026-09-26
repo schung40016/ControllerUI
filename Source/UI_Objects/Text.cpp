@@ -15,13 +15,13 @@ Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text)
 	resourceManager->Add<Text>(id, *this);
 }
 
-Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y, bool inp_isStatic = false)
+Text::Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y, bool inp_isStatic, float inp_z)
 	: text(inp_text)
 {
 	SetName(id);
 	SetColor(inp_color);
 	SetParent(inp_parentObj);
-	SetPosition({ inp_x, inp_y });
+	SetPosition(DirectX::SimpleMath::Vector3(inp_x, inp_y, inp_z));
 	SetIsStatic(inp_isStatic);
 	resourceManager->Add<Text>(id, *this);
 }
