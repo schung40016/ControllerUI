@@ -11,23 +11,23 @@ GameObject::GameObject()
 	resourceManager = GameObjectManager::GetInstance();
 }
 
-GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size)
+GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size, float inp_z)
 {
 	name = id;
 	resourceManager = GameObjectManager::GetInstance();
-	gObj_position = inp_position;
+	gObj_position = { inp_position.x, inp_position.y, inp_z };
 	CalculatePositionActual(gObj_position);
 	gObj_originalSize = inp_size;
 	resourceManager->Add<GameObject>(id, *this);
 }
 
 
-GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size, DirectX::SimpleMath::Vector2 inp_sizeDimensions) 
+GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size, DirectX::SimpleMath::Vector2 inp_sizeDimensions, float inp_z)
 {
 	name = id;
 	resourceManager = GameObjectManager::GetInstance();
 	gObj_size = inp_sizeDimensions;
-	gObj_position = inp_position;
+	gObj_position = { inp_position.x, inp_position.y, inp_z };
 	CalculatePositionActual(gObj_position);
 	gObj_originalSize = inp_size;
 	resourceManager->Add<GameObject>(id, *this);
@@ -54,23 +54,38 @@ const std::string GameObject::GetName() const
 	return name;
 }
 
-const DirectX::SimpleMath::Vector2 GameObject::GetPosition() const
+const DirectX::SimpleMath::Vector3 GameObject::GetPosition() const
 {
 	if (gObj_parentObj)
 	{
 		float scale = GetScale();
-		DirectX::SimpleMath::Vector2 parent_pos = gObj_parentObj->GetPosition();
+		DirectX::SimpleMath::Vector3 parent_pos = gObj_parentObj->GetPosition();
 		float calcX = gObj_position.x * scale + parent_pos.x;
 		float calcY = gObj_position.y * scale + parent_pos.y;
-		return { calcX, calcY };
+
+		// Depth is inherited additively and never scaled, so a child is always
+		// offset from its parent's layer by its own z.
+		float calcZ = gObj_position.z + parent_pos.z;
+		return { calcX, calcY, calcZ };
 	}
 
 	return gObj_position;
 }
 
+const DirectX::SimpleMath::Vector2 GameObject::GetPosition2D() const
+{
+	DirectX::SimpleMath::Vector3 pos = GetPosition();
+	return { pos.x, pos.y };
+}
+
+const float GameObject::GetZ() const
+{
+	return GetPosition().z;
+}
+
 const DirectX::SimpleMath::Vector2 GameObject::GetRenderPosition() const			// Get render position. rename. 
 {
-	DirectX::SimpleMath::Vector2 temp = GetPosition();
+	DirectX::SimpleMath::Vector3 temp = GetPosition();
 	return DirectX::SimpleMath::Vector2(temp.x, fRenderOffset - temp.y);
 }
 
@@ -114,10 +129,22 @@ void GameObject::SetName(std::string inp_name)
 	name = inp_name;
 }
 
-void GameObject::SetPosition(const DirectX::SimpleMath::Vector2 inp_position)
+void GameObject::SetPosition(const DirectX::SimpleMath::Vector3 inp_position)
 {
 	gObj_position = inp_position;
-	gObj_positionActual = { inp_position.x, fRenderOffset - inp_position.y };
+	CalculatePositionActual(gObj_position);
+}
+
+void GameObject::SetPosition(const DirectX::SimpleMath::Vector2 inp_position)
+{
+	// Preserve the existing depth so 2D repositioning never changes layering.
+	SetPosition(DirectX::SimpleMath::Vector3(inp_position.x, inp_position.y, gObj_position.z));
+}
+
+void GameObject::SetZ(float inp_z)
+{
+	gObj_position.z = inp_z;
+	CalculatePositionActual(gObj_position);
 }
 
 void GameObject::SetScale(const float inp_size)
@@ -152,11 +179,13 @@ void GameObject::SetSize(const DirectX::SimpleMath::Vector2 inp_size)
 
 void GameObject::MovePosition(const DirectX::SimpleMath::Vector2 inp_position)
 {
-	gObj_position = gObj_position + inp_position;
+	// Movement is purely 2D; depth is left untouched.
+	gObj_position.x += inp_position.x;
+	gObj_position.y += inp_position.y;
 	CalculatePositionActual(gObj_position);
 }
 
-void GameObject::CalculatePositionActual(DirectX::SimpleMath::Vector2 inp_position)
+void GameObject::CalculatePositionActual(DirectX::SimpleMath::Vector3 inp_position)
 {
-	gObj_positionActual = { inp_position.x, fRenderOffset - inp_position.y };
+	gObj_positionActual = { inp_position.x, fRenderOffset - inp_position.y, inp_position.z };
 }

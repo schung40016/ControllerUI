@@ -2,6 +2,7 @@
 
 #include "./pch.h"
 #include "UIObject.h"
+#include "Source/Constants/DefaultValues.h"
 
 class Text : public UIObject
 {
@@ -17,7 +18,7 @@ public:
 	
 	Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text);
 
-	Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y, bool inp_isStatic);
+	Text(std::string id, DirectX::XMVECTOR inp_color, std::string inp_text, GameObject& inp_parentObj, float inp_x, float inp_y, bool inp_isStatic, float inp_z = DefaultValues::Z_DEFAULT);
 
 	void Draw(const std::unique_ptr<DirectX::SpriteFont>& m_font, const std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, const DirectX::SimpleMath::Vector2& camOffset);
 

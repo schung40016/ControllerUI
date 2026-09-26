@@ -132,7 +132,7 @@ void RigidBody::CheckIfGrounded()
 	float rayCastVerticalLength = parentLengthHalved + fGroundCheckerOffset;
 	float rayCastHorizontalLength = parentWidthHalved + fGroundCheckerOffset;
 
-	DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition();
+	DirectX::SimpleMath::Vector2 parentPos = parentObj->GetPosition2D();
 	DirectX::SimpleMath::Vector2 rightEdge = { parentPos.x + parentWidthHalved, parentPos.y};
 	DirectX::SimpleMath::Vector2 leftEdge = { parentPos.x - parentWidthHalved, parentPos.y };
 	bool groundedRightCheck = Raycast::CastRaycast(rightEdge, { 0, -1 }, EnumData::ColliderLayers::Ground, rayCastVerticalLength);

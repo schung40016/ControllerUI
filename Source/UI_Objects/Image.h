@@ -19,10 +19,10 @@ public:
 	Image();
 
 	// Renders entire image.
-	Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, bool inp_isStatic);
+	Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, bool inp_isStatic = false, float inp_z = DefaultValues::Z_DEFAULT);
 	
 	// Renders partial sprite.
-	Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, DirectX::SimpleMath::Vector2 inp_originPos, RECT inp_renderingRect);
+	Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, DirectX::SimpleMath::Vector2 inp_originPos, RECT inp_renderingRect, float inp_z = DefaultValues::Z_DEFAULT);
 
 	void Render(std::unique_ptr<DirectX::SpriteBatch>& m_spriteBatch, std::unique_ptr<DirectX::DescriptorHeap>& m_resourceDescriptors, const DirectX::SimpleMath::Vector2& camOffset);
 

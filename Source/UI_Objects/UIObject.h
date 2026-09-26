@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "Source/Game/GameObject.h"
+#include "Source/Constants/DefaultValues.h"
 
 class UIObject : public GameObject
 {

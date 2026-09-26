@@ -12,8 +12,8 @@ class GameObject
 {
 private: 
 	std::string name = "";
-	DirectX::SimpleMath::Vector2 gObj_position = { 0, 0 };
-	DirectX::SimpleMath::Vector2 gObj_positionActual = { 0, 0 };
+	DirectX::SimpleMath::Vector3 gObj_position = { 0, 0, 0 };
+	DirectX::SimpleMath::Vector3 gObj_positionActual = { 0, 0, 0 };
 	DirectX::SimpleMath::Vector2 gObj_size = { 0, 0 };
 	float gObj_scale = 1.f;
 	std::shared_ptr<GameObject> gObj_parentObj = nullptr;
@@ -30,9 +30,9 @@ protected:
 public: 
 	GameObject();
 	
-	GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size);
+	GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size, float inp_z = DefaultValues::Z_DEFAULT);
 
-	GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size, DirectX::SimpleMath::Vector2 inp_sizeDimensions);
+	GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position, float inp_size, DirectX::SimpleMath::Vector2 inp_sizeDimensions, float inp_z = DefaultValues::Z_DEFAULT);
 
 	void Awake();
 
@@ -40,7 +40,22 @@ public:
 
 	const std::string GetName() const;
 
-	const DirectX::SimpleMath::Vector2 GetPosition() const;	
+	/// <summary>
+	/// World position including depth. The z axis is the render depth:
+	/// LOWER z draws on top of higher z, following Unity's convention.
+	/// </summary>
+	const DirectX::SimpleMath::Vector3 GetPosition() const;
+
+	/// <summary>
+	/// World position with the depth component dropped, for 2D maths
+	/// such as collision and raycasting.
+	/// </summary>
+	const DirectX::SimpleMath::Vector2 GetPosition2D() const;
+
+	/// <summary>
+	/// Render depth of this object, including any depth inherited from parents.
+	/// </summary>
+	const float GetZ() const;
 	
 	const DirectX::SimpleMath::Vector2 GetRenderPosition() const;
 
@@ -58,7 +73,17 @@ public:
 
 	void SetName(std::string inp_name);
 
+	void SetPosition(DirectX::SimpleMath::Vector3 inp_position);
+
+	/// <summary>
+	/// Sets the x/y position while preserving the existing render depth.
+	/// </summary>
 	void SetPosition(DirectX::SimpleMath::Vector2 inp_position);
+
+	/// <summary>
+	/// Sets the render depth. Lower values draw on top.
+	/// </summary>
+	void SetZ(float inp_z);
 
 	void SetScale(const float inp_size);
 
@@ -74,7 +99,7 @@ public:
 
 	void MovePosition(const DirectX::SimpleMath::Vector2 inp_position);
 
-	void CalculatePositionActual(DirectX::SimpleMath::Vector2 inp_position);
+	void CalculatePositionActual(DirectX::SimpleMath::Vector3 inp_position);
 
 	template <typename T> 
 	inline T* GetComponent()

@@ -8,13 +8,13 @@ Quad::Quad()
 	resourceManager = GameObjectManager::GetInstance();
 }
 
-Quad::Quad(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid, bool inp_display, bool inp_isStatic)
+Quad::Quad(std::string id, DirectX::XMVECTOR colorInput, GameObject& inp_parentObj, float inp_scale, float inp_x, float inp_y, float inp_len, float inp_wid, bool inp_display, bool inp_isStatic, float inp_z)
 {
 	SetName(id);
 	SetColor(colorInput);
 	SetParent(inp_parentObj);
 	SetScale(inp_scale);
-	SetPosition({ inp_x, inp_y });
+	SetPosition(DirectX::SimpleMath::Vector3(inp_x, inp_y, inp_z));
 	SetLength(inp_len);
 	SetWidth(inp_wid);
 	SetDisplay(inp_display);

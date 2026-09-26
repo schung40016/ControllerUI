@@ -30,6 +30,39 @@ private:
     GameObjectManager* resourceManager;
     Camera* focusedCamera = nullptr;
 
+    // Identifies which batch/effect a renderable needs, so the sorted draw
+    // pass knows when it must close one batch and open another.
+    enum class RenderBatchType
+    {
+        None,
+        Sprite,
+        Shape,
+        Line
+    };
+
+    // Concrete type of a queued renderable, used to dispatch to the correct
+    // draw call. Adding a new renderable means adding a value here plus a
+    // case in GetBatchType and DrawEntry.
+    enum class RenderKind
+    {
+        Text,
+        Image,
+        Shape,
+        Line
+    };
+
+    // A single renderable resolved into "what to draw" plus "how deep it is".
+    // depth caches GetZ() so the sort does not re-walk the parent chain.
+    struct RenderEntry
+    {
+        float depth = DefaultValues::Z_DEFAULT;
+        RenderKind kind = RenderKind::Text;
+        UIObject* object = nullptr;
+    };
+
+    // Reused between frames so the per-frame sort does not reallocate.
+    std::vector<RenderEntry> renderQueue;
+
     int frameCount = 0;
     float width = 0.f;
     float height = 0.f;
@@ -46,21 +79,26 @@ public:
     void RenderAllGameObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects,
         std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Quad>& quadObjects, std::unordered_map<std::string, Camera>& camObjects);
 
-    void RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects);
+    void BuildRenderQueue(std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects,
+        std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Quad>& quadObjects);
 
-    void RenderInputShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects);
+    void FlushRenderQueue(ID3D12GraphicsCommandList* commandList);
 
-    void RenderShapeObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects);
+    static RenderBatchType GetBatchType(RenderKind kind);
 
-    void RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects);
+    void DrawEntry(const RenderEntry& entry, const DirectX::SimpleMath::Vector2& camOffset);
+
+    void QueueRenderable(UIObject& object, RenderKind kind);
+
+    void BeginBatch(RenderBatchType batchType, ID3D12GraphicsCommandList* commandList);
+
+    void EndBatch(RenderBatchType batchType);
 
     void RenderCameraComponents(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Camera>& camObjects);
 
     void PrepareDeviceDependentResources(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12Device* device, std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Camera>& camObjects);
 
     void PrepareWindowDependentResources(RECT size, const D3D12_VIEWPORT& viewport, std::unordered_map<std::string, Camera>& camObjects);
-
-    void CheckInputs(const std::unordered_map<std::string, Triangle>& shpObjects);
 
     void ResetAssets(std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Camera>& camObjects);
 

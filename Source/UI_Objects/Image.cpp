@@ -7,25 +7,25 @@ Image::Image()
 	resourceManager = GameObjectManager::GetInstance();
 }
 
-Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, bool inp_isStatic = false)
+Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, bool inp_isStatic, float inp_z)
 	: imgLocation(inp_imgLocation), currEnum(inp_enum)
 {
 	SetName(id);
 	SetColor(inp_color);
 	SetParent(inp_parentObj);
-	SetPosition({ inp_x, inp_y });
+	SetPosition(DirectX::SimpleMath::Vector3(inp_x, inp_y, inp_z));
 	SetScale(inp_scale);
 	SetIsStatic(inp_isStatic);
 	resourceManager->Add<Image>(id, *this);
 }
 
-Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, DirectX::SimpleMath::Vector2 inp_originPos, RECT inp_renderingRect)
+Image::Image(std::string id, DirectX::XMVECTOR inp_color, std::string inp_imgLocation, EnumData::Descriptors inp_enum, GameObject& inp_parentObj, float inp_x, float inp_y, float inp_scale, DirectX::SimpleMath::Vector2 inp_originPos, RECT inp_renderingRect, float inp_z)
 	: imgLocation(inp_imgLocation), currEnum(inp_enum), m_origin(inp_originPos), renderingEdges(inp_renderingRect)
 {
 	SetName(id);
 	SetColor(inp_color);
 	SetParent(inp_parentObj);
-	SetPosition({ inp_x, inp_y });
+	SetPosition(DirectX::SimpleMath::Vector3(inp_x, inp_y, inp_z));
 	SetScale(inp_scale);
 	resourceManager->Add<Image>(id, *this);
 }

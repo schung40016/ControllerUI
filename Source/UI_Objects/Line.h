@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "UIObject.h"
+#include "Source/Constants/DefaultValues.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -17,9 +18,9 @@ private:
 public:
 	Line();
 
-	Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic = false);
+	Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic = false, float inp_z = DefaultValues::Z_DEFAULT);
 
-	Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic = false, int inp_layer = 0);
+	Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic = false, int inp_layer = 0, float inp_z = DefaultValues::Z_DEFAULT);
 
 	void DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPositionColor>>& m_batch, const DirectX::SimpleMath::Vector2& camOffset) const;
 

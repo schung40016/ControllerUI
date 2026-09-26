@@ -7,6 +7,7 @@
 #include "Source/UI_Objects/Text.h"
 #include "Source/UI_Objects/Shapes/Triangle.h"
 #include "Source/UI_Objects/Line.h"
+#include "Source/Constants/DefaultValues.h"
 
 Controller::Controller()
 {
@@ -21,44 +22,44 @@ Controller::Controller(float inp_size, std::string inp_controllerName, DirectX::
     GameObject parentObj = GameObject(sControllerName, inp_position, fSizeMultiplier);
     GameObject& tempControllerObj = resourceManager->Get<GameObject>(sControllerName);
 
-    Text controllerTitle = Text(sControllerName + "_controllerTitle", DirectX::Colors::Black, "ControllerUI", tempControllerObj, 0.f, -250.f, true);
-    Text connectionTitle = Text(sControllerName + "_connectionTitle", DirectX::Colors::Black, "Controller Connection: ", tempControllerObj, -50.f, 250.f, true);
-    Text connectionStatus = Text(sControllerName + "_connectionStatus", DirectX::Colors::Black, "Connected", tempControllerObj, 400.f, 250.f, true);
+    Text controllerTitle = Text(sControllerName + "_controllerTitle", DirectX::Colors::Black, "ControllerUI", tempControllerObj, 0.f, -250.f, true, DefaultValues::Z_GUI);
+    Text connectionTitle = Text(sControllerName + "_connectionTitle", DirectX::Colors::Black, "Controller Connection: ", tempControllerObj, -50.f, 250.f, true, DefaultValues::Z_GUI);
+    Text connectionStatus = Text(sControllerName + "_connectionStatus", DirectX::Colors::Black, "Connected", tempControllerObj, 400.f, 250.f, true, DefaultValues::Z_GUI);
 
     std::string gamePadName = sControllerName + "_gamePad";
     std::string imgLeftTriggerName = sControllerName + "_imgLeftTrigger";
     std::string imgRightTriggerName = sControllerName + "_imgRightTrigger";
 
     // Create a higher tier object to act as the parent for all these objects.
-    Image gamePad = Image(gamePadName, DirectX::Colors::White, ".\\Images\\gamepad.png", EnumData::Descriptors::Controller, tempControllerObj, 0.f, 0.f, 1.f, true);   // xbox controller
-    Image imgLeftTrigger = Image(imgLeftTriggerName, DirectX::Colors::White, ".\\Images\\LeftTrigger.png", EnumData::Descriptors::LeftTrigger, tempControllerObj, -290.f, 140.f, 1.f, true);    // left trigger.
-    Image imgRightTrigger = Image(imgRightTriggerName, DirectX::Colors::White, ".\\Images\\RightTrigger.png", EnumData::Descriptors::RightTrigger, tempControllerObj, 290.f, 140.f, 1.f, true);  // right trigger.
+    Image gamePad = Image(gamePadName, DirectX::Colors::White, ".\\Images\\gamepad.png", EnumData::Descriptors::Controller, tempControllerObj, 0.f, 0.f, 1.f, true, DefaultValues::Z_GUI);   // xbox controller
+    Image imgLeftTrigger = Image(imgLeftTriggerName, DirectX::Colors::White, ".\\Images\\LeftTrigger.png", EnumData::Descriptors::LeftTrigger, tempControllerObj, -290.f, 140.f, 1.f, true, DefaultValues::Z_GUI);    // left trigger.
+    Image imgRightTrigger = Image(imgRightTriggerName, DirectX::Colors::White, ".\\Images\\RightTrigger.png", EnumData::Descriptors::RightTrigger, tempControllerObj, 290.f, 140.f, 1.f, true, DefaultValues::Z_GUI);  // right trigger.
 
     Image& temp_gamePad = resourceManager->Get<Image>(gamePadName);
     Image& temp_imgLeftTrigger = resourceManager->Get<Image>(imgLeftTriggerName);
     Image& temp_imgRightTrigger = resourceManager->Get<Image>(imgRightTriggerName);
 
 
-    Triangle a = Triangle(sControllerName + "_a", DirectX::Colors::HotPink, temp_gamePad, 1.f, 159.f, 38.f, 40.f, 40.f, true);
-    Triangle b = Triangle(sControllerName + "_b", DirectX::Colors::HotPink, temp_gamePad, 1.f, 199.f, 80.f, 40.f, 40.f, true);
-    Triangle x = Triangle(sControllerName + "_x", DirectX::Colors::HotPink, temp_gamePad, 1.f, 119.f, 80.f, 40.f, 40.f, true);
-    Triangle y = Triangle(sControllerName + "_y", DirectX::Colors::HotPink, temp_gamePad, 1.f, 159.f, 120.f, 40.f, 40.f, true);
+    Triangle a = Triangle(sControllerName + "_a", DirectX::Colors::HotPink, temp_gamePad, 1.f, 159.f, 38.f, 40.f, 40.f, true, DefaultValues::Z_GUI);
+    Triangle b = Triangle(sControllerName + "_b", DirectX::Colors::HotPink, temp_gamePad, 1.f, 199.f, 80.f, 40.f, 40.f, true, DefaultValues::Z_GUI);
+    Triangle x = Triangle(sControllerName + "_x", DirectX::Colors::HotPink, temp_gamePad, 1.f, 119.f, 80.f, 40.f, 40.f, true, DefaultValues::Z_GUI);
+    Triangle y = Triangle(sControllerName + "_y", DirectX::Colors::HotPink, temp_gamePad, 1.f, 159.f, 120.f, 40.f, 40.f, true, DefaultValues::Z_GUI);
 
-    Triangle start = Triangle(sControllerName + "_start", DirectX::Colors::HotPink, temp_gamePad, 1.f, 51.f, 80.f, 40.f, 40.f, true);  // start
-    Triangle view = Triangle(sControllerName + "_view", DirectX::Colors::HotPink, temp_gamePad, 1.f, -39.f, 80.f, 40.f, 40.f, true);  // view
-    Triangle dPadUp = Triangle(sControllerName + "_dPadUp", DirectX::Colors::HotPink, temp_gamePad, 1.f, -72.f, 20.f, 40.f, 40.f, true); // dpadup
-    Triangle dPadDown = Triangle(sControllerName + "_dPadDown", DirectX::Colors::HotPink, temp_gamePad, 1.f, -72.f, -50.f, 40.f, 40.f, true);   // dpaddown
-    Triangle dPadLeft = Triangle(sControllerName + "_dPadLeft", DirectX::Colors::HotPink, temp_gamePad, 1.f, -109.f, -15.f, 40.f, 40.f, true);  // dpadright
-    Triangle dPadRight = Triangle(sControllerName + "_dPadRight", DirectX::Colors::HotPink, temp_gamePad, 1.f, -39.f, -15.f, 40.f, 40.f, true);  // dpadlefft
-    Triangle leftShoulder = Triangle(sControllerName + "_leftShoulder", DirectX::Colors::HotPink, temp_gamePad, 1.f, -149.f, 180.f, 40.f, 40.f, true); // left shoulder
-    Triangle rightShoulder = Triangle(sControllerName + "_rightShoulder", DirectX::Colors::HotPink, temp_gamePad, 1.f, 151.f, 180.f, 40.f, 40.f, true);    // right shoulder
-    Triangle leftTrigger = Triangle(sControllerName + "_leftTrigger", DirectX::Colors::HotPink, temp_imgLeftTrigger, 1.f, 1.f, -10.f, 40.f, 40.f, true);  // left trigger
-    Triangle righTrigger = Triangle(sControllerName + "_rightTrigger", DirectX::Colors::HotPink, temp_imgRightTrigger, 1.f, 1.f, -10.f, 40.f, 40.f, true);    // right trigger
-    Triangle leftStick = Triangle(sControllerName + "_leftStick", DirectX::Colors::HotPink, temp_gamePad, 1.f, -147.f, 80.f, 40.f, 40.f, true);    // left stick
-    Triangle rightstick = Triangle(sControllerName + "_rightStick", DirectX::Colors::HotPink, temp_gamePad, 1.f, 83.f, -15.f, 40.f, 40.f, true);  // right stick
+    Triangle start = Triangle(sControllerName + "_start", DirectX::Colors::HotPink, temp_gamePad, 1.f, 51.f, 80.f, 40.f, 40.f, true, DefaultValues::Z_GUI);  // start
+    Triangle view = Triangle(sControllerName + "_view", DirectX::Colors::HotPink, temp_gamePad, 1.f, -39.f, 80.f, 40.f, 40.f, true, DefaultValues::Z_GUI);  // view
+    Triangle dPadUp = Triangle(sControllerName + "_dPadUp", DirectX::Colors::HotPink, temp_gamePad, 1.f, -72.f, 20.f, 40.f, 40.f, true, DefaultValues::Z_GUI); // dpadup
+    Triangle dPadDown = Triangle(sControllerName + "_dPadDown", DirectX::Colors::HotPink, temp_gamePad, 1.f, -72.f, -50.f, 40.f, 40.f, true, DefaultValues::Z_GUI);   // dpaddown
+    Triangle dPadLeft = Triangle(sControllerName + "_dPadLeft", DirectX::Colors::HotPink, temp_gamePad, 1.f, -109.f, -15.f, 40.f, 40.f, true, DefaultValues::Z_GUI);  // dpadright
+    Triangle dPadRight = Triangle(sControllerName + "_dPadRight", DirectX::Colors::HotPink, temp_gamePad, 1.f, -39.f, -15.f, 40.f, 40.f, true, DefaultValues::Z_GUI);  // dpadlefft
+    Triangle leftShoulder = Triangle(sControllerName + "_leftShoulder", DirectX::Colors::HotPink, temp_gamePad, 1.f, -149.f, 180.f, 40.f, 40.f, true, DefaultValues::Z_GUI); // left shoulder
+    Triangle rightShoulder = Triangle(sControllerName + "_rightShoulder", DirectX::Colors::HotPink, temp_gamePad, 1.f, 151.f, 180.f, 40.f, 40.f, true, DefaultValues::Z_GUI);    // right shoulder
+    Triangle leftTrigger = Triangle(sControllerName + "_leftTrigger", DirectX::Colors::HotPink, temp_imgLeftTrigger, 1.f, 1.f, -10.f, 40.f, 40.f, true, DefaultValues::Z_GUI);  // left trigger
+    Triangle righTrigger = Triangle(sControllerName + "_rightTrigger", DirectX::Colors::HotPink, temp_imgRightTrigger, 1.f, 1.f, -10.f, 40.f, 40.f, true, DefaultValues::Z_GUI);    // right trigger
+    Triangle leftStick = Triangle(sControllerName + "_leftStick", DirectX::Colors::HotPink, temp_gamePad, 1.f, -147.f, 80.f, 40.f, 40.f, true, DefaultValues::Z_GUI);    // left stick
+    Triangle rightstick = Triangle(sControllerName + "_rightStick", DirectX::Colors::HotPink, temp_gamePad, 1.f, 83.f, -15.f, 40.f, 40.f, true, DefaultValues::Z_GUI);  // right stick
     
-    Line leftStickDir = Line(sControllerName + "_leftStickDir", DirectX::Colors::HotPink, temp_gamePad, {-148.f, 78.f}, 1.f, true); // left stick direction
-    Line rightStickDir = Line(sControllerName + "_rightStickDir", DirectX::Colors::HotPink, temp_gamePad, {80.f, -15.f}, 1.f, true);   // right stick direction
+    Line leftStickDir = Line(sControllerName + "_leftStickDir", DirectX::Colors::HotPink, temp_gamePad, {-148.f, 78.f}, 1.f, true, DefaultValues::Z_GUI); // left stick direction
+    Line rightStickDir = Line(sControllerName + "_rightStickDir", DirectX::Colors::HotPink, temp_gamePad, {80.f, -15.f}, 1.f, true, DefaultValues::Z_GUI);   // right stick direction
 
     // Create compmonent.
     std::string controllerUIName = sControllerName + "_ControllerUI";

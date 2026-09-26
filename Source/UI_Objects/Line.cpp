@@ -7,23 +7,23 @@ Line::Line()
     resourceManager = GameObjectManager::GetInstance();
 }
 
-Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic)
+Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic, float inp_z)
 {
     SetName(id);
     SetParent(inp_parentObj);
     SetScale(inp_scale);
-    SetPosition(inp_pt2);
+    SetPosition(DirectX::SimpleMath::Vector3(inp_pt2.x, inp_pt2.y, inp_z));
     SetColor(inp_shapeColor);
     SetIsStatic(inp_isStatic);
     resourceManager->Add<Line>(id, *this);
 }
 
-Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic, int inp_layer)
+Line::Line(std::string id, DirectX::XMVECTOR inp_shapeColor, GameObject& inp_parentObj, DirectX::SimpleMath::Vector2 inp_pt1, DirectX::SimpleMath::Vector2 inp_pt2, float inp_scale, bool inp_isStatic, int inp_layer, float inp_z)
     : layer(inp_layer)
 {
     SetName(id);
     SetParent(inp_parentObj);
-    SetPosition(inp_pt1);
+    SetPosition(DirectX::SimpleMath::Vector3(inp_pt1.x, inp_pt1.y, inp_z));
     point1 = inp_pt1;
     point2 = inp_pt2;
     SetScale(inp_scale);

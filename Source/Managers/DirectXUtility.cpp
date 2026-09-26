@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "DirectXUtility.h"
 #include "GameObjectManager.h"
 
@@ -76,22 +76,12 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     focusedCamera->PrepareProjection(player, {width, height});
 
 
-    // --- Controller ---
     // Render Camera Objects
     RenderCameraComponents(commandList, camObjects);
 
-    // Render Text and Image objects
-    RenderSpriteBatchObjects(commandList, txtObjects, imgObjects);
-
-    // Render Triangles
-    RenderInputShapeObjects(commandList, triObjects);
-
-    // Render all shape objects
-    RenderShapeObjects(m_deviceResources, commandList, quadObjects);
-
-    // Render Lines
-    RenderLineObjects(commandList, lnObjects);
-    // ------------------
+    // Collect every visible renderable, sort it by depth, then draw.
+    BuildRenderQueue(txtObjects, imgObjects, triObjects, lnObjects, quadObjects);
+    FlushRenderQueue(commandList);
 
     PIXEndEvent(commandList);
 
@@ -103,74 +93,171 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     PIXEndEvent();
 }
 
-void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects)
+void DirectXUtility::QueueRenderable(UIObject& object, RenderKind kind)
 {
-    // -- RENDER TEXT --
-    m_spriteBatch->Begin(commandList);
+    if (!focusedCamera->CanRender(object.GetRenderPosition(), object.GetDimensions()))
+    {
+        return;
+    }
 
+    RenderEntry entry;
+    entry.depth = object.GetZ();
+    entry.kind = kind;
+    entry.object = &object;
+    renderQueue.push_back(entry);
+}
+
+void DirectXUtility::BuildRenderQueue(std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects,
+    std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Quad>& quadObjects)
+{
+    renderQueue.clear();
+
+    // Objects are collected in their historical draw order so that a stable
+    // sort keeps the previous behaviour whenever two objects share a z value.
     for (auto& [_, txt] : txtObjects)
     {
-        if (focusedCamera->CanRender(txt.GetRenderPosition(), txt.GetDimensions()))
-        {
-            txt.SetOrigin(m_font);
-            txt.Draw(m_font, m_spriteBatch, focusedCamera->GetOffset());
-        }
+        QueueRenderable(txt, RenderKind::Text);
     }
 
-    // -- RENDER IMAGE --
     for (auto& [_, img] : imgObjects)
     {
-        if (focusedCamera->CanRender(img.GetRenderPosition(), img.GetDimensions()))
-        {
-            img.Render(m_spriteBatch, m_resourceDescriptors, focusedCamera->GetOffset());
-        }
+        QueueRenderable(img, RenderKind::Image);
     }
 
-    m_spriteBatch->End();
-}
-
-void DirectXUtility::RenderInputShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects)
-{
-    m_effect->Apply(commandList);
-
-    m_batch->Begin(commandList);
-
-    CheckInputs(shpObjects);
-
-    m_batch->End();
-}
-
-void DirectXUtility::RenderShapeObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects)
-{
-    m_effect->Apply(commandList);
-
-    m_batch->Begin(commandList);
-    for (const auto& quad : quadObjects)
+    for (auto& [_, tri] : triObjects)
     {
-        if (focusedCamera->CanRender(quad.second.GetRenderPosition(), quad.second.GetDimensions()))
-        {
-            quad.second.Draw(m_batch, focusedCamera->GetOffset());
-        }
+        QueueRenderable(tri, RenderKind::Shape);
     }
-    m_batch->End();
+
+    for (auto& [_, quad] : quadObjects)
+    {
+        QueueRenderable(quad, RenderKind::Shape);
+    }
+
+    for (auto& [_, line] : lnObjects)
+    {
+        QueueRenderable(line, RenderKind::Line);
+    }
+
+    // Painter's algorithm: draw the deepest objects first so that the lowest
+    // z values end up on top, matching Unity's convention.
+    std::stable_sort(renderQueue.begin(), renderQueue.end(),
+        [](const RenderEntry& lhs, const RenderEntry& rhs)
+        {
+            return lhs.depth > rhs.depth;
+        });
 }
 
-void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects)
+DirectXUtility::RenderBatchType DirectXUtility::GetBatchType(RenderKind kind)
 {
-    m_lineEffect->SetView(focusedCamera->GetProjection());
-    m_lineEffect->Apply(commandList);
-
-    m_batch->Begin(commandList);
-
-    for (const auto& line : lnObjects)
+    switch (kind)
     {
-        if (focusedCamera->CanRender(line.second.GetRenderPosition(), line.second.GetDimensions()))
-        {
-            line.second.DrawStickOrientation(m_batch, focusedCamera->GetOffset());
-        }
+    case RenderKind::Text:
+    case RenderKind::Image:
+        return RenderBatchType::Sprite;
+
+    case RenderKind::Shape:
+        return RenderBatchType::Shape;
+
+    case RenderKind::Line:
+        return RenderBatchType::Line;
     }
 
-    m_batch->End();
+    return RenderBatchType::None;
+}
+
+void DirectXUtility::DrawEntry(const RenderEntry& entry, const DirectX::SimpleMath::Vector2& camOffset)
+{
+    // The kind tag records the concrete type that was queued, so these casts
+    // are always to the object's real type.
+    switch (entry.kind)
+    {
+    case RenderKind::Text:
+    {
+        Text* txt = static_cast<Text*>(entry.object);
+        txt->SetOrigin(m_font);
+        txt->Draw(m_font, m_spriteBatch, camOffset);
+        break;
+    }
+
+    case RenderKind::Image:
+        static_cast<Image*>(entry.object)->Render(m_spriteBatch, m_resourceDescriptors, camOffset);
+        break;
+
+    case RenderKind::Shape:
+        static_cast<const Shape*>(entry.object)->Draw(m_batch, camOffset);
+        break;
+
+    case RenderKind::Line:
+        static_cast<const Line*>(entry.object)->DrawStickOrientation(m_batch, camOffset);
+        break;
+    }
+}
+
+void DirectXUtility::BeginBatch(RenderBatchType batchType, ID3D12GraphicsCommandList* commandList)
+{
+    switch (batchType)
+    {
+    case RenderBatchType::Sprite:
+        m_spriteBatch->Begin(commandList);
+        break;
+
+    case RenderBatchType::Shape:
+        m_effect->Apply(commandList);
+        m_batch->Begin(commandList);
+        break;
+
+    case RenderBatchType::Line:
+        m_lineEffect->SetView(focusedCamera->GetProjection());
+        m_lineEffect->Apply(commandList);
+        m_batch->Begin(commandList);
+        break;
+
+    default:
+        break;
+    }
+}
+
+void DirectXUtility::EndBatch(RenderBatchType batchType)
+{
+    switch (batchType)
+    {
+    case RenderBatchType::Sprite:
+        m_spriteBatch->End();
+        break;
+
+    case RenderBatchType::Shape:
+    case RenderBatchType::Line:
+        m_batch->End();
+        break;
+
+    default:
+        break;
+    }
+}
+
+void DirectXUtility::FlushRenderQueue(ID3D12GraphicsCommandList* commandList)
+{
+    RenderBatchType activeBatch = RenderBatchType::None;
+    const DirectX::SimpleMath::Vector2& camOffset = focusedCamera->GetOffset();
+
+    for (const RenderEntry& entry : renderQueue)
+    {
+        // Objects of different kinds need different batches/effects, so only
+        // reopen a batch when the required one actually changes.
+        RenderBatchType requiredBatch = GetBatchType(entry.kind);
+
+        if (requiredBatch != activeBatch)
+        {
+            EndBatch(activeBatch);
+            BeginBatch(requiredBatch, commandList);
+            activeBatch = requiredBatch;
+        }
+
+        DrawEntry(entry, camOffset);
+    }
+
+    EndBatch(activeBatch);
 }
 
 void DirectXUtility::PrepareDeviceDependentResources(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12Device* device, std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Camera>& camObjects)
@@ -254,17 +341,6 @@ void DirectXUtility::PrepareWindowDependentResources(RECT size, const D3D12_VIEW
 
     m_effect->SetProjection(proj);
     m_lineEffect->SetProjection(proj);
-}
-
-void DirectXUtility::CheckInputs(const std::unordered_map<std::string, Triangle>& shpObjects)
-{
-    // All the triangle's position have to be relative to the image positions.
-    // Iterate through UI button class so that we can basically have a single for loop and call the set position and draw triangle once.
-
-    for (const auto& currObject : shpObjects)
-    {
-        currObject.second.Draw(m_batch, focusedCamera->GetOffset());
-    }
 }
 
 void DirectXUtility::ResetAssets(std::unordered_map<std::string, Image>& imgObjects, std::unordered_map<std::string, Camera>& camObjects)
