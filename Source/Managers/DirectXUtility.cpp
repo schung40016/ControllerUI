@@ -76,22 +76,24 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     focusedCamera->PrepareProjection(player, {width, height});
 
 
-    // --- Controller ---
     // Render Camera Objects
     RenderCameraComponents(commandList, camObjects);
 
-    // Render Text and Image objects
-    RenderSpriteBatchObjects(commandList, txtObjects, imgObjects);
+    // --- World layer ---
+    // Non-static objects scroll with the camera and must never cover the GUI.
+    RenderSpriteBatchObjects(commandList, txtObjects, imgObjects, false);
+    RenderInputShapeObjects(commandList, triObjects, false);
+    RenderShapeObjects(m_deviceResources, commandList, quadObjects, false);
+    RenderLineObjects(commandList, lnObjects, false);
+    // -------------------
 
-    // Render Triangles
-    RenderInputShapeObjects(commandList, triObjects);
-
-    // Render all shape objects
-    RenderShapeObjects(m_deviceResources, commandList, quadObjects);
-
-    // Render Lines
-    RenderLineObjects(commandList, lnObjects);
-    // ------------------
+    // --- GUI layer ---
+    // Static objects are screen-anchored UI, so they are drawn last (on top).
+    RenderSpriteBatchObjects(commandList, txtObjects, imgObjects, true);
+    RenderInputShapeObjects(commandList, triObjects, true);
+    RenderShapeObjects(m_deviceResources, commandList, quadObjects, true);
+    RenderLineObjects(commandList, lnObjects, true);
+    // -----------------
 
     PIXEndEvent(commandList);
 
@@ -103,13 +105,18 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     PIXEndEvent();
 }
 
-void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects)
+void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects, bool renderStatic)
 {
     // -- RENDER TEXT --
     m_spriteBatch->Begin(commandList);
 
     for (auto& [_, txt] : txtObjects)
     {
+        if (txt.GetIsStatic() != renderStatic)
+        {
+            continue;
+        }
+
         if (focusedCamera->CanRender(txt.GetRenderPosition(), txt.GetDimensions()))
         {
             txt.SetOrigin(m_font);
@@ -120,6 +127,11 @@ void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* command
     // -- RENDER IMAGE --
     for (auto& [_, img] : imgObjects)
     {
+        if (img.GetIsStatic() != renderStatic)
+        {
+            continue;
+        }
+
         if (focusedCamera->CanRender(img.GetRenderPosition(), img.GetDimensions()))
         {
             img.Render(m_spriteBatch, m_resourceDescriptors, focusedCamera->GetOffset());
@@ -129,24 +141,29 @@ void DirectXUtility::RenderSpriteBatchObjects(ID3D12GraphicsCommandList* command
     m_spriteBatch->End();
 }
 
-void DirectXUtility::RenderInputShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects)
+void DirectXUtility::RenderInputShapeObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Triangle>& shpObjects, bool renderStatic)
 {
     m_effect->Apply(commandList);
 
     m_batch->Begin(commandList);
 
-    CheckInputs(shpObjects);
+    CheckInputs(shpObjects, renderStatic);
 
     m_batch->End();
 }
 
-void DirectXUtility::RenderShapeObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects)
+void DirectXUtility::RenderShapeObjects(const std::unique_ptr<DX::DeviceResources>& m_deviceResources, ID3D12GraphicsCommandList* commandList, const std::unordered_map<std::string, Quad>& quadObjects, bool renderStatic)
 {
     m_effect->Apply(commandList);
 
     m_batch->Begin(commandList);
     for (const auto& quad : quadObjects)
     {
+        if (quad.second.GetIsStatic() != renderStatic)
+        {
+            continue;
+        }
+
         if (focusedCamera->CanRender(quad.second.GetRenderPosition(), quad.second.GetDimensions()))
         {
             quad.second.Draw(m_batch, focusedCamera->GetOffset());
@@ -155,7 +172,7 @@ void DirectXUtility::RenderShapeObjects(const std::unique_ptr<DX::DeviceResource
     m_batch->End();
 }
 
-void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects)
+void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, std::unordered_map<std::string, Line>& lnObjects, bool renderStatic)
 {
     m_lineEffect->SetView(focusedCamera->GetProjection());
     m_lineEffect->Apply(commandList);
@@ -164,6 +181,11 @@ void DirectXUtility::RenderLineObjects(ID3D12GraphicsCommandList* commandList, s
 
     for (const auto& line : lnObjects)
     {
+        if (line.second.GetIsStatic() != renderStatic)
+        {
+            continue;
+        }
+
         if (focusedCamera->CanRender(line.second.GetRenderPosition(), line.second.GetDimensions()))
         {
             line.second.DrawStickOrientation(m_batch, focusedCamera->GetOffset());
@@ -256,13 +278,18 @@ void DirectXUtility::PrepareWindowDependentResources(RECT size, const D3D12_VIEW
     m_lineEffect->SetProjection(proj);
 }
 
-void DirectXUtility::CheckInputs(const std::unordered_map<std::string, Triangle>& shpObjects)
+void DirectXUtility::CheckInputs(const std::unordered_map<std::string, Triangle>& shpObjects, bool renderStatic)
 {
     // All the triangle's position have to be relative to the image positions.
     // Iterate through UI button class so that we can basically have a single for loop and call the set position and draw triangle once.
 
     for (const auto& currObject : shpObjects)
     {
+        if (currObject.second.GetIsStatic() != renderStatic)
+        {
+            continue;
+        }
+
         currObject.second.Draw(m_batch, focusedCamera->GetOffset());
     }
 }
