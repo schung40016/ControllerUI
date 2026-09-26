@@ -93,6 +93,20 @@ void DirectXUtility::RenderAllGameObjects(const std::unique_ptr<DX::DeviceResour
     PIXEndEvent();
 }
 
+void DirectXUtility::QueueRenderable(UIObject& object, RenderKind kind)
+{
+    if (!focusedCamera->CanRender(object.GetRenderPosition(), object.GetDimensions()))
+    {
+        return;
+    }
+
+    RenderEntry entry;
+    entry.depth = object.GetZ();
+    entry.kind = kind;
+    entry.object = &object;
+    renderQueue.push_back(entry);
+}
+
 void DirectXUtility::BuildRenderQueue(std::unordered_map<std::string, Text>& txtObjects, std::unordered_map<std::string, Image>& imgObjects,
     std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Quad>& quadObjects)
 {
@@ -102,62 +116,27 @@ void DirectXUtility::BuildRenderQueue(std::unordered_map<std::string, Text>& txt
     // sort keeps the previous behaviour whenever two objects share a z value.
     for (auto& [_, txt] : txtObjects)
     {
-        if (focusedCamera->CanRender(txt.GetRenderPosition(), txt.GetDimensions()))
-        {
-            RenderEntry entry;
-            entry.depth = txt.GetZ();
-            entry.batchType = RenderBatchType::Sprite;
-            entry.text = &txt;
-            renderQueue.push_back(entry);
-        }
+        QueueRenderable(txt, RenderKind::Text);
     }
 
     for (auto& [_, img] : imgObjects)
     {
-        if (focusedCamera->CanRender(img.GetRenderPosition(), img.GetDimensions()))
-        {
-            RenderEntry entry;
-            entry.depth = img.GetZ();
-            entry.batchType = RenderBatchType::Sprite;
-            entry.image = &img;
-            renderQueue.push_back(entry);
-        }
+        QueueRenderable(img, RenderKind::Image);
     }
 
     for (auto& [_, tri] : triObjects)
     {
-        if (focusedCamera->CanRender(tri.GetRenderPosition(), tri.GetDimensions()))
-        {
-            RenderEntry entry;
-            entry.depth = tri.GetZ();
-            entry.batchType = RenderBatchType::Shape;
-            entry.shape = &tri;
-            renderQueue.push_back(entry);
-        }
+        QueueRenderable(tri, RenderKind::Shape);
     }
 
     for (auto& [_, quad] : quadObjects)
     {
-        if (focusedCamera->CanRender(quad.GetRenderPosition(), quad.GetDimensions()))
-        {
-            RenderEntry entry;
-            entry.depth = quad.GetZ();
-            entry.batchType = RenderBatchType::Shape;
-            entry.shape = &quad;
-            renderQueue.push_back(entry);
-        }
+        QueueRenderable(quad, RenderKind::Shape);
     }
 
     for (auto& [_, line] : lnObjects)
     {
-        if (focusedCamera->CanRender(line.GetRenderPosition(), line.GetDimensions()))
-        {
-            RenderEntry entry;
-            entry.depth = line.GetZ();
-            entry.batchType = RenderBatchType::Line;
-            entry.line = &line;
-            renderQueue.push_back(entry);
-        }
+        QueueRenderable(line, RenderKind::Line);
     }
 
     // Painter's algorithm: draw the deepest objects first so that the lowest
@@ -167,6 +146,52 @@ void DirectXUtility::BuildRenderQueue(std::unordered_map<std::string, Text>& txt
         {
             return lhs.depth > rhs.depth;
         });
+}
+
+DirectXUtility::RenderBatchType DirectXUtility::GetBatchType(RenderKind kind)
+{
+    switch (kind)
+    {
+    case RenderKind::Text:
+    case RenderKind::Image:
+        return RenderBatchType::Sprite;
+
+    case RenderKind::Shape:
+        return RenderBatchType::Shape;
+
+    case RenderKind::Line:
+        return RenderBatchType::Line;
+    }
+
+    return RenderBatchType::None;
+}
+
+void DirectXUtility::DrawEntry(const RenderEntry& entry, const DirectX::SimpleMath::Vector2& camOffset)
+{
+    // The kind tag records the concrete type that was queued, so these casts
+    // are always to the object's real type.
+    switch (entry.kind)
+    {
+    case RenderKind::Text:
+    {
+        Text* txt = static_cast<Text*>(entry.object);
+        txt->SetOrigin(m_font);
+        txt->Draw(m_font, m_spriteBatch, camOffset);
+        break;
+    }
+
+    case RenderKind::Image:
+        static_cast<Image*>(entry.object)->Render(m_spriteBatch, m_resourceDescriptors, camOffset);
+        break;
+
+    case RenderKind::Shape:
+        static_cast<const Shape*>(entry.object)->Draw(m_batch, camOffset);
+        break;
+
+    case RenderKind::Line:
+        static_cast<const Line*>(entry.object)->DrawStickOrientation(m_batch, camOffset);
+        break;
+    }
 }
 
 void DirectXUtility::BeginBatch(RenderBatchType batchType, ID3D12GraphicsCommandList* commandList)
@@ -214,37 +239,22 @@ void DirectXUtility::EndBatch(RenderBatchType batchType)
 void DirectXUtility::FlushRenderQueue(ID3D12GraphicsCommandList* commandList)
 {
     RenderBatchType activeBatch = RenderBatchType::None;
+    const DirectX::SimpleMath::Vector2& camOffset = focusedCamera->GetOffset();
 
     for (const RenderEntry& entry : renderQueue)
     {
         // Objects of different kinds need different batches/effects, so only
         // reopen a batch when the required one actually changes.
-        if (entry.batchType != activeBatch)
+        RenderBatchType requiredBatch = GetBatchType(entry.kind);
+
+        if (requiredBatch != activeBatch)
         {
             EndBatch(activeBatch);
-            BeginBatch(entry.batchType, commandList);
-            activeBatch = entry.batchType;
+            BeginBatch(requiredBatch, commandList);
+            activeBatch = requiredBatch;
         }
 
-        const DirectX::SimpleMath::Vector2& camOffset = focusedCamera->GetOffset();
-
-        if (entry.text != nullptr)
-        {
-            entry.text->SetOrigin(m_font);
-            entry.text->Draw(m_font, m_spriteBatch, camOffset);
-        }
-        else if (entry.image != nullptr)
-        {
-            entry.image->Render(m_spriteBatch, m_resourceDescriptors, camOffset);
-        }
-        else if (entry.shape != nullptr)
-        {
-            entry.shape->Draw(m_batch, camOffset);
-        }
-        else if (entry.line != nullptr)
-        {
-            entry.line->DrawStickOrientation(m_batch, camOffset);
-        }
+        DrawEntry(entry, camOffset);
     }
 
     EndBatch(activeBatch);

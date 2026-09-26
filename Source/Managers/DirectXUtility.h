@@ -40,16 +40,24 @@ private:
         Line
     };
 
+    // Concrete type of a queued renderable, used to dispatch to the correct
+    // draw call. Adding a new renderable means adding a value here plus a
+    // case in GetBatchType and DrawEntry.
+    enum class RenderKind
+    {
+        Text,
+        Image,
+        Shape,
+        Line
+    };
+
     // A single renderable resolved into "what to draw" plus "how deep it is".
-    // Exactly one of the object pointers is non-null.
+    // depth caches GetZ() so the sort does not re-walk the parent chain.
     struct RenderEntry
     {
         float depth = DefaultValues::Z_DEFAULT;
-        RenderBatchType batchType = RenderBatchType::None;
-        Text* text = nullptr;
-        Image* image = nullptr;
-        const Shape* shape = nullptr;
-        const Line* line = nullptr;
+        RenderKind kind = RenderKind::Text;
+        UIObject* object = nullptr;
     };
 
     // Reused between frames so the per-frame sort does not reallocate.
@@ -75,6 +83,12 @@ public:
         std::unordered_map<std::string, Triangle>& triObjects, std::unordered_map<std::string, Line>& lnObjects, std::unordered_map<std::string, Quad>& quadObjects);
 
     void FlushRenderQueue(ID3D12GraphicsCommandList* commandList);
+
+    static RenderBatchType GetBatchType(RenderKind kind);
+
+    void DrawEntry(const RenderEntry& entry, const DirectX::SimpleMath::Vector2& camOffset);
+
+    void QueueRenderable(UIObject& object, RenderKind kind);
 
     void BeginBatch(RenderBatchType batchType, ID3D12GraphicsCommandList* commandList);
 
