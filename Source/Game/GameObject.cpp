@@ -18,6 +18,7 @@ GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position
 	gObj_position = { inp_position.x, inp_position.y, inp_z };
 	CalculatePositionActual(gObj_position);
 	gObj_originalSize = inp_size;
+	CalcScale(DefaultValues::DEFAULT_SIZE);
 	resourceManager->Add<GameObject>(id, *this);
 }
 
@@ -30,6 +31,7 @@ GameObject::GameObject(std::string id, DirectX::SimpleMath::Vector2 inp_position
 	gObj_position = { inp_position.x, inp_position.y, inp_z };
 	CalculatePositionActual(gObj_position);
 	gObj_originalSize = inp_size;
+	CalcScale(DefaultValues::DEFAULT_SIZE);
 	resourceManager->Add<GameObject>(id, *this);
 }
 
@@ -58,7 +60,10 @@ const DirectX::SimpleMath::Vector3 GameObject::GetPosition() const
 {
 	if (gObj_parentObj)
 	{
-		float scale = GetScale();
+		// A child's local offset lives in its parent's space, so it is scaled by the
+		// parent's scale only. Using GetScale() here would also apply the child's own
+		// scale, compounding it and dragging children off their anchor.
+		float scale = gObj_parentObj->GetScale();
 		DirectX::SimpleMath::Vector3 parent_pos = gObj_parentObj->GetPosition();
 		float calcX = gObj_position.x * scale + parent_pos.x;
 		float calcY = gObj_position.y * scale + parent_pos.y;
@@ -119,9 +124,19 @@ const DirectX::SimpleMath::Vector2 GameObject::GetSize() const
 	return gObj_size;
 }
 
-void GameObject::CalcScale(float inp_size)
+// Scales the object against a fixed reference resolution, NOT the live window size.
+// gObj_originalSize encodes a ratio against that reference (e.g. 975 renders 1:1,
+// 2925 renders at a third), so calling this once at construction keeps objects a
+// constant pixel size and lets a larger window simply reveal more of the world.
+void GameObject::CalcScale(float inp_referenceSize)
 {
-	gObj_scale = inp_size / gObj_originalSize;
+	if (gObj_originalSize == 0.f)
+	{
+		gObj_scale = 1.f;
+		return;
+	}
+
+	gObj_scale = inp_referenceSize / gObj_originalSize;
 }
 
 void GameObject::SetName(std::string inp_name)

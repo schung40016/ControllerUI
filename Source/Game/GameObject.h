@@ -69,7 +69,13 @@ public:
 
 	const DirectX::SimpleMath::Vector2 GetSize() const;
 
-	void CalcScale(float inp_size);
+	/// <summary>
+	/// Recomputes gObj_scale from a fixed reference resolution (DefaultValues::DEFAULT_SIZE)
+	/// divided by this object's original size. Called once at construction; it is
+	/// deliberately NOT driven by the live window size, so objects keep a constant
+	/// pixel size and resizing the window only reveals more of the world.
+	/// </summary>
+	void CalcScale(float inp_referenceSize);
 
 	void SetName(std::string inp_name);
 
