@@ -36,13 +36,19 @@ void Line::DrawStickOrientation(std::unique_ptr<DirectX::PrimitiveBatch<VertexPo
 {
     Vector2 pos = GetRenderPosition();
 
-    if (GetIsStatic())
+    // Static objects are screen anchored; only world objects follow the camera.
+    if (!GetIsStatic())
     {
         pos += camOffset;
     }
 
-    float calcPt2X = (pos.x - point1.x) + point2.x;
-    float calcPt2Y = (pos.y + point1.y) - point2.y;
+    // point1/point2 are offsets in the parent's space, so they use the parent's scale
+    // to stay consistent with GetPosition(). Without this the second endpoint ignores
+    // scale and the line detaches from the shape it outlines.
+    const float scale = GetParentObj() ? GetParentObj()->GetScale() : 1.f;
+
+    float calcPt2X = (pos.x - point1.x * scale) + point2.x * scale;
+    float calcPt2Y = (pos.y + point1.y * scale) - point2.y * scale;
 
     DirectX::DX12::VertexPositionColor vec1(Vector3(pos.x, pos.y, layer), GetColor());
     DirectX::DX12::VertexPositionColor vec2(Vector3(calcPt2X, calcPt2Y, layer), GetColor());

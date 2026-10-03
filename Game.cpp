@@ -233,16 +233,9 @@ void Game::CreateWindowSizeDependentResources()
 
     auto size = m_deviceResources->GetOutputSize();
 
-    float horizontal = float(size.right);
-    float vertical = float(size.bottom);
-
-    std::unordered_map<std::string, GameObject>& gameObjs = resourceManager->GetBank<GameObject>();
-
-    for (auto &curr : gameObjs)
-    {
-        //curr.second.SetPosition({horizontal, vertical});
-        curr.second.CalcScale(std::min(horizontal, vertical));
-    }
+    // GameObject scales are deliberately NOT recomputed from the window size.
+    // The orthographic projection maps world units 1:1 to pixels, so objects keep a
+    // constant pixel size and a larger window simply reveals more of the world.
 
     directXUtility.PrepareWindowDependentResources(size, viewport, resourceManager->GetBank<Camera>());
 }

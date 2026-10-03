@@ -208,7 +208,11 @@ void DirectXUtility::BeginBatch(RenderBatchType batchType, ID3D12GraphicsCommand
         break;
 
     case RenderBatchType::Line:
-        m_lineEffect->SetView(focusedCamera->GetProjection());
+        // The camera offset is applied CPU-side in Line::DrawStickOrientation, which
+        // also honours isStatic. Feeding camView2D in here as well would translate
+        // every line by camOffset a second time, so keep this view at identity to
+        // match the shape effect.
+        m_lineEffect->SetView(DirectX::SimpleMath::Matrix::Identity);
         m_lineEffect->Apply(commandList);
         m_batch->Begin(commandList);
         break;

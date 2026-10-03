@@ -38,7 +38,6 @@ Player::Player(float inp_size,
 	resourceManager->Add<GameObject>(sPlayerName, player_gameObj);
 
 	GameObject& tempPlayerGame = resourceManager->Get<GameObject>(sPlayerName);
-	tempPlayerGame.SetScale(.1f);
 
 	Image playerSprite = Image(sImageName, DirectX::Colors::White, ".\\Images\\PlayerSpriteSheet.png", EnumData::Descriptors::PlayerImage, tempPlayerGame, .25f, .25f, .35f, false);
 	resourceManager->Add<Image>(sImageName, playerSprite);
